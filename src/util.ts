@@ -5,3 +5,25 @@ export function getCanvasCtx2D(canvas: HTMLCanvasElement): CanvasRenderingContex
   }
   return ctx;
 }
+
+export function loadImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = url;
+  });
+}
+
+export function imageToCanvas(image: HTMLImageElement): HTMLCanvasElement {
+  const canvas = document.createElement('canvas');
+  canvas.height = image.naturalHeight;
+  canvas.width = image.naturalWidth;
+  const ctx = getCanvasCtx2D(canvas);
+  ctx.drawImage(image, 0, 0);
+
+  // Verify that the canvas data isn't tainted.
+  ctx.getImageData(0, 120, 1, 1);
+
+  return canvas;
+}

@@ -1,4 +1,4 @@
-import { getCanvasCtx2D } from "./util.js";
+import { loadImage, imageToCanvas } from "./util.js";
 
 type AsepriteDimensions = {
   x: number,
@@ -57,28 +57,6 @@ class AsepriteSheet {
     ctx.drawImage(this.image, x, y, w, h, dx, dy, w, h);
   }
 };
-
-function loadImage(url: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = url;
-  });
-}
-
-function imageToCanvas(image: HTMLImageElement): HTMLCanvasElement {
-  const canvas = document.createElement('canvas');
-  canvas.height = image.naturalHeight;
-  canvas.width = image.naturalWidth;
-  const ctx = getCanvasCtx2D(canvas);
-  ctx.drawImage(image, 0, 0);
-
-  // Verify that the canvas data isn't tainted.
-  ctx.getImageData(0, 120, 1, 1);
-
-  return canvas;
-}
 
 export async function loadAsepriteSheet(path: string): Promise<AsepriteSheet> {
   const baseURL = new URL(window.location.href);
