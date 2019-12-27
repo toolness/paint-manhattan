@@ -32,7 +32,7 @@ type AsepriteSheetMetadata = {
 
 type AsepriteSheet = {
   metadata: AsepriteSheetMetadata,
-  buffer: ArrayBuffer,
+  image: HTMLImageElement,
 };
 
 export async function loadAsepriteSheet(path: string): Promise<AsepriteSheet> {
@@ -44,10 +44,11 @@ export async function loadAsepriteSheet(path: string): Promise<AsepriteSheet> {
   }
   const metadata: AsepriteSheetMetadata = await metadataRes.json();
   const imageURL = new URL(metadata.meta.image, metadataURL).href;
-  const imageRes = await fetch(imageURL);
-  if (imageRes.status !== 200) {
-    throw new Error(`Got HTTP ${imageRes.status} loading ${imageURL}!`);
-  }
-  const buffer = await imageRes.arrayBuffer();
-  return {metadata, buffer};
+
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve({metadata, image});
+    image.onerror = reject;
+    image.src = imageURL;
+  });
 }
