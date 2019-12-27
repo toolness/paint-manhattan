@@ -12,11 +12,13 @@ PNG_FILENAME = "manhattan.png"
 
 ASEPRITE_PATH = os.environ.get('ASEPRITE_PATH')
 
+# https://www.aseprite.org/docs/cli/
 ASEPRITE_ARGS = [
     "-b",
     "--data", JSON_FILENAME,
     "--sheet", PNG_FILENAME,
     "--split-layers",
+    "--filename-format", r"{layer}",
     ASE_FILENAME,
 ]
 
