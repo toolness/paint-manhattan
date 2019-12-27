@@ -1,3 +1,5 @@
+import { getCanvasCtx2D } from "./util.js";
+
 type AsepriteDimensions = {
   x: number,
   y: number,
@@ -30,10 +32,30 @@ type AsepriteSheetMetadata = {
   }
 };
 
-type AsepriteSheet = {
-  metadata: AsepriteSheetMetadata,
-  image: HTMLImageElement,
-  canvas: HTMLCanvasElement,
+class AsepriteSheet {
+  readonly canvas: HTMLCanvasElement;
+
+  constructor(readonly metadata: AsepriteSheetMetadata, readonly image: HTMLImageElement) {
+    this.canvas = imageToCanvas(image);
+
+    if (image.naturalWidth !== metadata.meta.size.w ||
+        image.naturalHeight !== metadata.meta.size.h) {
+      throw new Error('Assertion failure, image is not expected dimensions!');
+    }
+  }
+
+  getFrameMetadata(name: string): AsepriteFrame {
+    const frame = this.metadata.frames[name];
+    if (!frame) {
+      throw new Error(`Frame "${name}" does not exist`);
+    }
+    return frame;
+  }
+
+  drawFrame(ctx: CanvasRenderingContext2D, name: string, dx: number, dy: number) {
+    const { x, y, w, h } = this.getFrameMetadata(name).frame;
+    ctx.drawImage(this.image, x, y, w, h, dx, dy, w, h);
+  }
 };
 
 function loadImage(url: string): Promise<HTMLImageElement> {
@@ -49,10 +71,7 @@ function imageToCanvas(image: HTMLImageElement): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
   canvas.height = image.naturalHeight;
   canvas.width = image.naturalWidth;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    throw new Error('Unable to get 2d context of canvas!');
-  }
+  const ctx = getCanvasCtx2D(canvas);
   ctx.drawImage(image, 0, 0);
 
   // Verify that the canvas data isn't tainted.
@@ -71,13 +90,5 @@ export async function loadAsepriteSheet(path: string): Promise<AsepriteSheet> {
   const metadata: AsepriteSheetMetadata = await metadataRes.json();
   const imageURL = new URL(metadata.meta.image, metadataURL).href;
   const image = await loadImage(imageURL);
-
-  if (image.naturalWidth !== metadata.meta.size.w ||
-      image.naturalHeight !== metadata.meta.size.h) {
-    throw new Error('Assertion failure, image is not expected dimensions!');
-  }
-
-  const canvas = imageToCanvas(image);
-
-  return {metadata, image, canvas};
+  return new AsepriteSheet(metadata, image);
 }
