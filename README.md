@@ -4,6 +4,17 @@ The streets are based on a map called [Plan of the City of New York][plan]
 that was created sometime between 1790 and 1799. The map is old but the
 streets haven't actually changed much over the past couple centuries.
 
+## Quick start
+
+```
+yarn
+yarn watch
+```
+
+In another terminal, start a web server with `python3 -m http.server`.
+
+Then visit http://localhost:8000/.
+
 ## Editing the map
 
 [Aseprite][] is required to edit the map at `manhattan.aseprite`. The metadata
