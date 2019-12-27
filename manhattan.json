@@ -1,0 +1,43 @@
+{ "frames": {
+   "manhattan (Reference image).aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "manhattan (Land and water).aseprite": {
+    "frame": { "x": 0, "y": 120, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "manhattan (Streets).aseprite": {
+    "frame": { "x": 0, "y": 240, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "manhattan (Whitehall).aseprite": {
+    "frame": { "x": 0, "y": 360, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.16.3-x64",
+  "image": "manhattan.png",
+  "format": "RGBA8888",
+  "size": { "w": 160, "h": 480 },
+  "scale": "1"
+ }
+}
