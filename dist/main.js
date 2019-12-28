@@ -14,7 +14,7 @@ async function main() {
     const sheet = await loadAsepriteSheet(SPRITESHEET_URL);
     const fontImage = await loadImage(FONT_URL);
     const font = new BitmapFont(fontImage, FONT_OPTIONS);
-    const showStreetSkeleton = qs.get('skel') === 'on';
+    const showStreetSkeleton = !(qs.get('noskel') === 'on');
     const manhattan = new Manhattan({ sheet, font, root: document.body, showStreetSkeleton });
     manhattan.start();
 }
