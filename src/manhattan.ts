@@ -2,6 +2,10 @@ import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
 import { getCanvasCtx2D } from './util.js';
 
+const PAINT_RADIUS = 2;
+
+const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 0.5)';
+
 const TERRAIN_FRAME = "Land and water";
 
 const IGNORE_FRAMES = [
@@ -48,6 +52,15 @@ export class Manhattan {
     const { width, height } = this.canvas;
     const ctx = getCanvasCtx2D(this.canvas);
     sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+
+    if (this.penPos) {
+      ctx.save();
+      ctx.fillStyle = PAINT_HOVER_STYLE;
+      const size = PAINT_RADIUS * 2 + 1;
+      ctx.fillRect(this.penPos.x - PAINT_RADIUS, this.penPos.y - PAINT_RADIUS, size, size);
+      ctx.restore();
+    }
+
     const pos = this.penPos ? ` ${this.penPos.x}, ${this.penPos.y}` : ``;
     const btn = this.isPenDown ? 'DOWN' : 'UP';
     font.drawText(ctx, `${btn}${pos}`, width, height, 'bottom-right');
