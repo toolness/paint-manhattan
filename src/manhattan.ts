@@ -4,7 +4,9 @@ import { getCanvasCtx2D } from './util.js';
 
 const PAINT_RADIUS = 2;
 
-const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 0.5)';
+const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
+
+const PAINT_STREET_STYLE = '#eec39a';
 
 const TERRAIN_FRAME = "Land and water";
 
