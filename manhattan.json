@@ -23,7 +23,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Whitehall": {
+   "Whitehall Street": {
     "frame": { "x": 0, "y": 360, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -31,8 +31,64 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "State": {
+   "State Street": {
     "frame": { "x": 0, "y": 480, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Broadway": {
+    "frame": { "x": 0, "y": 600, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Wall Street": {
+    "frame": { "x": 0, "y": 720, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Broad Street": {
+    "frame": { "x": 0, "y": 840, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Pine Street": {
+    "frame": { "x": 0, "y": 960, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Cedar Street": {
+    "frame": { "x": 0, "y": 1080, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Rector Street": {
+    "frame": { "x": 0, "y": 1200, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Liberty Street": {
+    "frame": { "x": 0, "y": 1320, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
@@ -45,7 +101,7 @@
   "version": "1.2.16.3-x64",
   "image": "manhattan.png",
   "format": "RGBA8888",
-  "size": { "w": 160, "h": 600 },
+  "size": { "w": 160, "h": 1440 },
   "scale": "1"
  }
 }
