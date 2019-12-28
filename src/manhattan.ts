@@ -185,66 +185,96 @@ export class Manhattan {
     this.drawText(ctx);
   }
 
-  private handleMouseLeave(e: MouseEvent) {
-    this.penPos = null;
-    this.draw();
+  private updatePen(isDown?: boolean, pctX?: number|null, pctY?: number|null) {
+    let stateChanged = false;
+
+    if (typeof(isDown) === 'boolean') {
+      if (this.isPenDown !== isDown) {
+        this.isPenDown = isDown;
+        stateChanged = true;
+      }
+    }
+
+    if (typeof(pctX) === 'number' && typeof(pctY) === 'number') {
+      const x = Math.floor(pctX * this.canvas.width);
+      const y = Math.floor(pctY * this.canvas.height);
+      if (!(this.penPos && this.penPos.x === x && this.penPos.y === y)) {
+        this.penPos = {x, y};
+        stateChanged = true;
+      }
+    } else if (pctX === null && pctY === null) {
+      if (this.penPos) {
+        this.penPos = null;
+        stateChanged = true;
+      }
+    }
+
+    if (stateChanged) {
+      this.draw();
+    }
   }
 
-  private updatePenPosFromTouch(e: TouchEvent) {
+  private updatePenFromTouch(e: TouchEvent) {
+    if (e.type === 'touchcancel' || e.type === 'touchend') {
+      this.updatePen(false, null, null);
+      return;
+    }
     const touch = e.touches[0];
     const rect = this.canvas.getBoundingClientRect();
     const offsetX = Math.max(touch.clientX - rect.left, 0);
     const offsetY = Math.max(touch.clientY - rect.top, 0);
     const pctX = Math.min(offsetX, rect.width) / rect.width;
     const pctY = Math.min(offsetY, rect.height) / rect.height;
+    this.updatePen(true, pctX, pctY);
+  }
 
-    this.updatePenPos(pctX, pctY);
+  private updatePenFromMouse(e: MouseEvent) {
+    const visibleSize = this.canvas.getBoundingClientRect();
+    const pctX = e.offsetX / visibleSize.width;
+    const pctY = e.offsetY / visibleSize.height;
+
+    if (e.type === 'mouseup') {
+      this.updatePen(false, pctX, pctY);
+    } else if (e.type === 'mouseleave') {
+      this.updatePen(false, null, null);
+    } else if (e.type === 'mousedown') {
+      this.updatePen(true, pctX, pctY);
+    } else if (e.type === 'mousemove') {
+      this.updatePen(undefined, pctX, pctY);
+    }
   }
 
   private handleTouchStart(e: TouchEvent) {
     e.preventDefault();
-    this.isPenDown = true;
-    this.updatePenPosFromTouch(e);
+    this.updatePenFromTouch(e);
   }
 
   private handleTouchEnd(e: TouchEvent) {
-    this.isPenDown = false;
-    this.penPos = null;
+    this.updatePenFromTouch(e);
   }
 
   private handleTouchCancel(e: TouchEvent) {
-    this.handleTouchEnd(e);
+    this.updatePenFromTouch(e);
   }
 
   private handleTouchMove(e: TouchEvent) {
-    this.isPenDown = true;
-    this.updatePenPosFromTouch(e);
-  }
-
-  private updatePenPos(pctX: number, pctY: number) {
-    const x = Math.floor(pctX * this.canvas.width);
-    const y = Math.floor(pctY * this.canvas.height);
-    if (!(this.penPos && this.penPos.x === x && this.penPos.y === y)) {
-      this.penPos = {x, y};
-      this.draw();
-    }
+    this.updatePenFromTouch(e);
   }
 
   private handleMouseMove(e: MouseEvent) {
-    const visibleSize = this.canvas.getBoundingClientRect();
-    const pctX = e.offsetX / visibleSize.width;
-    const pctY = e.offsetY / visibleSize.height;
-    this.updatePenPos(pctX, pctY);
+    this.updatePenFromMouse(e);
   }
 
-  private handleMouseDown() {
-    this.isPenDown = true;
-    this.draw();
+  private handleMouseLeave(e: MouseEvent) {
+    this.updatePenFromMouse(e);
   }
 
-  private handleMouseUp() {
-    this.isPenDown = false;
-    this.draw();
+  private handleMouseDown(e: MouseEvent) {
+    this.updatePenFromMouse(e);
+  }
+
+  private handleMouseUp(e: MouseEvent) {
+    this.updatePenFromMouse(e);
   }
 
   private handleResize() {
