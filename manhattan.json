@@ -94,6 +94,22 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
+   },
+   "Greenwich Street": {
+    "frame": { "x": 0, "y": 1440, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Church Street": {
+    "frame": { "x": 0, "y": 1560, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
    }
  },
  "meta": {
@@ -101,7 +117,7 @@
   "version": "1.2.16.3-x64",
   "image": "manhattan.png",
   "format": "RGBA8888",
-  "size": { "w": 160, "h": 1440 },
+  "size": { "w": 160, "h": 1680 },
   "scale": "1"
  }
 }
