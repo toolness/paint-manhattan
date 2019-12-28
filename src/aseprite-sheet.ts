@@ -56,6 +56,13 @@ export class AsepriteSheet {
     const { x, y, w, h } = this.getFrameMetadata(name).frame;
     ctx.drawImage(this.image, x, y, w, h, dx, dy, w, h);
   }
+
+  getFrameImageData(ctx: CanvasRenderingContext2D, name: string, xOfs: number = 0, yOfs: number = 0, width?: number, height?: number) {
+    const { frame } = this.getFrameMetadata(name);
+    width = width || frame.w;
+    height = height || frame.h;
+    return ctx.getImageData(frame.x + xOfs, frame.y + yOfs, width, height);
+  }
 };
 
 export async function loadAsepriteSheet(path: string): Promise<AsepriteSheet> {
