@@ -1,6 +1,6 @@
 import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
-import { getCanvasCtx2D } from './util.js';
+import { getCanvasCtx2D, createCanvas } from './util.js';
 
 const PAINT_RADIUS = 2;
 
@@ -36,9 +36,7 @@ export class Manhattan {
 
   constructor(readonly options: ManhattanOptions) {
     const {w, h} = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
-    const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
+    const canvas = createCanvas(w, h);
     canvas.style.cursor = 'none';
     options.root.appendChild(canvas);
     this.canvas = canvas;

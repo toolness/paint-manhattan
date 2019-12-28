@@ -16,7 +16,7 @@ export function loadImage(url: string): Promise<HTMLImageElement> {
 }
 
 export function imageToCanvas(image: HTMLImageElement): HTMLCanvasElement {
-  const canvas = document.createElement('canvas');
+  const canvas = createCanvas(image.naturalWidth, image.naturalHeight);
   canvas.height = image.naturalHeight;
   canvas.width = image.naturalWidth;
   const ctx = getCanvasCtx2D(canvas);
@@ -25,5 +25,12 @@ export function imageToCanvas(image: HTMLImageElement): HTMLCanvasElement {
   // Verify that the canvas data isn't tainted.
   ctx.getImageData(0, 120, 1, 1);
 
+  return canvas;
+}
+
+export function createCanvas(width: number, height: number): HTMLCanvasElement {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
   return canvas;
 }
