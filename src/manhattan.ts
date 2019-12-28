@@ -37,6 +37,7 @@ export class Manhattan {
     const canvas = document.createElement('canvas');
     canvas.width = w;
     canvas.height = h;
+    canvas.style.cursor = 'none';
     options.root.appendChild(canvas);
     this.canvas = canvas;
     this.handleResize = this.handleResize.bind(this);
@@ -55,9 +56,10 @@ export class Manhattan {
 
     if (this.penPos) {
       ctx.save();
-      ctx.fillStyle = PAINT_HOVER_STYLE;
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = PAINT_HOVER_STYLE;
       const size = PAINT_RADIUS * 2 + 1;
-      ctx.fillRect(this.penPos.x - PAINT_RADIUS, this.penPos.y - PAINT_RADIUS, size, size);
+      ctx.strokeRect(this.penPos.x - PAINT_RADIUS + 0.5, this.penPos.y - PAINT_RADIUS + 0.5, size, size);
       ctx.restore();
     }
 
