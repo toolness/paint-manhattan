@@ -1,6 +1,7 @@
 import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
 import { getCanvasCtx2D, createCanvas, shuffleArray } from './util.js';
+import { CanvasResizer } from './canvas-resizer.js';
 
 type RGBA = [number, number, number, number];
 
@@ -83,6 +84,7 @@ type CurrentHighlightFrameDetails = {
 };
 
 export class Manhattan {
+  readonly resizer: CanvasResizer;
   readonly streetCanvas: HTMLCanvasElement;
   readonly canvas: HTMLCanvasElement;
   readonly highlightFrames: string[];
@@ -97,8 +99,8 @@ export class Manhattan {
     const canvas = createCanvas(w, h);
     canvas.style.cursor = 'none';
     options.root.appendChild(canvas);
+    this.resizer = new CanvasResizer(canvas);
     this.canvas = canvas;
-    this.handleResize = this.handleResize.bind(this);
     this.handleMouseEvent = this.handleMouseEvent.bind(this);
     this.handleTouchEvent = this.handleTouchEvent.bind(this);
     this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
@@ -271,29 +273,15 @@ export class Manhattan {
     this.updatePenFromMouse(e);
   }
 
-  private handleResize() {
-    const { canvas } = this;
-    const aspectRatio = this.canvas.width / this.canvas.height;
-    const currAspectRatio = window.innerWidth / window.innerHeight;
-    if (currAspectRatio < aspectRatio) {
-      canvas.classList.remove('full-height');
-      canvas.classList.add('full-width');
-    } else {
-      canvas.classList.remove('full-width');
-      canvas.classList.add('full-height');
-    }
-  }
-
   start() {
-    window.addEventListener('resize', this.handleResize);
+    this.resizer.start();
     MOUSE_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleMouseEvent as any));
     TOUCH_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleTouchEvent as any));
-    this.handleResize();
     this.updateAndDraw();
   }
 
   stop() {
-    window.removeEventListener('resize', this.handleResize);
+    this.resizer.stop();
     MOUSE_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleMouseEvent as any));
     TOUCH_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleTouchEvent as any));
   }
