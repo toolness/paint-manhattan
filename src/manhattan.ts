@@ -4,14 +4,29 @@ import { getCanvasCtx2D } from './util.js';
 
 const TERRAIN_FRAME = "Land and water";
 
+const IGNORE_FRAMES = [
+  "Reference image",
+  "Streets",
+];
+
 type ManhattanOptions = {
   sheet: AsepriteSheet,
   font: BitmapFont,
   root: HTMLElement,
 };
 
+function getHighlightFrames(sheet: AsepriteSheet): string[] {
+  const ignoreFrames = new Set([TERRAIN_FRAME, ...IGNORE_FRAMES]);
+  return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
+}
+
+type Position = {x: number, y: number};
+
 export class Manhattan {
   readonly canvas: HTMLCanvasElement;
+  readonly highlightFrames: string[];
+  isPenDown: boolean = false;
+  penPos: Position|null = null;
 
   constructor(readonly options: ManhattanOptions) {
     const {w, h} = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
@@ -21,14 +36,49 @@ export class Manhattan {
     options.root.appendChild(canvas);
     this.canvas = canvas;
     this.handleResize = this.handleResize.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.highlightFrames = getHighlightFrames(options.sheet);
   }
 
-  private drawFrame() {
+  private draw() {
     const { sheet, font } = this.options;
     const { width, height } = this.canvas;
     const ctx = getCanvasCtx2D(this.canvas);
     sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-    font.drawText(ctx, 'Hello World', width, height, 'bottom-right');
+    const pos = this.penPos ? ` ${this.penPos.x}, ${this.penPos.y}` : ``;
+    const btn = this.isPenDown ? 'DOWN' : 'UP';
+    font.drawText(ctx, `${btn}${pos}`, width, height, 'bottom-right');
+  }
+
+  private handleMouseLeave(e: MouseEvent) {
+    this.penPos = null;
+    this.draw();
+  }
+
+  private handleMouseMove(e: MouseEvent) {
+    const visibleSize = this.canvas.getBoundingClientRect();
+    const pctX = e.offsetX / visibleSize.width;
+    const pctY = e.offsetY / visibleSize.height;
+    const x = Math.floor(pctX * this.canvas.width);
+    const y = Math.floor(pctY * this.canvas.height);
+
+    if (!(this.penPos && this.penPos.x === x && this.penPos.y === y)) {
+      this.penPos = {x, y};
+      this.draw();
+    }
+  }
+
+  private handleMouseDown() {
+    this.isPenDown = true;
+    this.draw();
+  }
+
+  private handleMouseUp() {
+    this.isPenDown = false;
+    this.draw();
   }
 
   private handleResize() {
@@ -46,11 +96,19 @@ export class Manhattan {
 
   start() {
     window.addEventListener('resize', this.handleResize);
+    this.canvas.addEventListener('mouseleave', this.handleMouseLeave);
+    this.canvas.addEventListener('mousemove', this.handleMouseMove);
+    this.canvas.addEventListener('mouseup', this.handleMouseUp);
+    this.canvas.addEventListener('mousedown', this.handleMouseDown);
     this.handleResize();
-    this.drawFrame();
+    this.draw();
   }
 
   stop() {
     window.removeEventListener('resize', this.handleResize);
+    this.canvas.removeEventListener('mouseleave', this.handleMouseLeave);
+    this.canvas.removeEventListener('mousemove', this.handleMouseMove);
+    this.canvas.removeEventListener('mouseup', this.handleMouseUp);
+    this.canvas.removeEventListener('mousedown', this.handleMouseDown);
   }
 }
