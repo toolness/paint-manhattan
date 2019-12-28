@@ -8,10 +8,8 @@ streets haven't actually changed much over the past couple centuries.
 
 ```
 yarn
-yarn watch
+yarn start
 ```
-
-In another terminal, start a web server with `python3 -m http.server`.
 
 Then visit http://localhost:8000/.
 

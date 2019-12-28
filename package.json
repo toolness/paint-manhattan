@@ -6,10 +6,12 @@
   "author": "Atul Varma <varmaa@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "concurrently": "^5.0.2",
+    "http-server": "^0.12.0",
     "typescript": "^3.7.4"
   },
   "scripts": {
     "build": "tsc",
-    "watch": "tsc --watch"
+    "start": "concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"http-server -c-1 -p 8000\""
   }
 }
