@@ -4,7 +4,7 @@ import { getCanvasCtx2D, createCanvas, shuffleArray } from './util.js';
 
 type RGBA = [number, number, number, number];
 
-const PAINT_RADIUS = 10;
+const PAINT_RADIUS = 5;
 
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 
@@ -136,7 +136,15 @@ export class Manhattan {
 
   private updateStreets() {
     const curr = this.currentHighlightFrameDetails;
-    if (!(this.penPos && this.isPenDown && curr)) return;
+  
+    if (!curr) return;
+
+    if (!this.isPenDown && curr.pixelsLeft === 0) {
+      this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+    }
+
+    if (!(this.penPos && this.isPenDown)) return;
+
     const x1 = Math.max(this.penPos.x - PAINT_RADIUS, 0);
     const y1 = Math.max(this.penPos.y - PAINT_RADIUS, 0);
     const x2 = Math.min(this.penPos.x + PAINT_RADIUS, this.canvas.width - 1);
@@ -163,9 +171,6 @@ export class Manhattan {
     if (pixelsAdded) {
       streetCtx.putImageData(streetData, x1, y1);
       curr.pixelsLeft -= pixelsAdded;
-      if (curr.pixelsLeft === 0) {
-        this.currentHighlightFrameDetails = this.getNextHighlightFrame();
-      }
     }
   }
 
@@ -184,10 +189,11 @@ export class Manhattan {
     font.drawText(ctx, msg2, width, height, 'bottom-right');
   }
 
-  private draw() {
+  private updateAndDraw() {
+    this.updateStreets();
+
     const ctx = getCanvasCtx2D(this.canvas);
     this.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-    this.updateStreets();
     ctx.drawImage(this.streetCanvas, 0, 0);
     this.drawPenCursor(ctx);
     this.drawText(ctx);
@@ -218,7 +224,7 @@ export class Manhattan {
     }
 
     if (stateChanged) {
-      this.draw();
+      this.updateAndDraw();
     }
   }
 
@@ -279,7 +285,7 @@ export class Manhattan {
     MOUSE_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleMouseEvent as any));
     TOUCH_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleTouchEvent as any));
     this.handleResize();
-    this.draw();
+    this.updateAndDraw();
   }
 
   stop() {
