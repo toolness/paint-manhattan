@@ -24,6 +24,20 @@ const IGNORE_FRAMES = [
   "Streets",
 ];
 
+const MOUSE_EVENTS = [
+  'mouseleave',
+  'mousemove',
+  'mouseup',
+  'mousedown',
+];
+
+const TOUCH_EVENTS = [
+  'touchstart',
+  'touchend',
+  'touchmove',
+  'touchcancel',
+];
+
 type ManhattanOptions = {
   sheet: AsepriteSheet,
   font: BitmapFont,
@@ -81,14 +95,8 @@ export class Manhattan {
     options.root.appendChild(canvas);
     this.canvas = canvas;
     this.handleResize = this.handleResize.bind(this);
-    this.handleMouseLeave = this.handleMouseLeave.bind(this);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleTouchStart = this.handleTouchStart.bind(this);
-    this.handleTouchEnd = this.handleTouchEnd.bind(this);
-    this.handleTouchMove = this.handleTouchMove.bind(this);
-    this.handleTouchCancel = this.handleTouchCancel.bind(this);
+    this.handleMouseEvent = this.handleMouseEvent.bind(this);
+    this.handleTouchEvent = this.handleTouchEvent.bind(this);
     this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
   }
@@ -244,36 +252,12 @@ export class Manhattan {
     }
   }
 
-  private handleTouchStart(e: TouchEvent) {
+  private handleTouchEvent(e: TouchEvent) {
     e.preventDefault();
     this.updatePenFromTouch(e);
   }
 
-  private handleTouchEnd(e: TouchEvent) {
-    this.updatePenFromTouch(e);
-  }
-
-  private handleTouchCancel(e: TouchEvent) {
-    this.updatePenFromTouch(e);
-  }
-
-  private handleTouchMove(e: TouchEvent) {
-    this.updatePenFromTouch(e);
-  }
-
-  private handleMouseMove(e: MouseEvent) {
-    this.updatePenFromMouse(e);
-  }
-
-  private handleMouseLeave(e: MouseEvent) {
-    this.updatePenFromMouse(e);
-  }
-
-  private handleMouseDown(e: MouseEvent) {
-    this.updatePenFromMouse(e);
-  }
-
-  private handleMouseUp(e: MouseEvent) {
+  private handleMouseEvent(e: MouseEvent) {
     this.updatePenFromMouse(e);
   }
 
@@ -292,27 +276,15 @@ export class Manhattan {
 
   start() {
     window.addEventListener('resize', this.handleResize);
-    this.canvas.addEventListener('mouseleave', this.handleMouseLeave);
-    this.canvas.addEventListener('mousemove', this.handleMouseMove);
-    this.canvas.addEventListener('mouseup', this.handleMouseUp);
-    this.canvas.addEventListener('mousedown', this.handleMouseDown);
-    this.canvas.addEventListener('touchstart', this.handleTouchStart);
-    this.canvas.addEventListener('touchend', this.handleTouchEnd);
-    this.canvas.addEventListener('touchmove', this.handleTouchMove);
-    this.canvas.addEventListener('touchcancel', this.handleTouchCancel);
+    MOUSE_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleMouseEvent as any));
+    TOUCH_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleTouchEvent as any));
     this.handleResize();
     this.draw();
   }
 
   stop() {
     window.removeEventListener('resize', this.handleResize);
-    this.canvas.removeEventListener('mouseleave', this.handleMouseLeave);
-    this.canvas.removeEventListener('mousemove', this.handleMouseMove);
-    this.canvas.removeEventListener('mouseup', this.handleMouseUp);
-    this.canvas.removeEventListener('mousedown', this.handleMouseDown);
-    this.canvas.removeEventListener('touchstart', this.handleTouchStart);
-    this.canvas.removeEventListener('touchend', this.handleTouchEnd);
-    this.canvas.removeEventListener('touchmove', this.handleTouchMove);
-    this.canvas.removeEventListener('touchcancel', this.handleTouchCancel);
+    MOUSE_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleMouseEvent as any));
+    TOUCH_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleTouchEvent as any));
   }
 }
