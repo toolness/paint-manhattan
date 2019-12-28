@@ -4,7 +4,7 @@ import { getCanvasCtx2D, createCanvas, shuffleArray } from './util.js';
 
 type RGBA = [number, number, number, number];
 
-const PAINT_RADIUS = 3;
+const PAINT_RADIUS = 10;
 
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 
@@ -85,6 +85,10 @@ export class Manhattan {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchCancel = this.handleTouchCancel.bind(this);
     this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
   }
@@ -186,17 +190,51 @@ export class Manhattan {
     this.draw();
   }
 
-  private handleMouseMove(e: MouseEvent) {
-    const visibleSize = this.canvas.getBoundingClientRect();
-    const pctX = e.offsetX / visibleSize.width;
-    const pctY = e.offsetY / visibleSize.height;
+  private updatePenPosFromTouch(e: TouchEvent) {
+    const touch = e.touches[0];
+    const rect = this.canvas.getBoundingClientRect();
+    const offsetX = Math.max(touch.clientX - rect.left, 0);
+    const offsetY = Math.max(touch.clientY - rect.top, 0);
+    const pctX = Math.min(offsetX, rect.width) / rect.width;
+    const pctY = Math.min(offsetY, rect.height) / rect.height;
+
+    this.updatePenPos(pctX, pctY);
+  }
+
+  private handleTouchStart(e: TouchEvent) {
+    e.preventDefault();
+    this.isPenDown = true;
+    this.updatePenPosFromTouch(e);
+  }
+
+  private handleTouchEnd(e: TouchEvent) {
+    this.isPenDown = false;
+    this.penPos = null;
+  }
+
+  private handleTouchCancel(e: TouchEvent) {
+    this.handleTouchEnd(e);
+  }
+
+  private handleTouchMove(e: TouchEvent) {
+    this.isPenDown = true;
+    this.updatePenPosFromTouch(e);
+  }
+
+  private updatePenPos(pctX: number, pctY: number) {
     const x = Math.floor(pctX * this.canvas.width);
     const y = Math.floor(pctY * this.canvas.height);
-
     if (!(this.penPos && this.penPos.x === x && this.penPos.y === y)) {
       this.penPos = {x, y};
       this.draw();
     }
+  }
+
+  private handleMouseMove(e: MouseEvent) {
+    const visibleSize = this.canvas.getBoundingClientRect();
+    const pctX = e.offsetX / visibleSize.width;
+    const pctY = e.offsetY / visibleSize.height;
+    this.updatePenPos(pctX, pctY);
   }
 
   private handleMouseDown() {
@@ -228,6 +266,10 @@ export class Manhattan {
     this.canvas.addEventListener('mousemove', this.handleMouseMove);
     this.canvas.addEventListener('mouseup', this.handleMouseUp);
     this.canvas.addEventListener('mousedown', this.handleMouseDown);
+    this.canvas.addEventListener('touchstart', this.handleTouchStart);
+    this.canvas.addEventListener('touchend', this.handleTouchEnd);
+    this.canvas.addEventListener('touchmove', this.handleTouchMove);
+    this.canvas.addEventListener('touchcancel', this.handleTouchCancel);
     this.handleResize();
     this.draw();
   }
@@ -238,5 +280,9 @@ export class Manhattan {
     this.canvas.removeEventListener('mousemove', this.handleMouseMove);
     this.canvas.removeEventListener('mouseup', this.handleMouseUp);
     this.canvas.removeEventListener('mousedown', this.handleMouseDown);
+    this.canvas.removeEventListener('touchstart', this.handleTouchStart);
+    this.canvas.removeEventListener('touchend', this.handleTouchEnd);
+    this.canvas.removeEventListener('touchmove', this.handleTouchMove);
+    this.canvas.removeEventListener('touchcancel', this.handleTouchCancel);
   }
 }
