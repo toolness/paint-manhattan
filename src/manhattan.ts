@@ -49,6 +49,10 @@ function getHighlightFrames(sheet: AsepriteSheet): string[] {
   return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
 }
 
+function shortenStreetName(name: string): string {
+  return name.replace('Street', 'St');
+}
+
 function isImageEmptyAt(im: ImageData, idx: number): boolean {
   return im.data[idx + RED_OFFSET] === 0 &&
     im.data[idx + GREEN_OFFSET] === 0 &&
@@ -181,7 +185,7 @@ export class Manhattan {
     let msg1 = "Hooray!"
     let msg2 = "You painted Manhattan.";
     if (curr) {
-      msg1 = `Paint ${curr.name}.`;
+      msg1 = `Paint ${shortenStreetName(curr.name)}.`;
       const pixels = curr.pixelsLeft === 1 ? 'pixel' : 'pixels';
       msg2 = `${curr.pixelsLeft} ${pixels} left.`;
     }
