@@ -9,11 +9,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        image-rendering: crisp-edges;
-        image-rendering: pixelated;
         margin: 0;
         overflow: hidden;
         background: black;
+
+        /**
+         * We want pixelated image rendering, but if the browser doesn't support it,
+         * crisp-edges is good enough.
+         */
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
       }
 
       .full-width {
