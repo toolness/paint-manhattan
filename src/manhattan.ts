@@ -157,24 +157,28 @@ export class Manhattan {
     }
   }
 
-  private draw() {
-    const { sheet, font } = this.options;
+  private drawText(ctx: CanvasRenderingContext2D) {
     const { width, height } = this.canvas;
-    const ctx = getCanvasCtx2D(this.canvas);
-    sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-
-    this.updateStreets();
-
-    ctx.drawImage(this.streetCanvas, 0, 0);
-
-    this.drawPenCursor(ctx);
-
+    const { font } = this.options;
     const curr = this.currentHighlightFrameDetails;
-    let msg = "You painted Manhattan!";
+    let msg1 = "Hooray!"
+    let msg2 = "You painted Manhattan.";
     if (curr) {
-      msg = `Paint ${curr.name}.`;
+      msg1 = `Paint ${curr.name}.`;
+      const pixels = curr.pixelsLeft === 1 ? 'pixel' : 'pixels';
+      msg2 = `${curr.pixelsLeft} ${pixels} left.`;
     }
-    font.drawText(ctx, msg, width, height, 'bottom-right');
+    font.drawText(ctx, msg1, width, height - font.options.charHeight, 'bottom-right');
+    font.drawText(ctx, msg2, width, height, 'bottom-right');
+  }
+
+  private draw() {
+    const ctx = getCanvasCtx2D(this.canvas);
+    this.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+    this.updateStreets();
+    ctx.drawImage(this.streetCanvas, 0, 0);
+    this.drawPenCursor(ctx);
+    this.drawText(ctx);
   }
 
   private handleMouseLeave(e: MouseEvent) {
