@@ -6,6 +6,8 @@ import { Pen } from './pen.js';
 
 type RGBA = [number, number, number, number];
 
+const STREET_SKELETON_ALPHA = 0.33;
+
 const PAINT_RADIUS = 5;
 
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
@@ -14,19 +16,27 @@ const PAINT_STREET_RGBA: RGBA = [238, 195, 154, 255];
 
 const TERRAIN_FRAME = "Land and water";
 
+const STREETS_FRAME = "Streets";
+
 const IGNORE_FRAMES = [
   "Reference image",
-  "Streets",
 ];
 
-type ManhattanOptions = {
+const NON_HIGHLIGHT_FRAMES = [
+  TERRAIN_FRAME,
+  STREETS_FRAME,
+  ...IGNORE_FRAMES
+];
+
+export type ManhattanOptions = {
   sheet: AsepriteSheet,
   font: BitmapFont,
   root: HTMLElement,
+  showStreetSkeleton: boolean,
 };
 
 function getHighlightFrames(sheet: AsepriteSheet): string[] {
-  const ignoreFrames = new Set([TERRAIN_FRAME, ...IGNORE_FRAMES]);
+  const ignoreFrames = new Set(NON_HIGHLIGHT_FRAMES);
   return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
 }
 
@@ -82,6 +92,14 @@ export class Manhattan {
       }
     }
     return total;
+  }
+
+  private drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
+    if (!this.options.showStreetSkeleton) return;
+    ctx.save();
+    ctx.globalAlpha = STREET_SKELETON_ALPHA;
+    this.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
+    ctx.restore();
   }
 
   private drawPenCursor(ctx: CanvasRenderingContext2D) {
@@ -157,6 +175,7 @@ export class Manhattan {
 
     const ctx = getCanvasCtx2D(this.canvas);
     this.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+    this.drawStreetSkeleton(ctx);
     ctx.drawImage(this.streetCanvas, 0, 0);
     this.drawPenCursor(ctx);
     this.drawText(ctx);
