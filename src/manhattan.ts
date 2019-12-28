@@ -2,6 +2,7 @@ import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
 import { getCanvasCtx2D, createCanvas, shuffleArray } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
+import { Pen } from './pen.js';
 
 type RGBA = [number, number, number, number];
 
@@ -23,20 +24,6 @@ const TERRAIN_FRAME = "Land and water";
 const IGNORE_FRAMES = [
   "Reference image",
   "Streets",
-];
-
-const MOUSE_EVENTS = [
-  'mouseleave',
-  'mousemove',
-  'mouseup',
-  'mousedown',
-];
-
-const TOUCH_EVENTS = [
-  'touchstart',
-  'touchend',
-  'touchmove',
-  'touchcancel',
 ];
 
 type ManhattanOptions = {
@@ -77,7 +64,6 @@ function setPixel(im: ImageData, idx: number, r: number, g: number, b: number, a
   im.data[idx + ALPHA_OFFSET] = a;
 }
 
-type Position = {x: number, y: number};
 type CurrentHighlightFrameDetails = {
   name: string,
   pixelsLeft: number,
@@ -88,9 +74,8 @@ export class Manhattan {
   readonly streetCanvas: HTMLCanvasElement;
   readonly canvas: HTMLCanvasElement;
   readonly highlightFrames: string[];
+  readonly pen: Pen;
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
-  isPenDown: boolean = false;
-  penPos: Position|null = null;
 
   constructor(readonly options: ManhattanOptions) {
     const {w, h} = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
@@ -99,10 +84,9 @@ export class Manhattan {
     const canvas = createCanvas(w, h);
     canvas.style.cursor = 'none';
     options.root.appendChild(canvas);
+    this.pen = new Pen(canvas, this.updateAndDraw.bind(this));
     this.resizer = new CanvasResizer(canvas);
     this.canvas = canvas;
-    this.handleMouseEvent = this.handleMouseEvent.bind(this);
-    this.handleTouchEvent = this.handleTouchEvent.bind(this);
     this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
   }
@@ -131,12 +115,13 @@ export class Manhattan {
   }
 
   private drawPenCursor(ctx: CanvasRenderingContext2D) {
-    if (!this.penPos) return;
+    const { pen } = this;
+    if (!pen.pos) return;
     ctx.save();
     ctx.lineWidth = 1;
     ctx.strokeStyle = PAINT_HOVER_STYLE;
     const size = PAINT_RADIUS * 2;
-    ctx.strokeRect(this.penPos.x - PAINT_RADIUS + 0.5, this.penPos.y - PAINT_RADIUS + 0.5, size, size);
+    ctx.strokeRect(pen.pos.x - PAINT_RADIUS + 0.5, pen.pos.y - PAINT_RADIUS + 0.5, size, size);
     ctx.restore();
   }
 
@@ -145,16 +130,18 @@ export class Manhattan {
   
     if (!curr) return;
 
-    if (!this.isPenDown && curr.pixelsLeft === 0) {
+    const { pen } = this;
+
+    if (!pen.isDown && curr.pixelsLeft === 0) {
       this.currentHighlightFrameDetails = this.getNextHighlightFrame();
     }
 
-    if (!(this.penPos && this.isPenDown)) return;
+    if (!(pen.pos && pen.isDown)) return;
 
-    const x1 = Math.max(this.penPos.x - PAINT_RADIUS, 0);
-    const y1 = Math.max(this.penPos.y - PAINT_RADIUS, 0);
-    const x2 = Math.min(this.penPos.x + PAINT_RADIUS, this.canvas.width - 1);
-    const y2 = Math.min(this.penPos.y + PAINT_RADIUS, this.canvas.height - 1);
+    const x1 = Math.max(pen.pos.x - PAINT_RADIUS, 0);
+    const y1 = Math.max(pen.pos.y - PAINT_RADIUS, 0);
+    const x2 = Math.min(pen.pos.x + PAINT_RADIUS, this.canvas.width - 1);
+    const y2 = Math.min(pen.pos.y + PAINT_RADIUS, this.canvas.height - 1);
     const w = x2 - x1;
     const h = y2 - y1;
 
@@ -205,84 +192,14 @@ export class Manhattan {
     this.drawText(ctx);
   }
 
-  private updatePen(isDown?: boolean, pctX?: number|null, pctY?: number|null) {
-    let stateChanged = false;
-
-    if (typeof(isDown) === 'boolean') {
-      if (this.isPenDown !== isDown) {
-        this.isPenDown = isDown;
-        stateChanged = true;
-      }
-    }
-
-    if (typeof(pctX) === 'number' && typeof(pctY) === 'number') {
-      const x = Math.floor(pctX * this.canvas.width);
-      const y = Math.floor(pctY * this.canvas.height);
-      if (!(this.penPos && this.penPos.x === x && this.penPos.y === y)) {
-        this.penPos = {x, y};
-        stateChanged = true;
-      }
-    } else if (pctX === null && pctY === null) {
-      if (this.penPos) {
-        this.penPos = null;
-        stateChanged = true;
-      }
-    }
-
-    if (stateChanged) {
-      this.updateAndDraw();
-    }
-  }
-
-  private updatePenFromTouch(e: TouchEvent) {
-    if (e.type === 'touchcancel' || e.type === 'touchend') {
-      this.updatePen(false, null, null);
-      return;
-    }
-    const touch = e.touches[0];
-    const rect = this.canvas.getBoundingClientRect();
-    const offsetX = Math.max(touch.clientX - rect.left, 0);
-    const offsetY = Math.max(touch.clientY - rect.top, 0);
-    const pctX = Math.min(offsetX, rect.width) / rect.width;
-    const pctY = Math.min(offsetY, rect.height) / rect.height;
-    this.updatePen(true, pctX, pctY);
-  }
-
-  private updatePenFromMouse(e: MouseEvent) {
-    const visibleSize = this.canvas.getBoundingClientRect();
-    const pctX = e.offsetX / visibleSize.width;
-    const pctY = e.offsetY / visibleSize.height;
-
-    if (e.type === 'mouseup') {
-      this.updatePen(false, pctX, pctY);
-    } else if (e.type === 'mouseleave') {
-      this.updatePen(false, null, null);
-    } else if (e.type === 'mousedown') {
-      this.updatePen(true, pctX, pctY);
-    } else if (e.type === 'mousemove') {
-      this.updatePen(undefined, pctX, pctY);
-    }
-  }
-
-  private handleTouchEvent(e: TouchEvent) {
-    e.preventDefault();
-    this.updatePenFromTouch(e);
-  }
-
-  private handleMouseEvent(e: MouseEvent) {
-    this.updatePenFromMouse(e);
-  }
-
   start() {
     this.resizer.start();
-    MOUSE_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleMouseEvent as any));
-    TOUCH_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleTouchEvent as any));
+    this.pen.start();
     this.updateAndDraw();
   }
 
   stop() {
     this.resizer.stop();
-    MOUSE_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleMouseEvent as any));
-    TOUCH_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleTouchEvent as any));
+    this.pen.stop();
   }
 }
