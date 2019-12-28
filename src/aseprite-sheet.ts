@@ -32,7 +32,7 @@ type AsepriteSheetMetadata = {
   }
 };
 
-class AsepriteSheet {
+export class AsepriteSheet {
   readonly canvas: HTMLCanvasElement;
 
   constructor(readonly metadata: AsepriteSheetMetadata, readonly image: HTMLImageElement) {
