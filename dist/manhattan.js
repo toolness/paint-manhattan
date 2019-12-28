@@ -1,71 +1,39 @@
-import { getCanvasCtx2D, createCanvas, shuffleArray } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel } from './util.js';
+import { CanvasResizer } from './canvas-resizer.js';
+import { Pen } from './pen.js';
+const STREET_SKELETON_ALPHA = 0.33;
 const PAINT_RADIUS = 5;
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 const PAINT_STREET_RGBA = [238, 195, 154, 255];
-const BYTES_PER_PIXEL = 4;
-const RED_OFFSET = 0;
-const GREEN_OFFSET = 1;
-const BLUE_OFFSET = 2;
-const ALPHA_OFFSET = 3;
 const TERRAIN_FRAME = "Land and water";
+const STREETS_FRAME = "Streets";
 const IGNORE_FRAMES = [
     "Reference image",
-    "Streets",
 ];
-const MOUSE_EVENTS = [
-    'mouseleave',
-    'mousemove',
-    'mouseup',
-    'mousedown',
-];
-const TOUCH_EVENTS = [
-    'touchstart',
-    'touchend',
-    'touchmove',
-    'touchcancel',
+const NON_HIGHLIGHT_FRAMES = [
+    TERRAIN_FRAME,
+    STREETS_FRAME,
+    ...IGNORE_FRAMES
 ];
 function getHighlightFrames(sheet) {
-    const ignoreFrames = new Set([TERRAIN_FRAME, ...IGNORE_FRAMES]);
+    const ignoreFrames = new Set(NON_HIGHLIGHT_FRAMES);
     return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
 }
 function shortenStreetName(name) {
     return name.replace('Street', 'St');
 }
-function isImageEmptyAt(im, idx) {
-    return im.data[idx + RED_OFFSET] === 0 &&
-        im.data[idx + GREEN_OFFSET] === 0 &&
-        im.data[idx + BLUE_OFFSET] === 0 &&
-        im.data[idx + ALPHA_OFFSET] === 0;
-}
-function* iterPixelIndices(im) {
-    const totalPixels = typeof (im) === 'number' ? im : im.height * im.width;
-    let idx = 0;
-    for (let i = 0; i < totalPixels; i++) {
-        yield idx;
-        idx += BYTES_PER_PIXEL;
-    }
-}
-function setPixel(im, idx, r, g, b, a) {
-    im.data[idx + RED_OFFSET] = r;
-    im.data[idx + GREEN_OFFSET] = g;
-    im.data[idx + BLUE_OFFSET] = b;
-    im.data[idx + ALPHA_OFFSET] = a;
-}
 export class Manhattan {
     constructor(options) {
         this.options = options;
-        this.isPenDown = false;
-        this.penPos = null;
         const { w, h } = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
         const streetCanvas = createCanvas(w, h);
         this.streetCanvas = streetCanvas;
         const canvas = createCanvas(w, h);
         canvas.style.cursor = 'none';
         options.root.appendChild(canvas);
+        this.pen = new Pen(canvas, this.updateAndDraw.bind(this));
+        this.resizer = new CanvasResizer(canvas);
         this.canvas = canvas;
-        this.handleResize = this.handleResize.bind(this);
-        this.handleMouseEvent = this.handleMouseEvent.bind(this);
-        this.handleTouchEvent = this.handleTouchEvent.bind(this);
         this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
         this.currentHighlightFrameDetails = this.getNextHighlightFrame();
     }
@@ -90,29 +58,39 @@ export class Manhattan {
         }
         return total;
     }
+    drawStreetSkeleton(ctx) {
+        if (!this.options.showStreetSkeleton)
+            return;
+        ctx.save();
+        ctx.globalAlpha = STREET_SKELETON_ALPHA;
+        this.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
+        ctx.restore();
+    }
     drawPenCursor(ctx) {
-        if (!this.penPos)
+        const { pen } = this;
+        if (!pen.pos)
             return;
         ctx.save();
         ctx.lineWidth = 1;
         ctx.strokeStyle = PAINT_HOVER_STYLE;
         const size = PAINT_RADIUS * 2;
-        ctx.strokeRect(this.penPos.x - PAINT_RADIUS + 0.5, this.penPos.y - PAINT_RADIUS + 0.5, size, size);
+        ctx.strokeRect(pen.pos.x - PAINT_RADIUS + 0.5, pen.pos.y - PAINT_RADIUS + 0.5, size, size);
         ctx.restore();
     }
     updateStreets() {
         const curr = this.currentHighlightFrameDetails;
         if (!curr)
             return;
-        if (!this.isPenDown && curr.pixelsLeft === 0) {
+        const { pen } = this;
+        if (!pen.isDown && curr.pixelsLeft === 0) {
             this.currentHighlightFrameDetails = this.getNextHighlightFrame();
         }
-        if (!(this.penPos && this.isPenDown))
+        if (!(pen.pos && pen.isDown))
             return;
-        const x1 = Math.max(this.penPos.x - PAINT_RADIUS, 0);
-        const y1 = Math.max(this.penPos.y - PAINT_RADIUS, 0);
-        const x2 = Math.min(this.penPos.x + PAINT_RADIUS, this.canvas.width - 1);
-        const y2 = Math.min(this.penPos.y + PAINT_RADIUS, this.canvas.height - 1);
+        const x1 = Math.max(pen.pos.x - PAINT_RADIUS, 0);
+        const y1 = Math.max(pen.pos.y - PAINT_RADIUS, 0);
+        const x2 = Math.min(pen.pos.x + PAINT_RADIUS, this.canvas.width - 1);
+        const y2 = Math.min(pen.pos.y + PAINT_RADIUS, this.canvas.height - 1);
         const w = x2 - x1;
         const h = y2 - y1;
         const sheetCtx = getCanvasCtx2D(this.options.sheet.canvas);
@@ -153,96 +131,18 @@ export class Manhattan {
         this.updateStreets();
         const ctx = getCanvasCtx2D(this.canvas);
         this.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+        this.drawStreetSkeleton(ctx);
         ctx.drawImage(this.streetCanvas, 0, 0);
         this.drawPenCursor(ctx);
         this.drawText(ctx);
     }
-    updatePen(isDown, pctX, pctY) {
-        let stateChanged = false;
-        if (typeof (isDown) === 'boolean') {
-            if (this.isPenDown !== isDown) {
-                this.isPenDown = isDown;
-                stateChanged = true;
-            }
-        }
-        if (typeof (pctX) === 'number' && typeof (pctY) === 'number') {
-            const x = Math.floor(pctX * this.canvas.width);
-            const y = Math.floor(pctY * this.canvas.height);
-            if (!(this.penPos && this.penPos.x === x && this.penPos.y === y)) {
-                this.penPos = { x, y };
-                stateChanged = true;
-            }
-        }
-        else if (pctX === null && pctY === null) {
-            if (this.penPos) {
-                this.penPos = null;
-                stateChanged = true;
-            }
-        }
-        if (stateChanged) {
-            this.updateAndDraw();
-        }
-    }
-    updatePenFromTouch(e) {
-        if (e.type === 'touchcancel' || e.type === 'touchend') {
-            this.updatePen(false, null, null);
-            return;
-        }
-        const touch = e.touches[0];
-        const rect = this.canvas.getBoundingClientRect();
-        const offsetX = Math.max(touch.clientX - rect.left, 0);
-        const offsetY = Math.max(touch.clientY - rect.top, 0);
-        const pctX = Math.min(offsetX, rect.width) / rect.width;
-        const pctY = Math.min(offsetY, rect.height) / rect.height;
-        this.updatePen(true, pctX, pctY);
-    }
-    updatePenFromMouse(e) {
-        const visibleSize = this.canvas.getBoundingClientRect();
-        const pctX = e.offsetX / visibleSize.width;
-        const pctY = e.offsetY / visibleSize.height;
-        if (e.type === 'mouseup') {
-            this.updatePen(false, pctX, pctY);
-        }
-        else if (e.type === 'mouseleave') {
-            this.updatePen(false, null, null);
-        }
-        else if (e.type === 'mousedown') {
-            this.updatePen(true, pctX, pctY);
-        }
-        else if (e.type === 'mousemove') {
-            this.updatePen(undefined, pctX, pctY);
-        }
-    }
-    handleTouchEvent(e) {
-        e.preventDefault();
-        this.updatePenFromTouch(e);
-    }
-    handleMouseEvent(e) {
-        this.updatePenFromMouse(e);
-    }
-    handleResize() {
-        const { canvas } = this;
-        const aspectRatio = this.canvas.width / this.canvas.height;
-        const currAspectRatio = window.innerWidth / window.innerHeight;
-        if (currAspectRatio < aspectRatio) {
-            canvas.classList.remove('full-height');
-            canvas.classList.add('full-width');
-        }
-        else {
-            canvas.classList.remove('full-width');
-            canvas.classList.add('full-height');
-        }
-    }
     start() {
-        window.addEventListener('resize', this.handleResize);
-        MOUSE_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleMouseEvent));
-        TOUCH_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleTouchEvent));
-        this.handleResize();
+        this.resizer.start();
+        this.pen.start();
         this.updateAndDraw();
     }
     stop() {
-        window.removeEventListener('resize', this.handleResize);
-        MOUSE_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleMouseEvent));
-        TOUCH_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleTouchEvent));
+        this.resizer.stop();
+        this.pen.stop();
     }
 }

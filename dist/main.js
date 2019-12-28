@@ -10,10 +10,12 @@ const FONT_OPTIONS = {
     charsPerLine: 16,
 };
 async function main() {
+    const qs = new URLSearchParams(window.location.search);
     const sheet = await loadAsepriteSheet(SPRITESHEET_URL);
     const fontImage = await loadImage(FONT_URL);
     const font = new BitmapFont(fontImage, FONT_OPTIONS);
-    const manhattan = new Manhattan({ sheet, font, root: document.body });
+    const showStreetSkeleton = qs.get('skel') === 'on';
+    const manhattan = new Manhattan({ sheet, font, root: document.body, showStreetSkeleton });
     manhattan.start();
 }
 main().catch(e => {
