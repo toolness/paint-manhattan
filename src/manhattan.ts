@@ -1,6 +1,6 @@
 import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
-import { getCanvasCtx2D, createCanvas, shuffleArray } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
 
@@ -11,13 +11,6 @@ const PAINT_RADIUS = 5;
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 
 const PAINT_STREET_RGBA: RGBA = [238, 195, 154, 255];
-
-const BYTES_PER_PIXEL = 4;
-
-const RED_OFFSET = 0;
-const GREEN_OFFSET = 1;
-const BLUE_OFFSET = 2;
-const ALPHA_OFFSET = 3;
 
 const TERRAIN_FRAME = "Land and water";
 
@@ -39,29 +32,6 @@ function getHighlightFrames(sheet: AsepriteSheet): string[] {
 
 function shortenStreetName(name: string): string {
   return name.replace('Street', 'St');
-}
-
-function isImageEmptyAt(im: ImageData, idx: number): boolean {
-  return im.data[idx + RED_OFFSET] === 0 &&
-    im.data[idx + GREEN_OFFSET] === 0 &&
-    im.data[idx + BLUE_OFFSET] === 0 &&
-    im.data[idx + ALPHA_OFFSET] === 0;
-}
-
-function *iterPixelIndices(im: ImageData|number) {
-  const totalPixels = typeof(im) === 'number' ? im : im.height * im.width;
-  let idx = 0;
-  for (let i = 0; i < totalPixels; i++) {
-    yield idx;
-    idx += BYTES_PER_PIXEL;
-  }
-}
-
-function setPixel(im: ImageData, idx: number, r: number, g: number, b: number, a: number) {
-  im.data[idx + RED_OFFSET] = r;
-  im.data[idx + GREEN_OFFSET] = g;
-  im.data[idx + BLUE_OFFSET] = b;
-  im.data[idx + ALPHA_OFFSET] = a;
 }
 
 type CurrentHighlightFrameDetails = {

@@ -1,3 +1,10 @@
+const BYTES_PER_PIXEL = 4;
+
+const RED_OFFSET = 0;
+const GREEN_OFFSET = 1;
+const BLUE_OFFSET = 2;
+const ALPHA_OFFSET = 3;
+
 export function getCanvasCtx2D(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -49,4 +56,27 @@ export function shuffleArray<T>(a: T[]): T[] {
     a[j] = x;
   }
   return a;
+}
+
+export function isImageEmptyAt(im: ImageData, idx: number): boolean {
+  return im.data[idx + RED_OFFSET] === 0 &&
+    im.data[idx + GREEN_OFFSET] === 0 &&
+    im.data[idx + BLUE_OFFSET] === 0 &&
+    im.data[idx + ALPHA_OFFSET] === 0;
+}
+
+export function *iterPixelIndices(im: ImageData|number) {
+  const totalPixels = typeof(im) === 'number' ? im : im.height * im.width;
+  let idx = 0;
+  for (let i = 0; i < totalPixels; i++) {
+    yield idx;
+    idx += BYTES_PER_PIXEL;
+  }
+}
+
+export function setPixel(im: ImageData, idx: number, r: number, g: number, b: number, a: number) {
+  im.data[idx + RED_OFFSET] = r;
+  im.data[idx + GREEN_OFFSET] = g;
+  im.data[idx + BLUE_OFFSET] = b;
+  im.data[idx + ALPHA_OFFSET] = a;
 }
