@@ -1,6 +1,6 @@
 import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
-import { getCanvasCtx2D, createCanvas } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray } from './util.js';
 
 type RGBA = [number, number, number, number];
 
@@ -85,7 +85,7 @@ export class Manhattan {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.highlightFrames = getHighlightFrames(options.sheet);
+    this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
   }
 
