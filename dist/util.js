@@ -86,3 +86,32 @@ export function moveToTopOfArray(arr, item) {
     arr.push(item);
     return arr;
 }
+/**
+ * This is a poorly-implemented function that attempts to wrap the
+ * given text "in reverse"--that is, it attempts to ensure that
+ * the shortest line of text is at the top rather than the bottom.
+ */
+export function reverseWordWrap(str, width) {
+    const lines = [];
+    const words = str.split(' ').reverse();
+    let currLine = null;
+    for (let word of words) {
+        if (currLine === null) {
+            currLine = word;
+        }
+        else {
+            const newCurrLine = word + ' ' + currLine;
+            if (newCurrLine.length > width) {
+                lines.push(currLine);
+                currLine = word;
+            }
+            else {
+                currLine = newCurrLine;
+            }
+        }
+    }
+    if (currLine) {
+        lines.push(currLine);
+    }
+    return lines.reverse();
+}
