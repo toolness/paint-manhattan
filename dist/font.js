@@ -24,8 +24,15 @@ export class BitmapFont {
     }
     drawText(ctx, text, dx, dy, anchor = 'top-left') {
         switch (anchor) {
-            case 'top-left': this.drawTextAtTopLeft(ctx, text, dx, dy);
-            case 'bottom-right': this.drawTextAtTopLeft(ctx, text, dx - this.options.charWidth * text.length, dy - this.options.charHeight);
+            case 'top-left':
+                this.drawTextAtTopLeft(ctx, text, dx, dy);
+                break;
+            case 'bottom-right':
+                this.drawTextAtTopLeft(ctx, text, dx - this.options.charWidth * text.length, dy - this.options.charHeight);
+                break;
+            case 'center':
+                this.drawTextAtTopLeft(ctx, text, dx - Math.floor((this.options.charWidth * text.length) / 2), dy - Math.floor(this.options.charHeight / 2));
+                break;
         }
     }
 }

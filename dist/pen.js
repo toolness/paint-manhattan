@@ -13,6 +13,7 @@ const TOUCH_EVENTS = [
 export class Pen {
     constructor(canvas, onChange) {
         this.canvas = canvas;
+        this.wasDown = false;
         this.isDown = false;
         this.pos = null;
         this.handleMouseEvent = this.handleMouseEvent.bind(this);
@@ -23,6 +24,7 @@ export class Pen {
         let stateChanged = false;
         if (typeof (isDown) === 'boolean') {
             if (this.isDown !== isDown) {
+                this.wasDown = this.isDown;
                 this.isDown = isDown;
                 stateChanged = true;
             }
