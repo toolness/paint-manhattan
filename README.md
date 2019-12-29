@@ -33,12 +33,12 @@ Then visit http://localhost:8000/.
 
 ## Editing the map
 
-[Aseprite][] is required to edit the map at `manhattan.aseprite`. The metadata
-for each street name is stored in a separate layer per street; they effectively
-function as masks and the actual RGB color of the street isn't important, as long
-as it's not completely transparent.
+[Aseprite][] is required to edit the map at `graphics/manhattan.aseprite`. The
+metadata for each street name is stored in a separate layer per street; they
+effectively function as masks and the actual RGB color of the street isn't
+important, as long as it's not completely transparent.
 
-Once you've edited the map, run `python3 export_spritesheet.py` to export it
+Once you've edited the map, run `python3 export_from_aseprite.py` to export it
 as a spritesheet and associated JSON metadata (alternatively, you can use
 Aseprite's "Export Sprite Sheet" command with the equivalent options).
 

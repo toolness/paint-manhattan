@@ -4,6 +4,10 @@ import subprocess
 from pathlib import Path
 
 
+MY_DIR = Path(__file__).parent.resolve()
+
+GRAPHICS_DIR = MY_DIR / "graphics"
+
 ASE_FILENAME = "manhattan.aseprite"
 
 JSON_FILENAME = "manhattan.json"
@@ -38,7 +42,7 @@ def find_aseprite() -> Path:
 
 def main():
     print(f"Exporting {ASE_FILENAME} to {JSON_FILENAME} and {PNG_FILENAME}...")
-    if subprocess.call([find_aseprite(), *ASEPRITE_ARGS]):
+    if subprocess.call([find_aseprite(), *ASEPRITE_ARGS], cwd=GRAPHICS_DIR):
         sys.exit(1)
     print("Done.")
 
