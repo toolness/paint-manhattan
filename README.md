@@ -15,12 +15,21 @@ was particularly useful.
 
 ## Quick start
 
+[You can play the game here.][game]
+
+If you want to run/develop it locally, clone the repository,
+install [NodeJS][] and [Yarn][] and run:
+
 ```
 yarn
 yarn start
 ```
 
 Then visit http://localhost:8000/.
+
+[game]: https://toolness.github.io/paint-manhattan/
+[NodeJS]: https://nodejs.org/
+[Yarn]: https://yarnpkg.com/
 
 ## Editing the map
 
