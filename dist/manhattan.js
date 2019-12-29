@@ -89,8 +89,8 @@ export class Manhattan {
             return;
         const x1 = Math.max(pen.pos.x - PAINT_RADIUS, 0);
         const y1 = Math.max(pen.pos.y - PAINT_RADIUS, 0);
-        const x2 = Math.min(pen.pos.x + PAINT_RADIUS, this.canvas.width - 1);
-        const y2 = Math.min(pen.pos.y + PAINT_RADIUS, this.canvas.height - 1);
+        const x2 = Math.min(pen.pos.x + PAINT_RADIUS + 1, this.canvas.width - 1);
+        const y2 = Math.min(pen.pos.y + PAINT_RADIUS + 1, this.canvas.height - 1);
         const w = x2 - x1;
         const h = y2 - y1;
         const sheetCtx = getCanvasCtx2D(this.options.sheet.canvas);
