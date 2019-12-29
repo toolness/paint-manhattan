@@ -1,6 +1,6 @@
 import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
-import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray, reverseWordWrap } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
 
@@ -174,8 +174,14 @@ export class Manhattan {
       const pixels = curr.pixelsLeft === 1 ? 'pixel' : 'pixels';
       msg2 = `${curr.pixelsLeft} ${pixels} left.`;
     }
-    font.drawText(ctx, msg1, width, height - font.options.charHeight, 'bottom-right');
     font.drawText(ctx, msg2, width, height, 'bottom-right');
+
+    const msg1Lines = reverseWordWrap(msg1, Math.floor(width / font.options.charWidth));
+    let currY = height - font.options.charHeight;
+    for (let msg1Line of msg1Lines.reverse()) {
+      font.drawText(ctx, msg1Line, width, currY, 'bottom-right');
+      currY -= font.options.charHeight;
+    }
   }
 
   private updateAndDraw() {
