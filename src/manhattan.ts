@@ -41,7 +41,9 @@ function getHighlightFrames(sheet: AsepriteSheet): string[] {
 }
 
 function shortenStreetName(name: string): string {
-  return name.replace('Street', 'St');
+  return name
+    .replace('Street', 'St')
+    .replace('Place', 'Pl');
 }
 
 type CurrentHighlightFrameDetails = {
