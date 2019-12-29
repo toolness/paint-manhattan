@@ -3,7 +3,7 @@ import { BitmapFont } from './font.js';
 import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray, reverseWordWrap } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
-import { SoundEffect } from './audio.js';
+import { SoundEffect, initializeAudio } from './audio.js';
 
 type RGBA = [number, number, number, number];
 
@@ -196,6 +196,7 @@ export class Manhattan {
 
   private updateAndDrawSplashScreen(ctx: CanvasRenderingContext2D) {
     if (this.pen.wasDown && !this.pen.isDown) {
+      initializeAudio();
       this.state = 'playing';
       this.updateAndDraw();
       return;

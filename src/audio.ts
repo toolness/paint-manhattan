@@ -27,9 +27,23 @@ export class OptionalSoundEffect implements SoundEffect {
   }
 }
 
+const audioInitCallbacks: Function[] = [];
+
+/**
+ * This function needs to ultimately be called from an
+ * event handler; it works around the barriers
+ * some web browsers (such as iOS Safari) put in our way
+ * to prevent sites from abusing autoplay.
+ */
+export function initializeAudio() {
+  audioInitCallbacks.forEach(cb => cb());
+  audioInitCallbacks.splice(0);
+}
+
 async function loadAudio(url: string): Promise<HTMLAudioElement> {
   const audio = document.createElement('audio');
   return new Promise((resolve, reject) => {
+    audioInitCallbacks.push(() => audio.load());
     audio.oncanplay = () => {
       resolve(audio);
     };
