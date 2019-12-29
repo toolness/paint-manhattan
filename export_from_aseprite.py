@@ -52,7 +52,9 @@ def main():
         "--split-layers",
         "--filename-format", r"{layer}",
     ])
-    export(aseprite, 'splash')
+    export(aseprite, 'splash', extra_args=[
+        "--ignore-layer", "Background"
+    ])
     print("Done.")
 
 

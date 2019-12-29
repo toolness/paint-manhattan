@@ -202,10 +202,19 @@ export class Manhattan {
       return;
     }
     this.canvas.style.cursor = 'default';
-    ctx.drawImage(this.options.splashImage, 0, 0);
     ctx.save();
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.globalAlpha = 0.33;
+    this.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+    ctx.globalAlpha = 0.04;
+    this.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
+    ctx.globalAlpha = 1.0;
+    ctx.drawImage(this.options.splashImage, 0, 40);
     ctx.globalAlpha = 0.75;
-    this.options.font.drawText(ctx, 'click or tap to start', this.canvas.width / 2, this.canvas.height / 2, 'center');
+
+    const { font } = this.options;
+    font.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - font.options.charHeight, 'center');
     ctx.restore();
   }
 
