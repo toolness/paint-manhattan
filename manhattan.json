@@ -39,7 +39,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Wall Street": {
+   "Water Street": {
     "frame": { "x": 0, "y": 600, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -47,7 +47,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Vesey Street": {
+   "Wall Street": {
     "frame": { "x": 0, "y": 720, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -55,7 +55,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Stone Street": {
+   "Vesey Street": {
     "frame": { "x": 0, "y": 840, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -63,7 +63,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "State Street": {
+   "Thames Street": {
     "frame": { "x": 0, "y": 960, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -71,7 +71,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Rector Street": {
+   "Stone Street": {
     "frame": { "x": 0, "y": 1080, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -79,7 +79,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Pine Street": {
+   "State Street": {
     "frame": { "x": 0, "y": 1200, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -87,7 +87,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Pearl Street": {
+   "Robinson Street/Park Place": {
     "frame": { "x": 0, "y": 1320, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -95,7 +95,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "New Street": {
+   "Rector Street": {
     "frame": { "x": 0, "y": 1440, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -103,7 +103,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Nassau Street": {
+   "Pine Street": {
     "frame": { "x": 0, "y": 1560, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -111,7 +111,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Maiden Lane": {
+   "Pearl Street": {
     "frame": { "x": 0, "y": 1680, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -119,7 +119,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Liberty Street": {
+   "Partition/Fulton Street": {
     "frame": { "x": 0, "y": 1800, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -127,7 +127,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "John Street": {
+   "New Street": {
     "frame": { "x": 0, "y": 1920, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -135,7 +135,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Greenwich Street": {
+   "Nassau Street": {
     "frame": { "x": 0, "y": 2040, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -143,7 +143,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Dey Street": {
+   "Murray Street": {
     "frame": { "x": 0, "y": 2160, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -151,7 +151,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Courtlandt Street": {
+   "Maiden Lane": {
     "frame": { "x": 0, "y": 2280, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -159,7 +159,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Church Street": {
+   "Lombard Street/Trinity Place": {
     "frame": { "x": 0, "y": 2400, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -167,7 +167,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Cedar Street": {
+   "Liberty Street": {
     "frame": { "x": 0, "y": 2520, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -175,7 +175,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Broadway": {
+   "John Street": {
     "frame": { "x": 0, "y": 2640, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -183,7 +183,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Broad Street": {
+   "Gouverneur's Alley": {
     "frame": { "x": 0, "y": 2760, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -191,7 +191,7 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Bridge Street": {
+   "Gold Street": {
     "frame": { "x": 0, "y": 2880, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
@@ -199,8 +199,144 @@
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
    },
-   "Beaver Street": {
+   "Greenwich Street": {
     "frame": { "x": 0, "y": 3000, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Garden Street/Exchange Place": {
+    "frame": { "x": 0, "y": 3120, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Front Street": {
+    "frame": { "x": 0, "y": 3240, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Fair/Fulton Street": {
+    "frame": { "x": 0, "y": 3360, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Dutch Street": {
+    "frame": { "x": 0, "y": 3480, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Dey Street": {
+    "frame": { "x": 0, "y": 3600, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Courtlandt Street": {
+    "frame": { "x": 0, "y": 3720, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Cliff Street": {
+    "frame": { "x": 0, "y": 3840, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Church Street": {
+    "frame": { "x": 0, "y": 3960, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Chatham/Park Row": {
+    "frame": { "x": 0, "y": 4080, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Cedar Street": {
+    "frame": { "x": 0, "y": 4200, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Broadway": {
+    "frame": { "x": 0, "y": 4320, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Broad Street": {
+    "frame": { "x": 0, "y": 4440, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Bridge Street": {
+    "frame": { "x": 0, "y": 4560, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Beekman Street": {
+    "frame": { "x": 0, "y": 4680, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Beaver Street": {
+    "frame": { "x": 0, "y": 4800, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Barclay Street": {
+    "frame": { "x": 0, "y": 4920, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Ann Street": {
+    "frame": { "x": 0, "y": 5040, "w": 160, "h": 120 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
@@ -213,7 +349,7 @@
   "version": "1.2.16.3-x64",
   "image": "manhattan.png",
   "format": "RGBA8888",
-  "size": { "w": 160, "h": 3120 },
+  "size": { "w": 160, "h": 5160 },
   "scale": "1"
  }
 }
