@@ -1,6 +1,6 @@
 import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
-import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
 
@@ -33,6 +33,7 @@ export type ManhattanOptions = {
   font: BitmapFont,
   root: HTMLElement,
   showStreetSkeleton: boolean,
+  startWithStreet?: string,
 };
 
 function getHighlightFrames(sheet: AsepriteSheet): string[] {
@@ -69,7 +70,12 @@ export class Manhattan {
     this.pen = new Pen(canvas, this.updateAndDraw.bind(this));
     this.resizer = new CanvasResizer(canvas);
     this.canvas = canvas;
+
     this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
+    if (options.startWithStreet) {
+      moveToTopOfArray(this.highlightFrames, options.startWithStreet);
+    }
+
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
   }
 
