@@ -7,7 +7,7 @@
 /** ASCII value to subtract from every ASCII character we're asked to print. */
 const CHAR_CODE_OFFSET = 32;
 
-export type BitmapFontAnchor = 'top-left'|'bottom-right';
+export type BitmapFontAnchor = 'top-left'|'bottom-right'|'center';
 
 export type BitmapFontOptions = {
   charWidth: number,
@@ -34,8 +34,22 @@ export class BitmapFont {
 
   drawText(ctx: CanvasRenderingContext2D, text: string, dx: number, dy: number, anchor: BitmapFontAnchor = 'top-left') {
     switch (anchor) {
-      case 'top-left': this.drawTextAtTopLeft(ctx, text, dx, dy);
-      case 'bottom-right': this.drawTextAtTopLeft(ctx, text, dx - this.options.charWidth * text.length, dy - this.options.charHeight);
+      case 'top-left':
+      this.drawTextAtTopLeft(ctx, text, dx, dy);
+      break;
+
+      case 'bottom-right':
+      this.drawTextAtTopLeft(ctx, text, dx - this.options.charWidth * text.length, dy - this.options.charHeight);
+      break;
+
+      case 'center':
+      this.drawTextAtTopLeft(
+        ctx,
+        text,
+        dx - Math.floor((this.options.charWidth * text.length) / 2),
+        dy - Math.floor(this.options.charHeight / 2),
+      );
+      break;
     }
   }
 }

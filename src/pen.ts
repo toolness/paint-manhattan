@@ -15,6 +15,7 @@ const TOUCH_EVENTS = [
 ];
 
 export class Pen {
+  wasDown: boolean = false;
   isDown: boolean = false;
   pos: PenPosition|null = null;
   onChange?: () => void;
@@ -30,6 +31,7 @@ export class Pen {
 
     if (typeof(isDown) === 'boolean') {
       if (this.isDown !== isDown) {
+        this.wasDown = this.isDown;
         this.isDown = isDown;
         stateChanged = true;
       }

@@ -6,6 +6,8 @@ import { OptionalSoundEffect } from "./audio.js";
 
 const SPRITESHEET_URL = "./graphics/manhattan.json";
 
+const SPLASH_URL = "./graphics/splash.png";
+
 const FONT_URL = "./graphics/pman_font01.png";
 
 const SUCCESS_AUDIO_URL = "./audio/success.mp3";
@@ -20,11 +22,14 @@ async function main() {
   const qs = new URLSearchParams(window.location.search);
   const sheet = await loadAsepriteSheet(SPRITESHEET_URL);
   const fontImage = await loadImage(FONT_URL);
+  const splashImage = await loadImage(SPLASH_URL);
   const font = new BitmapFont(fontImage, FONT_OPTIONS);
   const manhattan = new Manhattan({
     sheet,
     font,
+    splashImage,
     root: document.body,
+    skipSplashScreen: qs.get('nosplash') === 'on',
     showStreetSkeleton: !(qs.get('noskel') === 'on'),
     startWithStreet: qs.get('street') || undefined,
     successSoundEffect: new OptionalSoundEffect(SUCCESS_AUDIO_URL),

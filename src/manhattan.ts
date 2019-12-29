@@ -33,6 +33,8 @@ export type ManhattanOptions = {
   sheet: AsepriteSheet,
   font: BitmapFont,
   root: HTMLElement,
+  splashImage: HTMLImageElement,
+  skipSplashScreen: boolean,
   showStreetSkeleton: boolean,
   startWithStreet?: string,
   successSoundEffect: SoundEffect,
@@ -54,6 +56,8 @@ type CurrentHighlightFrameDetails = {
   pixelsLeft: number,
 };
 
+type ManhattanState = 'splash'|'playing';
+
 export class Manhattan {
   readonly resizer: CanvasResizer;
   readonly streetCanvas: HTMLCanvasElement;
@@ -61,17 +65,18 @@ export class Manhattan {
   readonly highlightFrames: string[];
   readonly pen: Pen;
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
+  private state: ManhattanState;
 
   constructor(readonly options: ManhattanOptions) {
     const {w, h} = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
     const streetCanvas = createCanvas(w, h);
     this.streetCanvas = streetCanvas;
     const canvas = createCanvas(w, h);
-    canvas.style.cursor = 'none';
     options.root.appendChild(canvas);
     this.pen = new Pen(canvas, this.updateAndDraw.bind(this));
     this.resizer = new CanvasResizer(canvas);
     this.canvas = canvas;
+    this.state = options.skipSplashScreen ? 'playing' : 'splash';
 
     this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
     if (options.startWithStreet) {
@@ -168,7 +173,7 @@ export class Manhattan {
     }
   }
 
-  private drawText(ctx: CanvasRenderingContext2D) {
+  private drawStatusText(ctx: CanvasRenderingContext2D) {
     const { width, height } = this.canvas;
     const { font } = this.options;
     const curr = this.currentHighlightFrameDetails;
@@ -189,15 +194,35 @@ export class Manhattan {
     }
   }
 
-  private updateAndDraw() {
-    this.updateStreets();
+  private updateAndDrawSplashScreen(ctx: CanvasRenderingContext2D) {
+    if (this.pen.wasDown && !this.pen.isDown) {
+      this.state = 'playing';
+      this.updateAndDraw();
+      return;
+    }
+    this.canvas.style.cursor = 'default';
+    ctx.drawImage(this.options.splashImage, 0, 0);
+    ctx.save();
+    ctx.globalAlpha = 0.75;
+    this.options.font.drawText(ctx, 'click or tap to start', this.canvas.width / 2, this.canvas.height / 2, 'center');
+    ctx.restore();
+  }
 
+  private updateAndDraw() {
     const ctx = getCanvasCtx2D(this.canvas);
-    this.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-    this.drawStreetSkeleton(ctx);
-    ctx.drawImage(this.streetCanvas, 0, 0);
-    this.drawPenCursor(ctx);
-    this.drawText(ctx);
+
+    if (this.state === 'splash') {
+      this.updateAndDrawSplashScreen(ctx);
+    } else if (this.state === 'playing') {
+      this.canvas.style.cursor = 'none';
+      this.updateStreets();
+
+      this.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+      this.drawStreetSkeleton(ctx);
+      ctx.drawImage(this.streetCanvas, 0, 0);
+      this.drawPenCursor(ctx);
+      this.drawStatusText(ctx);
+    }
   }
 
   start() {
