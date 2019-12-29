@@ -182,6 +182,30 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
     "sourceSize": { "w": 160, "h": 120 },
     "duration": 100
+   },
+   "Stone Street": {
+    "frame": { "x": 0, "y": 2760, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "Bridge Street": {
+    "frame": { "x": 0, "y": 2880, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
+   },
+   "John Street": {
+    "frame": { "x": 0, "y": 3000, "w": 160, "h": 120 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 120 },
+    "sourceSize": { "w": 160, "h": 120 },
+    "duration": 100
    }
  },
  "meta": {
@@ -189,7 +213,7 @@
   "version": "1.2.16.3-x64",
   "image": "manhattan.png",
   "format": "RGBA8888",
-  "size": { "w": 160, "h": 2760 },
+  "size": { "w": 160, "h": 3120 },
   "scale": "1"
  }
 }
