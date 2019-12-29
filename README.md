@@ -4,6 +4,15 @@ The streets are based on a map called [Plan of the City of New York][plan]
 that was created sometime between 1790 and 1799. The map is old but the
 streets haven't actually changed much over the past couple centuries.
 
+In situations where the names of streets have changed, the old and new name
+have been separated with a slash; for example, Fair Street was later
+renamed to Fulton Street, so this is represented as "Fair/Fulton Street".
+A number of the renamings were informally verified through internet
+searches, though Forgotten New York's [Lower Manhattan Necrology][nec]
+was particularly useful.
+
+[nec]: https://forgotten-ny.com/1999/09/lower-manhattan-necrology/
+
 ## Quick start
 
 ```
