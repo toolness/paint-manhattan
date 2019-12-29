@@ -14,8 +14,13 @@ async function main() {
     const sheet = await loadAsepriteSheet(SPRITESHEET_URL);
     const fontImage = await loadImage(FONT_URL);
     const font = new BitmapFont(fontImage, FONT_OPTIONS);
-    const showStreetSkeleton = !(qs.get('noskel') === 'on');
-    const manhattan = new Manhattan({ sheet, font, root: document.body, showStreetSkeleton });
+    const manhattan = new Manhattan({
+        sheet,
+        font,
+        root: document.body,
+        showStreetSkeleton: !(qs.get('noskel') === 'on'),
+        startWithStreet: qs.get('street') || undefined,
+    });
     manhattan.start();
 }
 main().catch(e => {

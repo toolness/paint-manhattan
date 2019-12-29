@@ -1,4 +1,4 @@
-import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
 const STREET_SKELETON_ALPHA = 0.33;
@@ -20,7 +20,9 @@ function getHighlightFrames(sheet) {
     return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
 }
 function shortenStreetName(name) {
-    return name.replace('Street', 'St');
+    return name
+        .replace('Street', 'St')
+        .replace('Place', 'Pl');
 }
 export class Manhattan {
     constructor(options) {
@@ -35,6 +37,9 @@ export class Manhattan {
         this.resizer = new CanvasResizer(canvas);
         this.canvas = canvas;
         this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
+        if (options.startWithStreet) {
+            moveToTopOfArray(this.highlightFrames, options.startWithStreet);
+        }
         this.currentHighlightFrameDetails = this.getNextHighlightFrame();
     }
     getNextHighlightFrame() {
