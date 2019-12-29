@@ -3,8 +3,9 @@ import { loadImage } from "./util.js";
 import { BitmapFont } from "./font.js";
 import { Manhattan } from "./manhattan.js";
 import { OptionalSoundEffect } from "./audio.js";
-const SPRITESHEET_URL = "./manhattan.json";
-const FONT_URL = "./pman_font01.png";
+const SPRITESHEET_URL = "./graphics/manhattan.json";
+const FONT_URL = "./graphics/pman_font01.png";
+const SUCCESS_AUDIO_URL = "./audio/success.mp3";
 const FONT_OPTIONS = {
     charWidth: 6,
     charHeight: 8,
@@ -21,7 +22,7 @@ async function main() {
         root: document.body,
         showStreetSkeleton: !(qs.get('noskel') === 'on'),
         startWithStreet: qs.get('street') || undefined,
-        successSoundEffect: new OptionalSoundEffect('./audio/success.mp3'),
+        successSoundEffect: new OptionalSoundEffect(SUCCESS_AUDIO_URL),
     });
     manhattan.start();
 }
