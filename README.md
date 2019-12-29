@@ -1,4 +1,4 @@
-A hacky prototype to help me learn the streets of Manhattan.
+This is a simple game to help me learn the streets of Manhattan.
 
 The streets are based on a map called [Plan of the City of New York][plan]
 that was created sometime between 1790 and 1799. The map is old but the
