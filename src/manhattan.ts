@@ -10,7 +10,7 @@ const STREET_SKELETON_ALPHA = 0.33;
 
 const PAINT_RADIUS = 5;
 
-const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 0.75)';
+const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 
 const PAINT_STREET_RGBA: RGBA = [238, 195, 154, 255];
 
