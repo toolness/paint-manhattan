@@ -2,6 +2,7 @@ import { loadAsepriteSheet } from "./aseprite-sheet.js";
 import { loadImage } from "./util.js";
 import { BitmapFont } from "./font.js";
 import { Manhattan } from "./manhattan.js";
+import { OptionalSoundEffect } from "./audio.js";
 const SPRITESHEET_URL = "./manhattan.json";
 const FONT_URL = "./pman_font01.png";
 const FONT_OPTIONS = {
@@ -20,6 +21,7 @@ async function main() {
         root: document.body,
         showStreetSkeleton: !(qs.get('noskel') === 'on'),
         startWithStreet: qs.get('street') || undefined,
+        successSoundEffect: new OptionalSoundEffect('./audio/success.mp3'),
     });
     manhattan.start();
 }

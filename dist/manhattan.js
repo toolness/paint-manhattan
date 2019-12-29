@@ -116,6 +116,9 @@ export class Manhattan {
         if (pixelsAdded) {
             streetCtx.putImageData(streetData, x1, y1);
             curr.pixelsLeft -= pixelsAdded;
+            if (curr.pixelsLeft === 0) {
+                this.options.successSoundEffect.play();
+            }
         }
     }
     drawText(ctx) {
