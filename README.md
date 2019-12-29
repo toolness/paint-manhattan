@@ -42,6 +42,13 @@ Once you've edited the map, run `python3 export_spritesheet.py` to export it
 as a spritesheet and associated JSON metadata (alternatively, you can use
 Aseprite's "Export Sprite Sheet" command with the equivalent options).
 
+## About the audio
+
+Sound effects were created using increpare's [Bfxr][]. Original Bfxr files are
+located in the `audio/` directory.
+
+[Bfxr]: https://www.bfxr.net/
+
 ## About the font
 
 The font is taken from [pman-sdl][], an ancient Pac-Man clone I wrote in 2003. I

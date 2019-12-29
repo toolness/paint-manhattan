@@ -3,6 +3,7 @@ import { BitmapFont } from './font.js';
 import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray, reverseWordWrap } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
+import { SoundEffect } from './audio.js';
 
 type RGBA = [number, number, number, number];
 
@@ -34,6 +35,7 @@ export type ManhattanOptions = {
   root: HTMLElement,
   showStreetSkeleton: boolean,
   startWithStreet?: string,
+  successSoundEffect: SoundEffect,
 };
 
 function getHighlightFrames(sheet: AsepriteSheet): string[] {
@@ -160,6 +162,9 @@ export class Manhattan {
     if (pixelsAdded) {
       streetCtx.putImageData(streetData, x1, y1);
       curr.pixelsLeft -= pixelsAdded;
+      if (curr.pixelsLeft === 0) {
+        this.options.successSoundEffect.play();
+      }
     }
   }
 
