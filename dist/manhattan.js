@@ -7,7 +7,8 @@ const STREET_SKELETON_ALPHA = 0.33;
 const TIMER_INTERVAL_MS = 1500;
 const PAINT_RADIUS = 5;
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
-const PAINT_STREET_RGBA = [238, 195, 154, 255];
+const PAINT_INACTIVE_STREET_RGBA = [238, 195, 154, 255];
+const PAINT_ACTIVE_STREET_RGBA = [153, 229, 80, 255];
 const TERRAIN_FRAME = "Land and water";
 const STREETS_FRAME = "Streets";
 const IGNORE_FRAMES = [
@@ -41,11 +42,30 @@ export class Manhattan {
         this.canvas = canvas;
         this.splashTimer = new Timer(TIMER_INTERVAL_MS, this.updateAndDraw);
         this.state = options.skipSplashScreen ? 'playing' : 'splash';
-        this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
+        let highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
         if (options.startWithStreet) {
-            moveToTopOfArray(this.highlightFrames, options.startWithStreet);
+            moveToTopOfArray(highlightFrames, options.startWithStreet);
         }
+        if (options.minStreetSize > 0) {
+            highlightFrames = highlightFrames.filter(frame => {
+                return this.countPixelsToBePainted(frame) >= options.minStreetSize;
+            });
+        }
+        this.highlightFrames = highlightFrames;
         this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+    }
+    unhighlightActiveStreet() {
+        const streetCtx = getCanvasCtx2D(this.streetCanvas);
+        const streetIm = streetCtx.getImageData(0, 0, this.streetCanvas.width, this.streetCanvas.height);
+        // This is a bit brute-force, we're just iterating through all non-empty pixels and
+        // setting them to the un-highlighted color, which is fine for now because all
+        // the street canvas's pixels should be the same color anyways.
+        for (let idx of iterPixelIndices(streetIm)) {
+            if (!isImageEmptyAt(streetIm, idx)) {
+                setPixel(streetIm, idx, ...PAINT_INACTIVE_STREET_RGBA);
+            }
+        }
+        streetCtx.putImageData(streetIm, 0, 0);
     }
     getNextHighlightFrame() {
         const name = this.highlightFrames.pop();
@@ -93,6 +113,7 @@ export class Manhattan {
             return;
         const { pen } = this;
         if (!pen.isDown && curr.pixelsLeft === 0) {
+            this.unhighlightActiveStreet();
             this.currentHighlightFrameDetails = this.getNextHighlightFrame();
         }
         if (!(pen.pos && pen.isDown))
@@ -113,7 +134,7 @@ export class Manhattan {
             if (shouldBeHighlighted) {
                 const isHighlighted = !isImageEmptyAt(streetData, idx);
                 if (!isHighlighted) {
-                    setPixel(streetData, idx, ...PAINT_STREET_RGBA);
+                    setPixel(streetData, idx, ...PAINT_ACTIVE_STREET_RGBA);
                     pixelsAdded += 1;
                 }
             }
