@@ -35,6 +35,7 @@ const NON_HIGHLIGHT_FRAMES = [
 export type ManhattanOptions = {
   sheet: AsepriteSheet,
   font: BitmapFont,
+  tinyFont: BitmapFont,
   root: HTMLElement,
   splashImage: HTMLImageElement,
   skipSplashScreen: boolean,
@@ -238,8 +239,8 @@ export class Manhattan {
 
     if (this.splashTimer.tick % 2 === 0) {
       ctx.globalAlpha = 0.75;
-      const { font } = this.options;
-      font.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - font.options.charHeight, 'center');
+      const { tinyFont } = this.options;
+      tinyFont.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - tinyFont.options.charHeight, 'center');
     }
     ctx.restore();
   }
