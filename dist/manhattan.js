@@ -185,7 +185,7 @@ export class Manhattan {
         if (this.splashTimer.tick % 2 === 0) {
             ctx.globalAlpha = 0.75;
             const { tinyFont } = this.options;
-            tinyFont.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - tinyFont.options.charHeight, 'center');
+            tinyFont.drawText(ctx, 'Click or tap to start', this.canvas.width / 2, this.canvas.height - tinyFont.options.charHeight, 'center');
         }
         ctx.restore();
     }
