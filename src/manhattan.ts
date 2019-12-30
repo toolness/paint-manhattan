@@ -1,6 +1,6 @@
 import { AsepriteSheet } from './aseprite-sheet.js';
 import { BitmapFont } from './font.js';
-import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray, reverseWordWrap } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray} from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
 import { SoundEffect, initializeAudio } from './audio.js';
