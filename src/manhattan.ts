@@ -182,21 +182,29 @@ export class Manhattan {
 
   private drawStatusText(ctx: CanvasRenderingContext2D) {
     const { width, height } = this.canvas;
-    const { font } = this.options;
+    const { font: big, tinyFont: small } = this.options;
     const curr = this.currentHighlightFrameDetails;
-    let msg1 = "Hooray!"
-    let msg2 = "You painted Manhattan.";
-    if (curr) {
-      msg1 = `Paint ${shortenStreetName(curr.name)}.`;
-      const pixels = curr.pixelsLeft === 1 ? 'pixel' : 'pixels';
-      msg2 = `${curr.pixelsLeft} ${pixels} left.`;
-    }
-    font.drawText(ctx, msg2, width, height, 'bottom-right');
 
-    const msg1Lines = reverseWordWrap(msg1, Math.floor(width / font.options.charWidth));
-    let currY = height - font.options.charHeight;
-    for (let msg1Line of msg1Lines.reverse()) {
-      font.drawText(ctx, msg1Line, width, currY, 'bottom-right');
+    type Line = {text: string, font: BitmapFont, rightPadding?: number};
+    const lines: Line[] = [];
+
+    if (curr) {
+      lines.push({text: 'Paint', font: small});
+      lines.push({text: shortenStreetName(curr.name).toUpperCase(), font: big});
+      lines.push({text: '', font: small});
+      const pixels = curr.pixelsLeft === 1 ? 'pixel' : 'pixels';
+      lines.push({text: `${curr.pixelsLeft} ${pixels} left`, font: small});
+    } else {
+      lines.push({text: 'HOORAY!', font: big, rightPadding: 0});
+      lines.push({text: 'You painted Manhattan', font: small});
+    }
+
+    let currY = height - 1;
+
+    for (let line of lines.reverse()) {
+      const { font, text, rightPadding } = line;
+      const x = width - (typeof(rightPadding) === 'number' ? rightPadding : 2);
+      font.drawText(ctx, text, x, currY, 'bottom-right');
       currY -= font.options.charHeight;
     }
   }
