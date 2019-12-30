@@ -11,6 +11,10 @@ A number of the renamings were informally verified through internet
 searches, though Forgotten New York's [Lower Manhattan Necrology][nec]
 was particularly useful.
 
+Streets which no longer exist in present-day Manhattan, or whose
+names were ambiguous, are not included in the game as streets for
+the player to paint, though they are still visible on the screen.
+
 [nec]: https://forgotten-ny.com/1999/09/lower-manhattan-necrology/
 
 ## Quick start
