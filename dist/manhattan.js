@@ -1,4 +1,4 @@
-import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray, reverseWordWrap } from './util.js';
+import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray } from './util.js';
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
 import { initializeAudio } from './audio.js';
@@ -99,8 +99,8 @@ export class Manhattan {
             return;
         const x1 = Math.max(pen.pos.x - PAINT_RADIUS, 0);
         const y1 = Math.max(pen.pos.y - PAINT_RADIUS, 0);
-        const x2 = Math.min(pen.pos.x + PAINT_RADIUS + 1, this.canvas.width - 1);
-        const y2 = Math.min(pen.pos.y + PAINT_RADIUS + 1, this.canvas.height - 1);
+        const x2 = Math.min(pen.pos.x + PAINT_RADIUS + 1, this.canvas.width);
+        const y2 = Math.min(pen.pos.y + PAINT_RADIUS + 1, this.canvas.height);
         const w = x2 - x1;
         const h = y2 - y1;
         const sheetCtx = getCanvasCtx2D(this.options.sheet.canvas);
@@ -128,20 +128,25 @@ export class Manhattan {
     }
     drawStatusText(ctx) {
         const { width, height } = this.canvas;
-        const { font } = this.options;
+        const { font: big, tinyFont: small } = this.options;
         const curr = this.currentHighlightFrameDetails;
-        let msg1 = "Hooray!";
-        let msg2 = "You painted Manhattan.";
+        const lines = [];
         if (curr) {
-            msg1 = `Paint ${shortenStreetName(curr.name)}.`;
+            lines.push({ text: 'Paint', font: small });
+            lines.push({ text: shortenStreetName(curr.name).toUpperCase(), font: big });
+            lines.push({ text: '', font: small });
             const pixels = curr.pixelsLeft === 1 ? 'pixel' : 'pixels';
-            msg2 = `${curr.pixelsLeft} ${pixels} left.`;
+            lines.push({ text: `${curr.pixelsLeft} ${pixels} left`, font: small });
         }
-        font.drawText(ctx, msg2, width, height, 'bottom-right');
-        const msg1Lines = reverseWordWrap(msg1, Math.floor(width / font.options.charWidth));
-        let currY = height - font.options.charHeight;
-        for (let msg1Line of msg1Lines.reverse()) {
-            font.drawText(ctx, msg1Line, width, currY, 'bottom-right');
+        else {
+            lines.push({ text: 'HOORAY!', font: big, rightPadding: 0 });
+            lines.push({ text: 'You painted Manhattan', font: small });
+        }
+        let currY = height - 1;
+        for (let line of lines.reverse()) {
+            const { font, text, rightPadding } = line;
+            const x = width - (typeof (rightPadding) === 'number' ? rightPadding : 2);
+            font.drawText(ctx, text, x, currY, 'bottom-right');
             currY -= font.options.charHeight;
         }
     }
@@ -179,8 +184,8 @@ export class Manhattan {
         ctx.drawImage(this.options.splashImage, 0, 40);
         if (this.splashTimer.tick % 2 === 0) {
             ctx.globalAlpha = 0.75;
-            const { font } = this.options;
-            font.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - font.options.charHeight, 'center');
+            const { tinyFont } = this.options;
+            tinyFont.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - tinyFont.options.charHeight, 'center');
         }
         ctx.restore();
     }
