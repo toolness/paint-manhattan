@@ -47,7 +47,7 @@ export type ManhattanOptions = {
   successSoundEffect: SoundEffect,
 };
 
-function getHighlightFrames(sheet: AsepriteSheet): string[] {
+export function getStreetFrames(sheet: AsepriteSheet): string[] {
   const ignoreFrames = new Set(NON_HIGHLIGHT_FRAMES);
   return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
 }
@@ -88,7 +88,7 @@ export class Manhattan {
     this.splashTimer = new Timer(TIMER_INTERVAL_MS, this.updateAndDraw);
     this.state = options.skipSplashScreen ? 'playing' : 'splash';
 
-    let highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
+    let highlightFrames = shuffleArray(getStreetFrames(options.sheet));
     if (options.startWithStreet) {
       moveToTopOfArray(highlightFrames, options.startWithStreet);
     }

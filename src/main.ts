@@ -3,16 +3,7 @@ import { loadImage, safeParseInt } from "./util.js";
 import { BitmapFont, BitmapFontOptions } from "./font.js";
 import { Manhattan } from "./manhattan.js";
 import { OptionalSoundEffect } from "./audio.js";
-
-const SPRITESHEET_URL = "./graphics/manhattan.json";
-
-const SPLASH_URL = "./graphics/splash.png";
-
-const FONT_URL = "./graphics/pman_font01.png";
-
-const TINY_FONT_URL = "./graphics/tiny_font.png";
-
-const SUCCESS_AUDIO_URL = "./audio/success.mp3";
+import * as urls from './urls.js';
 
 const FONT_OPTIONS: BitmapFontOptions = {
   charWidth: 6,
@@ -28,10 +19,10 @@ const TINY_FONT_OPTIONS: BitmapFontOptions = {
 
 async function main() {
   const qs = new URLSearchParams(window.location.search);
-  const sheet = await loadAsepriteSheet(SPRITESHEET_URL);
-  const fontImage = await loadImage(FONT_URL);
-  const tinyFontImage = await loadImage(TINY_FONT_URL);
-  const splashImage = await loadImage(SPLASH_URL);
+  const sheet = await loadAsepriteSheet(urls.SPRITESHEET_URL);
+  const fontImage = await loadImage(urls.FONT_URL);
+  const tinyFontImage = await loadImage(urls.TINY_FONT_URL);
+  const splashImage = await loadImage(urls.SPLASH_URL);
   const font = new BitmapFont(fontImage, FONT_OPTIONS);
   const tinyFont = new BitmapFont(tinyFontImage, TINY_FONT_OPTIONS);
   const manhattan = new Manhattan({
@@ -44,7 +35,7 @@ async function main() {
     skipSplashScreen: qs.get('nosplash') === 'on',
     showStreetSkeleton: !(qs.get('noskel') === 'on'),
     startWithStreet: qs.get('street') || undefined,
-    successSoundEffect: new OptionalSoundEffect(SUCCESS_AUDIO_URL),
+    successSoundEffect: new OptionalSoundEffect(urls.SUCCESS_AUDIO_URL),
   });
   manhattan.start();
 }

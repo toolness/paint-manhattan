@@ -14,6 +14,13 @@
       <p>Streets with a pixel count below this value won't be shown to the player. You can set this absurdly high to instantly get a win screen, which can be useful for debugging that view.</p>
     </div>
     <div class="row">
+      <label for="street">Initial street</label>
+      <select name="street" id="street">
+        <option value="">(Random)</option>
+      </select>
+      <p>The initial street to prompt the player for painting. Note that if it is smaller than the minimum street size, it won't be shown!</p>
+    </div>
+    <div class="row">
       <label for="nosplash">
         <input type="checkbox" name="nosplash" id="nosplash">
         Skip splash screen
@@ -29,4 +36,5 @@
     </div>
     <button type="submit" class="button-primary">Start game</button>
   </form>
+  <script type="module" src="./dist/debug.js"></script>
 </div>
