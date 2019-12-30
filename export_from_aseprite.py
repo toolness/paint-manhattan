@@ -55,6 +55,9 @@ def main():
     export(aseprite, 'splash', extra_args=[
         "--ignore-layer", "Background"
     ])
+    export(aseprite, 'pman_font01', extra_args=[
+        "--ignore-layer", "Background"
+    ])
     print("Done.")
 
 
