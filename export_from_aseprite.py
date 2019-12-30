@@ -48,16 +48,18 @@ def find_aseprite() -> Path:
 
 def main():
     aseprite = find_aseprite()
+
     export(aseprite, 'manhattan', extra_args=[
         "--split-layers",
         "--filename-format", r"{layer}",
     ])
-    export(aseprite, 'splash', extra_args=[
-        "--ignore-layer", "Background"
-    ])
-    export(aseprite, 'pman_font01', extra_args=[
-        "--ignore-layer", "Background"
-    ])
+
+    ignore_bg = ["--ignore-layer", "Background"]
+
+    export(aseprite, 'splash', extra_args=ignore_bg)
+    export(aseprite, 'pman_font01', extra_args=ignore_bg)
+    export(aseprite, 'tiny_font', extra_args=ignore_bg)
+
     print("Done.")
 
 
