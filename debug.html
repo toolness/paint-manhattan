@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./vendor/skeleton/normalize.css">
+<link rel="stylesheet" href="./vendor/skeleton/skeleton.css">
+<title>Debug Paint Manhattan Circa 1799</title>
+<div class="container">
+  <h1>Debug Paint Manhattan Circa 1799</h1>
+  <p>This form will help you debug the game, and/or create a custom game that plays your way.</p>
+  <form method="get" action="index.html">
+    <div class="row">
+      <label for="minpix">Minimum street size, in pixels</label>
+      <input type="number" value="0" name="minpix" id="minpix">
+      <p>Streets with a pixel count below this value won't be shown to the player. You can set this absurdly high to instantly get a win screen, which can be useful for debugging that view.</p>
+    </div>
+    <div class="row">
+      <label for="nosplash">
+        <input type="checkbox" name="nosplash" id="nosplash">
+        Skip splash screen
+      </label>
+      <p>This will skip the intro splash screen, placing the user directly in the game. Note that audio on mobile browsers may not work when this option is in effect.</p>
+    </div>
+    <div class="row">
+      <label for="noskel">
+        <input type="checkbox" name="noskel" id="noskel">
+        Hide street skeleton
+      </label>
+      <p>This will prevent the "silhouette" of Manhattan's street layout from being displayed, which can make the game much harder.</p>
+    </div>
+    <button type="submit" class="button-primary">Start game</button>
+  </form>
+</div>

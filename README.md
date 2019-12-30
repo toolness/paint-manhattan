@@ -15,13 +15,13 @@ Streets which no longer exist in present-day Manhattan, or whose
 names were ambiguous, are not included in the game as streets for
 the player to paint, though they are still visible on the screen.
 
+[You can play the game here.][game]
+
 [nec]: https://forgotten-ny.com/1999/09/lower-manhattan-necrology/
 
 ## Quick start
 
-[You can play the game here.][game]
-
-If you want to run/develop it locally, clone the repository,
+If you want to run/develop the game locally, clone the repository,
 install [NodeJS][] and [Yarn][] and run:
 
 ```
@@ -30,6 +30,8 @@ yarn start
 ```
 
 Then visit http://localhost:8000/.
+
+You can also visit http://localhost:8000/debug.html for some debugging options.
 
 [game]: https://toolness.github.io/paint-manhattan/
 [NodeJS]: https://nodejs.org/
