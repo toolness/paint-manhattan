@@ -41,6 +41,7 @@ export type ManhattanOptions = {
   skipSplashScreen: boolean,
   showStreetSkeleton: boolean,
   startWithStreet?: string,
+  minStreetSize: number,
   successSoundEffect: SoundEffect,
 };
 
@@ -85,10 +86,16 @@ export class Manhattan {
     this.splashTimer = new Timer(TIMER_INTERVAL_MS, this.updateAndDraw);
     this.state = options.skipSplashScreen ? 'playing' : 'splash';
 
-    this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
+    let highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
     if (options.startWithStreet) {
-      moveToTopOfArray(this.highlightFrames, options.startWithStreet);
+      moveToTopOfArray(highlightFrames, options.startWithStreet);
     }
+    if (options.minStreetSize > 0) {
+      highlightFrames = highlightFrames.filter(frame => {
+        return this.countPixelsToBePainted(frame) >= options.minStreetSize;
+      });
+    }
+    this.highlightFrames = highlightFrames;
 
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
   }

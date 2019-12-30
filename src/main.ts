@@ -1,5 +1,5 @@
 import { loadAsepriteSheet } from "./aseprite-sheet.js";
-import { loadImage } from "./util.js";
+import { loadImage, safeParseInt } from "./util.js";
 import { BitmapFont, BitmapFontOptions } from "./font.js";
 import { Manhattan } from "./manhattan.js";
 import { OptionalSoundEffect } from "./audio.js";
@@ -40,6 +40,7 @@ async function main() {
     tinyFont,
     splashImage,
     root: document.body,
+    minStreetSize: safeParseInt(qs.get('minpix'), 0),
     skipSplashScreen: qs.get('nosplash') === 'on',
     showStreetSkeleton: !(qs.get('noskel') === 'on'),
     startWithStreet: qs.get('street') || undefined,

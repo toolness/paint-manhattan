@@ -130,3 +130,10 @@ export function reverseWordWrap(str: string, width: number): string[] {
 
   return lines.reverse();
 }
+
+export function safeParseInt(s: string|null, defaultValue: number): number {
+  if (s === null) return defaultValue;
+  const value = parseInt(s);
+  if (isNaN(value)) return defaultValue;
+  return value;
+}
