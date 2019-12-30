@@ -2,7 +2,9 @@ import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEm
 import { CanvasResizer } from './canvas-resizer.js';
 import { Pen } from './pen.js';
 import { initializeAudio } from './audio.js';
+import { Timer } from './timer.js';
 const STREET_SKELETON_ALPHA = 0.33;
+const TIMER_INTERVAL_MS = 1500;
 const PAINT_RADIUS = 5;
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 const PAINT_STREET_RGBA = [238, 195, 154, 255];
@@ -33,9 +35,11 @@ export class Manhattan {
         this.streetCanvas = streetCanvas;
         const canvas = createCanvas(w, h);
         options.root.appendChild(canvas);
-        this.pen = new Pen(canvas, this.updateAndDraw.bind(this));
+        this.updateAndDraw = this.updateAndDraw.bind(this);
+        this.pen = new Pen(canvas, this.updateAndDraw);
         this.resizer = new CanvasResizer(canvas);
         this.canvas = canvas;
+        this.splashTimer = new Timer(TIMER_INTERVAL_MS, this.updateAndDraw);
         this.state = options.skipSplashScreen ? 'playing' : 'splash';
         this.highlightFrames = shuffleArray(getHighlightFrames(options.sheet));
         if (options.startWithStreet) {
@@ -141,11 +145,26 @@ export class Manhattan {
             currY -= font.options.charHeight;
         }
     }
+    handleEnterState() {
+        if (this.state === 'splash') {
+            this.splashTimer.start();
+        }
+    }
+    handleExitState() {
+        if (this.state === 'splash') {
+            this.splashTimer.stop();
+        }
+    }
+    changeState(newState) {
+        this.handleExitState();
+        this.state = newState;
+        this.handleEnterState();
+        this.updateAndDraw();
+    }
     updateAndDrawSplashScreen(ctx) {
         if (this.pen.wasDown && !this.pen.isDown) {
             initializeAudio();
-            this.state = 'playing';
-            this.updateAndDraw();
+            this.changeState('playing');
             return;
         }
         this.canvas.style.cursor = 'default';
@@ -158,9 +177,11 @@ export class Manhattan {
         this.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
         ctx.globalAlpha = 1.0;
         ctx.drawImage(this.options.splashImage, 0, 40);
-        ctx.globalAlpha = 0.75;
-        const { font } = this.options;
-        font.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - font.options.charHeight, 'center');
+        if (this.splashTimer.tick % 2 === 0) {
+            ctx.globalAlpha = 0.75;
+            const { font } = this.options;
+            font.drawText(ctx, 'Click or tap to start.', this.canvas.width / 2, this.canvas.height - font.options.charHeight, 'center');
+        }
         ctx.restore();
     }
     updateAndDraw() {
@@ -181,9 +202,11 @@ export class Manhattan {
     start() {
         this.resizer.start();
         this.pen.start();
+        this.handleEnterState();
         this.updateAndDraw();
     }
     stop() {
+        this.handleExitState();
         this.resizer.stop();
         this.pen.stop();
     }
