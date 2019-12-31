@@ -19,6 +19,8 @@ const NON_HIGHLIGHT_FRAMES = [
     STREETS_FRAME,
     ...IGNORE_FRAMES
 ];
+const SCORE_BONUS_STREET_FINISHED = 10;
+const SCORE_PENALTY_COMPLETE_MISS = 2;
 export function getStreetFrames(sheet) {
     const ignoreFrames = new Set(NON_HIGHLIGHT_FRAMES);
     return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
@@ -31,6 +33,7 @@ function shortenStreetName(name) {
 export class Manhattan {
     constructor(options) {
         this.options = options;
+        this.score = 0;
         const { w, h } = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
         const streetCanvas = createCanvas(w, h);
         this.streetCanvas = streetCanvas;
@@ -129,6 +132,7 @@ export class Manhattan {
         const streetCtx = getCanvasCtx2D(this.streetCanvas);
         const streetData = streetCtx.getImageData(x1, y1, w, h);
         let pixelsAdded = 0;
+        let isCompleteMiss = true;
         for (let idx of iterPixelIndices(frameData)) {
             const shouldBeHighlighted = !isImageEmptyAt(frameData, idx);
             if (shouldBeHighlighted) {
@@ -137,6 +141,7 @@ export class Manhattan {
                     setPixel(streetData, idx, ...PAINT_ACTIVE_STREET_RGBA);
                     pixelsAdded += 1;
                 }
+                isCompleteMiss = false;
             }
         }
         if (pixelsAdded) {
@@ -144,7 +149,11 @@ export class Manhattan {
             curr.pixelsLeft -= pixelsAdded;
             if (curr.pixelsLeft === 0) {
                 this.options.successSoundEffect.play();
+                this.score += SCORE_BONUS_STREET_FINISHED;
             }
+        }
+        else if (isCompleteMiss && curr.pixelsLeft > 0) {
+            this.score = Math.max(this.score - SCORE_PENALTY_COMPLETE_MISS, 0);
         }
     }
     drawStatusText(ctx) {
@@ -170,6 +179,12 @@ export class Manhattan {
             font.drawText(ctx, text, x, currY, 'bottom-right');
             currY -= font.options.charHeight;
         }
+    }
+    drawScore(ctx) {
+        const { tinyFont } = this.options;
+        const x = 1;
+        const y = this.canvas.height - tinyFont.options.charHeight - 1;
+        tinyFont.drawText(ctx, `Score: ${this.score}`, x, y);
     }
     handleEnterState() {
         if (this.state === 'splash') {
@@ -223,6 +238,7 @@ export class Manhattan {
             ctx.drawImage(this.streetCanvas, 0, 0);
             this.drawPenCursor(ctx);
             this.drawStatusText(ctx);
+            this.drawScore(ctx);
         }
     }
     start() {
