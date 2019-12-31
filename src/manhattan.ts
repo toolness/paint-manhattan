@@ -49,6 +49,7 @@ export type ManhattanOptions = {
   startWithStreet?: string,
   minStreetSize: number,
   successSoundEffect: SoundEffect,
+  missSoundEffect: SoundEffect,
 };
 
 export function getStreetFrames(sheet: AsepriteSheet): string[] {
@@ -218,6 +219,7 @@ export class Manhattan {
       }
     } else if (isCompleteMiss && curr.pixelsLeft > 0) {
       this.score = Math.max(this.score - SCORE_PENALTY_COMPLETE_MISS, 0);
+      this.options.missSoundEffect.play();
     }
   }
 
