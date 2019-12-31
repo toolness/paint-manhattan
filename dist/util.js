@@ -50,10 +50,24 @@ export function shuffleArray(a) {
     return a;
 }
 export function isImageEmptyAt(im, idx) {
-    return im.data[idx + RED_OFFSET] === 0 &&
-        im.data[idx + GREEN_OFFSET] === 0 &&
-        im.data[idx + BLUE_OFFSET] === 0 &&
-        im.data[idx + ALPHA_OFFSET] === 0;
+    // This is really weird; ideally we'd compare r/g/b/a values to zero,
+    // which is what we used to do, except that Firefox perturbs
+    // some of the values from our original source images, which is very
+    // odd.  For instance, pixels that Chrome reports as being (0, 0, 0, 0)
+    // will be reported as (0, 255, 0, 1) by Firefox. So a more cross-browser
+    // way to test this is by just checking whether the alpha value is close
+    // to zero.
+    return im.data[idx + ALPHA_OFFSET] <= 1;
+}
+/** Return the pixel value as an (r, g, b, a) string for debugging. */
+export function getPixelStr(im, idx) {
+    const [r, g, b, a] = [
+        im.data[idx + RED_OFFSET],
+        im.data[idx + GREEN_OFFSET],
+        im.data[idx + BLUE_OFFSET],
+        im.data[idx + ALPHA_OFFSET],
+    ];
+    return `(${r}, ${g}, ${b}, ${a})`;
 }
 export function* iterPixelIndices(im) {
     const totalPixels = typeof (im) === 'number' ? im : im.height * im.width;
