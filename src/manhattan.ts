@@ -62,6 +62,11 @@ function shortenStreetName(name: string): string {
     .replace('Place', 'Pl');
 }
 
+function getPixelsLeftText(pixelsLeft: number): string {
+  const pixels = pixelsLeft === 1 ? 'pixel' : 'pixels';
+  return `${pixelsLeft} ${pixels} left`;
+}
+
 type CurrentHighlightFrameDetails = {
   name: string,
   pixelsLeft: number,
@@ -225,11 +230,14 @@ export class Manhattan {
     const lines: Line[] = [];
 
     if (curr) {
-      lines.push({text: 'Paint', font: small});
+      const done = curr.pixelsLeft === 0;
+      lines.push({text: done ? 'You painted' : 'Paint', font: small});
       lines.push({text: shortenStreetName(curr.name).toUpperCase(), font: big});
       lines.push({text: '', font: small});
-      const pixels = curr.pixelsLeft === 1 ? 'pixel' : 'pixels';
-      lines.push({text: `${curr.pixelsLeft} ${pixels} left`, font: small});
+      lines.push({
+        text: done ? 'Lift your finger to continue' : getPixelsLeftText(curr.pixelsLeft),
+        font: small
+      });
     } else {
       lines.push({text: 'HOORAY!', font: big, rightPadding: 0});
       lines.push({text: 'You painted Manhattan', font: small});
