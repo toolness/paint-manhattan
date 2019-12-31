@@ -3,6 +3,8 @@ import { createCanvas, shuffleArray, moveToTopOfArray, getCanvasCtx2D, iterPixel
 import { BitmapFont } from "../font.js";
 import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "./sheet-frames.js";
 import { ManhattanState } from "./state.js";
+import { StreetStoryState } from "./street-story.js";
+import { shortenStreetName } from "./streets.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -26,12 +28,6 @@ type CurrentHighlightFrameDetails = {
   name: string,
   pixelsLeft: number,
 };
-
-function shortenStreetName(name: string): string {
-  return name
-    .replace('Street', 'St')
-    .replace('Place', 'Pl');
-}
 
 function getPixelsLeftText(pixelsLeft: number): string {
   const pixels = pixelsLeft === 1 ? 'pixel' : 'pixels';
@@ -59,8 +55,7 @@ export class GameplayState extends ManhattanState {
       });
     }
     this.highlightFrames = highlightFrames;
-
-    this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+    this.currentHighlightFrameDetails = null;
   }
 
   drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
@@ -111,6 +106,13 @@ export class GameplayState extends ManhattanState {
   }
 
   update() {
+    let maybeShowStreetStory = false;
+
+    if (!this.currentHighlightFrameDetails) {
+      this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+      maybeShowStreetStory = true;
+    }
+
     const { game } = this;
     const curr = this.currentHighlightFrameDetails;
   
@@ -121,6 +123,12 @@ export class GameplayState extends ManhattanState {
     if (!pen.isDown && curr.pixelsLeft === 0) {
       this.unhighlightActiveStreet();
       this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+      maybeShowStreetStory = true;
+    }
+
+    if (maybeShowStreetStory && this.currentHighlightFrameDetails && game.options.showStreetStories) {
+      game.changeState(new StreetStoryState(game, this, this.currentHighlightFrameDetails.name));
+      return;
     }
 
     if (!(pen.pos && pen.isDown)) return;

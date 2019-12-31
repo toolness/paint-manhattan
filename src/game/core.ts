@@ -21,6 +21,7 @@ export type ManhattanOptions = {
   minStreetSize: number,
   successSoundEffect: SoundEffect,
   missSoundEffect: SoundEffect,
+  showStreetStories: boolean,
 };
 
 export class Manhattan {
@@ -44,7 +45,7 @@ export class Manhattan {
     this.currState.exit();
     this.currState = newState;
     this.currState.enter();
-    this.updateAndDraw();
+    this.currState.update();
   }
 
   updateAndDraw() {
@@ -52,6 +53,7 @@ export class Manhattan {
 
     const ctx = getCanvasCtx2D(this.canvas);
     this.currState.draw(ctx);
+    this.pen.updateHistory();
   }
 
   start() {

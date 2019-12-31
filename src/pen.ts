@@ -100,6 +100,10 @@ export class Pen {
     this.updatePenFromMouse(e);
   }
 
+  updateHistory() {
+    this.wasDown = this.isDown;
+  }
+
   start() {
     MOUSE_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleMouseEvent as any));
     TOUCH_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleTouchEvent as any));

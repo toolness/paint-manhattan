@@ -34,6 +34,7 @@ async function main() {
     minStreetSize: safeParseInt(qs.get('minpix'), 0),
     skipSplashScreen: qs.get('nosplash') === 'on',
     showStreetSkeleton: !(qs.get('noskel') === 'on'),
+    showStreetStories: qs.get('streetstories') === 'on',
     startWithStreet: qs.get('street') || undefined,
     successSoundEffect: new OptionalSoundEffect(urls.SUCCESS_AUDIO_URL),
     missSoundEffect: new OptionalSoundEffect(urls.MISS_AUDIO_URL),
