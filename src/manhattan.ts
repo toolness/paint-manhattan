@@ -235,7 +235,7 @@ export class Manhattan {
       lines.push({text: shortenStreetName(curr.name).toUpperCase(), font: big});
       lines.push({text: '', font: small});
       lines.push({
-        text: done ? 'Lift your finger to continue' : getPixelsLeftText(curr.pixelsLeft),
+        text: done ? 'Lift finger to continue' : getPixelsLeftText(curr.pixelsLeft),
         font: small
       });
     } else {
