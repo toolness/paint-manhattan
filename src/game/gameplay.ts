@@ -1,16 +1,8 @@
-import { AsepriteSheet } from './aseprite-sheet.js';
-import { BitmapFont } from './font.js';
-import { getCanvasCtx2D, createCanvas, shuffleArray, iterPixelIndices, isImageEmptyAt, setPixel, moveToTopOfArray} from './util.js';
-import { CanvasResizer } from './canvas-resizer.js';
-import { Pen } from './pen.js';
-import { SoundEffect, initializeAudio } from './audio.js';
-import { Timer } from './timer.js';
-
-type RGBA = [number, number, number, number];
-
-const STREET_SKELETON_ALPHA = 0.33;
-
-const TIMER_INTERVAL_MS = 1500;
+import { Manhattan } from "./core.js";
+import { createCanvas, shuffleArray, moveToTopOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel } from "../util.js";
+import { BitmapFont } from "../font.js";
+import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "./sheet-frames.js";
+import { ManhattanState } from "./state.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -22,42 +14,18 @@ const PAINT_INACTIVE_STREET_RGBA: RGBA = [238, 195, 154, 255];
 
 const PAINT_ACTIVE_STREET_RGBA: RGBA = [153, 229, 80, 255];
 
-const TERRAIN_FRAME = "Land and water";
-
-const STREETS_FRAME = "Streets";
-
-const IGNORE_FRAMES = [
-  "Reference image",
-];
-
-const NON_HIGHLIGHT_FRAMES = [
-  TERRAIN_FRAME,
-  STREETS_FRAME,
-  ...IGNORE_FRAMES
-];
-
 const SCORE_BONUS_STREET_FINISHED = 10;
 
 const SCORE_PENALTY_COMPLETE_MISS = 2;
 
-export type ManhattanOptions = {
-  sheet: AsepriteSheet,
-  font: BitmapFont,
-  tinyFont: BitmapFont,
-  root: HTMLElement,
-  splashImage: HTMLImageElement,
-  skipSplashScreen: boolean,
-  showStreetSkeleton: boolean,
-  startWithStreet?: string,
-  minStreetSize: number,
-  successSoundEffect: SoundEffect,
-  missSoundEffect: SoundEffect,
-};
+const STREET_SKELETON_ALPHA = 0.33;
 
-export function getStreetFrames(sheet: AsepriteSheet): string[] {
-  const ignoreFrames = new Set(NON_HIGHLIGHT_FRAMES);
-  return Object.keys(sheet.metadata.frames).filter(name => !ignoreFrames.has(name));
-}
+type RGBA = [number, number, number, number];
+
+type CurrentHighlightFrameDetails = {
+  name: string,
+  pixelsLeft: number,
+};
 
 function shortenStreetName(name: string): string {
   return name
@@ -70,120 +38,7 @@ function getPixelsLeftText(pixelsLeft: number): string {
   return `${pixelsLeft} ${pixels} left`;
 }
 
-type CurrentHighlightFrameDetails = {
-  name: string,
-  pixelsLeft: number,
-};
-
-export class Manhattan {
-  readonly resizer: CanvasResizer;
-  readonly canvas: HTMLCanvasElement;
-  readonly pen: Pen;
-  private currState: ManhattanState;
-
-  constructor(readonly options: ManhattanOptions) {
-    const {w, h} = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
-    const canvas = createCanvas(w, h);
-    options.root.appendChild(canvas);
-    this.updateAndDraw = this.updateAndDraw.bind(this);
-    this.pen = new Pen(canvas, this.updateAndDraw);
-    this.resizer = new CanvasResizer(canvas);
-    this.canvas = canvas;
-    this.currState = options.skipSplashScreen ? new GameplayState(this) : new SplashScreenState(this);
-  }
-
-  drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
-    if (!this.options.showStreetSkeleton) return;
-    ctx.save();
-    ctx.globalAlpha = STREET_SKELETON_ALPHA;
-    this.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
-    ctx.restore();
-  }
-
-  changeState(newState: ManhattanState) {
-    this.currState.exit();
-    this.currState = newState;
-    this.currState.enter();
-    this.updateAndDraw();
-  }
-
-  updateAndDraw() {
-    this.currState.update();
-
-    const ctx = getCanvasCtx2D(this.canvas);
-    this.currState.draw(ctx);
-  }
-
-  start() {
-    this.resizer.start();
-    this.pen.start();
-    this.currState.enter();
-    this.updateAndDraw();
-  }
-
-  stop() {
-    this.currState.exit();
-    this.resizer.stop();
-    this.pen.stop();
-  }
-}
-
-class ManhattanState {
-  constructor(readonly game: Manhattan) {}
-  enter() {}
-  exit() {}
-  update() {}
-  draw(ctx: CanvasRenderingContext2D) {}
-}
-
-class SplashScreenState extends ManhattanState {
-  readonly splashTimer: Timer;
-
-  constructor(readonly game: Manhattan) {
-    super(game);
-    this.splashTimer = new Timer(TIMER_INTERVAL_MS, this.game.updateAndDraw);
-  }
-
-  update() {
-    const { game } = this;
-    if (game.pen.wasDown && !game.pen.isDown) {
-      initializeAudio();
-      game.changeState(new GameplayState(game));
-      return;
-    }
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    const { game } = this;
-    game.canvas.style.cursor = 'default';
-    ctx.save();
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
-    ctx.globalAlpha = 0.33;
-    game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-    ctx.globalAlpha = 0.04;
-    game.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
-    ctx.globalAlpha = 1.0;
-    ctx.drawImage(game.options.splashImage, 0, 40);
-
-    if (this.splashTimer.tick % 2 === 0) {
-      ctx.globalAlpha = 0.75;
-      const { tinyFont } = game.options;
-      tinyFont.drawText(ctx, 'Click or tap to start', game.canvas.width / 2, game.canvas.height - tinyFont.options.charHeight, 'center');
-    }
-    ctx.restore();
-  }
-
-  enter() {
-    this.splashTimer.start();
-  }
-
-  exit() {
-    this.splashTimer.stop();
-  }
-}
-
-class GameplayState extends ManhattanState {
+export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
   private readonly highlightFrames: string[];
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
@@ -205,6 +60,14 @@ class GameplayState extends ManhattanState {
     this.highlightFrames = highlightFrames;
 
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+  }
+
+  drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
+    if (!this.game.options.showStreetSkeleton) return;
+    ctx.save();
+    ctx.globalAlpha = STREET_SKELETON_ALPHA;
+    this.game.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
+    ctx.restore();
   }
 
   private unhighlightActiveStreet() {
@@ -305,7 +168,7 @@ class GameplayState extends ManhattanState {
 
     game.canvas.style.cursor = 'none';
     game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-    game.drawStreetSkeleton(ctx);
+    this.drawStreetSkeleton(ctx);
     ctx.drawImage(this.streetCanvas, 0, 0);
     this.drawPenCursor(ctx);
     this.drawStatusText(ctx);

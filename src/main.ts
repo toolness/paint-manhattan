@@ -1,7 +1,7 @@
 import { loadAsepriteSheet } from "./aseprite-sheet.js";
 import { loadImage, safeParseInt } from "./util.js";
 import { BitmapFont, BitmapFontOptions } from "./font.js";
-import { Manhattan } from "./manhattan.js";
+import { Manhattan } from "./game/core.js";
 import { OptionalSoundEffect } from "./audio.js";
 import * as urls from './urls.js';
 
