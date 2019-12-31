@@ -14,10 +14,13 @@ const TOUCH_EVENTS = [
   'touchcancel',
 ];
 
+export type PenMedium = 'mouse'|'touch';
+
 export class Pen {
   wasDown: boolean = false;
   isDown: boolean = false;
   pos: PenPosition|null = null;
+  medium: PenMedium|null = null;
   onChange?: () => void;
 
   constructor(readonly canvas: HTMLCanvasElement, onChange?: () => void) {
@@ -57,6 +60,7 @@ export class Pen {
   }
 
   private updatePenFromTouch(e: TouchEvent) {
+    this.medium = 'touch';
     if (e.type === 'touchcancel' || e.type === 'touchend') {
       this.updatePen(false, null, null);
       return;
@@ -71,6 +75,7 @@ export class Pen {
   }
 
   private updatePenFromMouse(e: MouseEvent) {
+    this.medium = 'mouse';
     const visibleSize = this.canvas.getBoundingClientRect();
     const pctX = e.offsetX / visibleSize.width;
     const pctY = e.offsetY / visibleSize.height;
