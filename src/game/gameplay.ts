@@ -43,6 +43,7 @@ export class GameplayState extends ManhattanState {
   private readonly highlightFrames: string[];
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
   private score: number = 0;
+  private prevCursor: string|null = null;
 
   constructor(readonly game: Manhattan) {
     super(game);
@@ -166,7 +167,6 @@ export class GameplayState extends ManhattanState {
   draw(ctx: CanvasRenderingContext2D) {
     const { game } = this;
 
-    game.canvas.style.cursor = 'none';
     game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
     this.drawStreetSkeleton(ctx);
     ctx.drawImage(this.streetCanvas, 0, 0);
@@ -229,5 +229,16 @@ export class GameplayState extends ManhattanState {
     const x = 1;
     const y = this.game.canvas.height - tinyFont.options.charHeight - 1;
     tinyFont.drawText(ctx, `Score: ${this.score}`, x, y);
+  }
+
+  enter() {
+    this.prevCursor = this.game.canvas.style.cursor;
+    this.game.canvas.style.cursor = 'none';
+  }
+
+  exit() {
+    if (typeof(this.prevCursor) === 'string') {
+      this.game.canvas.style.cursor = this.prevCursor;
+    }
   }
 }
