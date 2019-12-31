@@ -207,7 +207,7 @@ class GameplayState extends ManhattanState {
     this.currentHighlightFrameDetails = this.getNextHighlightFrame();
   }
 
-  unhighlightActiveStreet() {
+  private unhighlightActiveStreet() {
     const streetCtx = getCanvasCtx2D(this.streetCanvas);
     const streetIm = streetCtx.getImageData(0, 0, this.streetCanvas.width, this.streetCanvas.height);
 
@@ -223,7 +223,7 @@ class GameplayState extends ManhattanState {
     streetCtx.putImageData(streetIm, 0, 0);
   }
 
-  getNextHighlightFrame(): CurrentHighlightFrameDetails|null {
+  private getNextHighlightFrame(): CurrentHighlightFrameDetails|null {
     const name = this.highlightFrames.pop();
     if (!name) {
       return null;
@@ -312,11 +312,11 @@ class GameplayState extends ManhattanState {
     this.drawScore(ctx);
   }
 
-  get paintRadius() {
+  private get paintRadius() {
     return this.game.pen.medium === 'touch' ? PAINT_RADIUS_TOUCH : PAINT_RADIUS_MOUSE;
   }
 
-  drawPenCursor(ctx: CanvasRenderingContext2D) {
+  private drawPenCursor(ctx: CanvasRenderingContext2D) {
     const { pen } = this.game;
     if (!pen.pos) return;
     ctx.save();
@@ -328,7 +328,7 @@ class GameplayState extends ManhattanState {
     ctx.restore();
   }
 
-  drawStatusText(ctx: CanvasRenderingContext2D) {
+  private drawStatusText(ctx: CanvasRenderingContext2D) {
     const { width, height } = this.game.canvas;
     const { font: big, tinyFont: small } = this.game.options;
     const curr = this.currentHighlightFrameDetails;
