@@ -24,7 +24,7 @@ export type ManhattanOptions = {
 };
 
 export class Manhattan {
-  readonly resizer: CanvasResizer;
+  private readonly resizer: CanvasResizer;
   readonly canvas: HTMLCanvasElement;
   readonly pen: Pen;
   private currState: ManhattanState;
