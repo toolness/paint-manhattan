@@ -1,6 +1,6 @@
-import { loadAsepriteSheet } from "./aseprite-sheet.js";
-import { SPRITESHEET_URL } from "./urls.js";
-import { getStreetFrames } from "./game/sheet-frames.js";
+import { loadAsepriteSheet } from "../aseprite-sheet.js";
+import { SPRITESHEET_URL } from "../game/urls.js";
+import { getStreetFrames } from "../game/sheet-frames.js";
 
 async function debugMain() {
   const sheet = await loadAsepriteSheet(SPRITESHEET_URL);

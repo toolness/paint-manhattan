@@ -1,9 +1,9 @@
-import { loadAsepriteSheet } from "./aseprite-sheet.js";
-import { loadImage, safeParseInt } from "./util.js";
-import { BitmapFont, BitmapFontOptions } from "./font.js";
-import { Manhattan } from "./game/core.js";
-import { OptionalSoundEffect } from "./audio.js";
-import * as urls from './urls.js';
+import { loadAsepriteSheet } from "../aseprite-sheet.js";
+import { loadImage, safeParseInt } from "../util.js";
+import { BitmapFont, BitmapFontOptions } from "../font.js";
+import { Manhattan } from "../game/core.js";
+import { OptionalSoundEffect } from "../audio.js";
+import * as urls from '../game/urls.js';
 
 const FONT_OPTIONS: BitmapFontOptions = {
   charWidth: 6,
