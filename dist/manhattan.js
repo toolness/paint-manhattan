@@ -5,7 +5,8 @@ import { initializeAudio } from './audio.js';
 import { Timer } from './timer.js';
 const STREET_SKELETON_ALPHA = 0.33;
 const TIMER_INTERVAL_MS = 1500;
-const PAINT_RADIUS = 5;
+const PAINT_RADIUS_MOUSE = 5;
+const PAINT_RADIUS_TOUCH = 10;
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 const PAINT_INACTIVE_STREET_RGBA = [238, 195, 154, 255];
 const PAINT_ACTIVE_STREET_RGBA = [153, 229, 80, 255];
@@ -103,6 +104,9 @@ export class Manhattan {
         this.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
         ctx.restore();
     }
+    get paintRadius() {
+        return this.pen.medium === 'touch' ? PAINT_RADIUS_TOUCH : PAINT_RADIUS_MOUSE;
+    }
     drawPenCursor(ctx) {
         const { pen } = this;
         if (!pen.pos)
@@ -110,8 +114,9 @@ export class Manhattan {
         ctx.save();
         ctx.lineWidth = 1;
         ctx.strokeStyle = PAINT_HOVER_STYLE;
-        const size = PAINT_RADIUS * 2;
-        ctx.strokeRect(pen.pos.x - PAINT_RADIUS + 0.5, pen.pos.y - PAINT_RADIUS + 0.5, size, size);
+        const { paintRadius } = this;
+        const size = paintRadius * 2;
+        ctx.strokeRect(pen.pos.x - paintRadius + 0.5, pen.pos.y - paintRadius + 0.5, size, size);
         ctx.restore();
     }
     updateStreets() {
@@ -125,10 +130,11 @@ export class Manhattan {
         }
         if (!(pen.pos && pen.isDown))
             return;
-        const x1 = Math.max(pen.pos.x - PAINT_RADIUS, 0);
-        const y1 = Math.max(pen.pos.y - PAINT_RADIUS, 0);
-        const x2 = Math.min(pen.pos.x + PAINT_RADIUS + 1, this.canvas.width);
-        const y2 = Math.min(pen.pos.y + PAINT_RADIUS + 1, this.canvas.height);
+        const { paintRadius } = this;
+        const x1 = Math.max(pen.pos.x - paintRadius, 0);
+        const y1 = Math.max(pen.pos.y - paintRadius, 0);
+        const x2 = Math.min(pen.pos.x + paintRadius + 1, this.canvas.width);
+        const y2 = Math.min(pen.pos.y + paintRadius + 1, this.canvas.height);
         const w = x2 - x1;
         const h = y2 - y1;
         const sheetCtx = getCanvasCtx2D(this.options.sheet.canvas);

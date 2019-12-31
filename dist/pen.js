@@ -16,6 +16,7 @@ export class Pen {
         this.wasDown = false;
         this.isDown = false;
         this.pos = null;
+        this.medium = null;
         this.handleMouseEvent = this.handleMouseEvent.bind(this);
         this.handleTouchEvent = this.handleTouchEvent.bind(this);
         this.onChange = onChange;
@@ -48,6 +49,7 @@ export class Pen {
         }
     }
     updatePenFromTouch(e) {
+        this.medium = 'touch';
         if (e.type === 'touchcancel' || e.type === 'touchend') {
             this.updatePen(false, null, null);
             return;
@@ -61,6 +63,7 @@ export class Pen {
         this.updatePen(true, pctX, pctY);
     }
     updatePenFromMouse(e) {
+        this.medium = 'mouse';
         const visibleSize = this.canvas.getBoundingClientRect();
         const pctX = e.offsetX / visibleSize.width;
         const pctY = e.offsetY / visibleSize.height;
