@@ -1,6 +1,8 @@
 import { createCanvas, shuffleArray, moveToTopOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel } from "../util.js";
 import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "./sheet-frames.js";
 import { ManhattanState } from "./state.js";
+import { StreetStoryState } from "./street-story.js";
+import { shortenStreetName } from "./streets.js";
 const PAINT_RADIUS_MOUSE = 5;
 const PAINT_RADIUS_TOUCH = 10;
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
@@ -9,11 +11,6 @@ const PAINT_ACTIVE_STREET_RGBA = [153, 229, 80, 255];
 const SCORE_BONUS_STREET_FINISHED = 10;
 const SCORE_PENALTY_COMPLETE_MISS = 2;
 const STREET_SKELETON_ALPHA = 0.33;
-function shortenStreetName(name) {
-    return name
-        .replace('Street', 'St')
-        .replace('Place', 'Pl');
-}
 function getPixelsLeftText(pixelsLeft) {
     const pixels = pixelsLeft === 1 ? 'pixel' : 'pixels';
     return `${pixelsLeft} ${pixels} left`;
@@ -23,6 +20,7 @@ export class GameplayState extends ManhattanState {
         super(game);
         this.game = game;
         this.score = 0;
+        this.prevCursor = null;
         const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
         this.streetCanvas = streetCanvas;
         let highlightFrames = shuffleArray(getStreetFrames(game.options.sheet));
@@ -35,7 +33,7 @@ export class GameplayState extends ManhattanState {
             });
         }
         this.highlightFrames = highlightFrames;
-        this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+        this.currentHighlightFrameDetails = null;
     }
     drawStreetSkeleton(ctx) {
         if (!this.game.options.showStreetSkeleton)
@@ -80,6 +78,11 @@ export class GameplayState extends ManhattanState {
         return total;
     }
     update() {
+        let maybeShowStreetStory = false;
+        if (!this.currentHighlightFrameDetails) {
+            this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+            maybeShowStreetStory = true;
+        }
         const { game } = this;
         const curr = this.currentHighlightFrameDetails;
         if (!curr)
@@ -88,6 +91,11 @@ export class GameplayState extends ManhattanState {
         if (!pen.isDown && curr.pixelsLeft === 0) {
             this.unhighlightActiveStreet();
             this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+            maybeShowStreetStory = true;
+        }
+        if (maybeShowStreetStory && this.currentHighlightFrameDetails && game.options.showStreetStories) {
+            game.changeState(new StreetStoryState(game, this, this.currentHighlightFrameDetails.name));
+            return;
         }
         if (!(pen.pos && pen.isDown))
             return;
@@ -130,7 +138,6 @@ export class GameplayState extends ManhattanState {
     }
     draw(ctx) {
         const { game } = this;
-        game.canvas.style.cursor = 'none';
         game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
         this.drawStreetSkeleton(ctx);
         ctx.drawImage(this.streetCanvas, 0, 0);
@@ -185,5 +192,14 @@ export class GameplayState extends ManhattanState {
         const x = 1;
         const y = this.game.canvas.height - tinyFont.options.charHeight - 1;
         tinyFont.drawText(ctx, `Score: ${this.score}`, x, y);
+    }
+    enter() {
+        this.prevCursor = this.game.canvas.style.cursor;
+        this.game.canvas.style.cursor = 'none';
+    }
+    exit() {
+        if (typeof (this.prevCursor) === 'string') {
+            this.game.canvas.style.cursor = this.prevCursor;
+        }
     }
 }
