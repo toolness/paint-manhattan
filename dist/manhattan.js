@@ -158,6 +158,7 @@ export class Manhattan {
         }
         else if (isCompleteMiss && curr.pixelsLeft > 0) {
             this.score = Math.max(this.score - SCORE_PENALTY_COMPLETE_MISS, 0);
+            this.options.missSoundEffect.play();
         }
     }
     drawStatusText(ctx) {

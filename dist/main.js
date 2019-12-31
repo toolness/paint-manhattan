@@ -33,6 +33,7 @@ async function main() {
         showStreetSkeleton: !(qs.get('noskel') === 'on'),
         startWithStreet: qs.get('street') || undefined,
         successSoundEffect: new OptionalSoundEffect(urls.SUCCESS_AUDIO_URL),
+        missSoundEffect: new OptionalSoundEffect(urls.MISS_AUDIO_URL),
     });
     manhattan.start();
 }
