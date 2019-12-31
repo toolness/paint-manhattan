@@ -34,6 +34,10 @@ const NON_HIGHLIGHT_FRAMES = [
   ...IGNORE_FRAMES
 ];
 
+const SCORE_BONUS_STREET_FINISHED = 10;
+
+const SCORE_PENALTY_COMPLETE_MISS = 2;
+
 export type ManhattanOptions = {
   sheet: AsepriteSheet,
   font: BitmapFont,
@@ -74,6 +78,7 @@ export class Manhattan {
   readonly splashTimer: Timer;
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
   private state: ManhattanState;
+  private score: number = 0;
 
   constructor(readonly options: ManhattanOptions) {
     const {w, h} = options.sheet.getFrameMetadata(TERRAIN_FRAME).frame;
@@ -186,6 +191,7 @@ export class Manhattan {
     const streetCtx = getCanvasCtx2D(this.streetCanvas);
     const streetData = streetCtx.getImageData(x1, y1, w, h);
     let pixelsAdded = 0;
+    let isCompleteMiss = true;
     for (let idx of iterPixelIndices(frameData)) {
       const shouldBeHighlighted = !isImageEmptyAt(frameData, idx);
       if (shouldBeHighlighted) {
@@ -194,6 +200,7 @@ export class Manhattan {
           setPixel(streetData, idx, ...PAINT_ACTIVE_STREET_RGBA);
           pixelsAdded += 1;
         }
+        isCompleteMiss = false;
       }
     }
 
@@ -202,7 +209,10 @@ export class Manhattan {
       curr.pixelsLeft -= pixelsAdded;
       if (curr.pixelsLeft === 0) {
         this.options.successSoundEffect.play();
+        this.score += SCORE_BONUS_STREET_FINISHED;
       }
+    } else if (isCompleteMiss && curr.pixelsLeft > 0) {
+      this.score = Math.max(this.score - SCORE_PENALTY_COMPLETE_MISS, 0);
     }
   }
 
@@ -233,6 +243,14 @@ export class Manhattan {
       font.drawText(ctx, text, x, currY, 'bottom-right');
       currY -= font.options.charHeight;
     }
+  }
+
+  private drawScore(ctx: CanvasRenderingContext2D) {
+    const { tinyFont } = this.options;
+
+    const x = 1;
+    const y = this.canvas.height - tinyFont.options.charHeight - 1;
+    tinyFont.drawText(ctx, `Score: ${this.score}`, x, y);
   }
 
   private handleEnterState() {
@@ -293,6 +311,7 @@ export class Manhattan {
       ctx.drawImage(this.streetCanvas, 0, 0);
       this.drawPenCursor(ctx);
       this.drawStatusText(ctx);
+      this.drawScore(ctx);
     }
   }
 
