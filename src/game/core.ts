@@ -45,6 +45,11 @@ export class Manhattan {
     this.currState.exit();
     this.currState = newState;
     this.currState.enter();
+
+    // We don't want a state thinking the pen just went up immediately after it started,
+    // as it's likely that the state transition was caused by the pen going up!
+    this.pen.updateHistory();
+
     this.currState.update();
   }
 

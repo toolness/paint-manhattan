@@ -31,7 +31,6 @@ const STREET_NAME_Y = 15;
 const STREET_STORY_Y = 30;
 
 export class StreetStoryState extends ManhattanState {
-  private justEntered: boolean = false;
   private storyLines: string[];
 
   constructor(readonly game: Manhattan, readonly gameplayState: GameplayState, readonly story: StreetStory) {
@@ -39,15 +38,10 @@ export class StreetStoryState extends ManhattanState {
     this.storyLines = paragraphsToWordWrappedLines(story.content, STORY_CHARS_PER_LINE);
   }
 
-  enter() {
-    this.justEntered = true;
-  }
-
   update() {
-    if (!this.justEntered && this.game.pen.wasDown && !this.game.pen.isDown) {
+    if (this.game.pen.justWentUp) {
       this.game.changeState(this.gameplayState);
     }
-    this.justEntered = false;
   }
 
   draw(ctx: CanvasRenderingContext2D) {

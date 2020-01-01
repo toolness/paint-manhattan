@@ -29,6 +29,10 @@ export class Pen {
     this.onChange = onChange;
   }
 
+  get justWentUp(): boolean {
+    return this.wasDown && !this.isDown;
+  }
+
   private updatePen(isDown?: boolean, pctX?: number|null, pctY?: number|null) {
     let stateChanged = false;
 

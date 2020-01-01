@@ -17,7 +17,7 @@ export class SplashScreenState extends ManhattanState {
 
   update() {
     const { game } = this;
-    if (game.pen.wasDown && !game.pen.isDown) {
+    if (game.pen.justWentUp) {
       initializeAudio();
       game.changeState(new GameplayState(game));
       return;
