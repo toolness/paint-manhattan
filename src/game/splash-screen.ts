@@ -2,7 +2,6 @@ import { Timer } from "../timer.js";
 import { Manhattan } from "./core.js";
 import { initializeAudio } from "../audio.js";
 import { GameplayState } from "./gameplay.js";
-import { TERRAIN_FRAME, STREETS_FRAME } from "./sheet-frames.js";
 import { ManhattanState } from "./state.js";
 
 const TIMER_INTERVAL_MS = 1500;
@@ -10,7 +9,7 @@ const TIMER_INTERVAL_MS = 1500;
 export class SplashScreenState extends ManhattanState {
   readonly splashTimer: Timer;
 
-  constructor(readonly game: Manhattan) {
+  constructor(readonly game: Manhattan, readonly gameplayState: GameplayState) {
     super(game);
     this.splashTimer = new Timer(TIMER_INTERVAL_MS, this.game.updateAndDraw);
   }
@@ -19,22 +18,16 @@ export class SplashScreenState extends ManhattanState {
     const { game } = this;
     if (game.pen.justWentUp) {
       initializeAudio();
-      game.changeState(new GameplayState(game));
+      game.changeState(this.gameplayState);
       return;
     }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
     const { game } = this;
-    game.canvas.style.cursor = 'default';
+
     ctx.save();
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
-    ctx.globalAlpha = 0.33;
-    game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-    ctx.globalAlpha = 0.04;
-    game.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
-    ctx.globalAlpha = 1.0;
+    this.gameplayState.drawDarkenedMap(ctx);
     ctx.drawImage(game.options.splashImage, 0, 40);
 
     if (this.splashTimer.tick % 2 === 0) {

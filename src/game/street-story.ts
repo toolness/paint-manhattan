@@ -56,7 +56,7 @@ const STORIES: StreetStory[] = [
   }
 ];
 
-const STORY_CHARS_PER_LINE = 40;
+const STORY_CHARS_PER_LINE = 35;
 const STREET_NAME_Y = 15;
 const STREET_STORY_Y = 30;
 
@@ -77,10 +77,10 @@ export class StreetStoryState extends ManhattanState {
   draw(ctx: CanvasRenderingContext2D) {
     const { game } = this;
     const { font: big, tinyFont: small } = game.options;
-    const { width, height } = this.game.canvas;
+    const { width } = this.game.canvas;
     const centerX = width / 2;
 
-    ctx.fillRect(0, 0, width, height);
+    this.gameplayState.drawDarkenedMap(ctx);
 
     const streetName = shortenStreetName(this.story.name).toUpperCase();
     big.drawText(ctx, streetName, centerX, STREET_NAME_Y, 'center');

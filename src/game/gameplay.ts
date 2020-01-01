@@ -179,14 +179,26 @@ export class GameplayState extends ManhattanState {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const { game } = this;
-
-    game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-    this.drawStreetSkeleton(ctx);
-    ctx.drawImage(this.streetCanvas, 0, 0);
+    this.drawMap(ctx);
     this.drawPenCursor(ctx);
     this.drawStatusText(ctx);
     this.drawScore(ctx);
+  }
+
+  private drawMap(ctx: CanvasRenderingContext2D) {
+    this.game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+    this.drawStreetSkeleton(ctx);
+    ctx.drawImage(this.streetCanvas, 0, 0);
+  }
+
+  drawDarkenedMap(ctx: CanvasRenderingContext2D) {
+    const { width, height } = this.game.canvas;
+    ctx.save();
+    this.drawMap(ctx);
+    ctx.fillStyle = '#000000';
+    ctx.globalAlpha = 0.75;
+    ctx.fillRect(0, 0, width, height);
+    ctx.restore();
   }
 
   private get paintRadius() {
