@@ -4,6 +4,8 @@ import { BitmapFont, BitmapFontOptions } from "../font.js";
 import { Manhattan } from "../game/core.js";
 import { OptionalSoundEffect } from "../audio.js";
 import * as urls from '../game/urls.js';
+import { validateStreetStories } from "../game/street-story.js";
+import { getStreetFrames } from "../game/sheet-frames.js";
 
 const FONT_OPTIONS: BitmapFontOptions = {
   charWidth: 6,
@@ -39,6 +41,7 @@ async function main() {
     successSoundEffect: new OptionalSoundEffect(urls.SUCCESS_AUDIO_URL),
     missSoundEffect: new OptionalSoundEffect(urls.MISS_AUDIO_URL),
   });
+  validateStreetStories(getStreetFrames(sheet));
   manhattan.start();
 }
 

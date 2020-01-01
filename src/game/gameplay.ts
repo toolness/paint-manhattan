@@ -127,8 +127,11 @@ export class GameplayState extends ManhattanState {
     }
 
     if (maybeShowStreetStory && this.currentHighlightFrameDetails && game.options.showStreetStories) {
-      game.changeState(new StreetStoryState(game, this, this.currentHighlightFrameDetails.name));
-      return;
+      const storyState = StreetStoryState.forStreet(game, this, this.currentHighlightFrameDetails.name);
+      if (storyState) {
+        game.changeState(storyState);
+        return;
+      }
     }
 
     if (!(pen.pos && pen.isDown)) return;
