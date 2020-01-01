@@ -3,6 +3,7 @@ import { Manhattan } from "./core.js";
 import { GameplayState } from "./gameplay.js";
 import { shortenStreetName } from "./streets.js";
 import { paragraphsToWordWrappedLines } from "../util.js";
+import { ActionPrompt } from "./action-prompt.js";
 
 export type StreetStory = {
   name: string,
@@ -62,10 +63,12 @@ const STREET_STORY_Y = 30;
 
 export class StreetStoryState extends ManhattanState {
   private storyLines: string[];
+  private prompt: ActionPrompt;
 
   constructor(readonly game: Manhattan, readonly gameplayState: GameplayState, readonly story: StreetStory) {
     super(game);
     this.storyLines = paragraphsToWordWrappedLines(story.content, STORY_CHARS_PER_LINE);
+    this.prompt = new ActionPrompt(game, 'to continue');
   }
 
   update() {
@@ -90,6 +93,16 @@ export class StreetStoryState extends ManhattanState {
       small.drawText(ctx, line, centerX, currY, 'center');
       currY += small.options.charHeight;
     }
+
+    this.prompt.draw(ctx);
+  }
+
+  enter() {
+    this.prompt.start();
+  }
+
+  exit() {
+    this.prompt.stop();
   }
 
   static forStreet(game: Manhattan, gameplayState: GameplayState, streetName: string): StreetStoryState|null {
