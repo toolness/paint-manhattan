@@ -7,34 +7,38 @@ const STORIES = [
     {
         name: "George/Spruce Street",
         content: [
-            "Built around 1725, this street was once named in honor of King George III, but eventually changed after the Revolution.",
-            "Today it's home to a Deconstructivist skyscraper by Frank Gehry, located between William and Nassau.",
+            "Built around 1725, George street was once named in honor of King George III, but eventually changed to Spruce after the Revolution.",
+            "Today it's home to a famous skyscraper by Frank Gehry, located between William and Nassau.",
         ],
         sourceURL: "https://en.wikipedia.org/wiki/Spruce_Street_(Manhattan)",
     },
     {
         name: "Bridge Street",
-        content: "This street was given its name because it was one of three bridges that crossed a canal located at present-day Broad Street.",
+        content: "Bridge street was given its name because it was one of three bridges that crossed a canal located at present-day Broad Street.",
         sourceURL: "https://en.wikipedia.org/wiki/Bridge_Street_(Manhattan)",
     },
     {
         name: "Front Street",
-        content: "This street was originally built on landfill in the latter half of the 18th century, and ran along the waterfront until the turn of the next century, when South street was built on more landfill.",
+        content: [
+            "Front street was originally built on landfill in the latter half of the 18th century.",
+            "It ran along the waterfront until the turn of the next century, when a new road called South street was built from more landfill.",
+        ],
         // Weirdly, the Wikipedia entry for "Front Street (Manhattan)" actually redirects to Lower Manhattan and includes no information about Front street.
         sourceURL: "https://en.wikipedia.org/wiki/South_Street_(Manhattan)",
     },
     {
         name: "Pearl Street",
         content: [
-            "This street dates back to the early 1600s and was named for the many oysters found in the river. During British rule, it was called Great Queen Street.",
-            "It ran along the waterfront until the latter half of the 18th century, when Water and Front streets were built from landfill.",
+            "Pearl street dates back to the early 1600s and was named for the many oysters found in the river.",
+            "During British rule, it was called Great Queen Street, but then changed back to Pearl after the revolution.",
+            "Pearl ran along the waterfront until the latter half of the 18th century, when Water and Front streets were built from landfill.",
         ],
         sourceURL: "https://en.wikipedia.org/wiki/Pearl_Street_(Manhattan)",
     },
     {
         name: "Wall Street",
         content: [
-            "From 1711 to 1762, at the corner of Wall and Pearl, the city operated its first official slave market for the sale and rental of enslaved Africans and Indians.",
+            "From 1711 to 1762, at the corner of Wall and Pearl, the city operated its first official market for the sale and rental of enslaved Africans and Indians.",
             "The city directly benefited from the sale of slaves by implementing taxes on every person who was bought and sold there.",
         ],
         sourceURL: "https://en.wikipedia.org/wiki/Wall_Street",
@@ -42,8 +46,8 @@ const STORIES = [
     {
         name: "Fair/Fulton Street",
         content: [
-            "This street, along with Partition Street west of Broadway, was renamed to Fulton Street in 1816, in honor of Robert Fulton, the inventor of the steamship.",
-            "From 1882-1890, just south of Fulton and Pearl stood Pearl Street Station, the first commercial central power plant in the United States."
+            "Fair street, along with Partition Street west of Broadway, was renamed to Fulton Street in 1816, in honor of Robert Fulton, the inventor of the steamship.",
+            "Eventually it extended to Pearl, and near their intersection in 1882 was built Pearl Street Station, the first commercial central power plant in the United States."
         ],
         sourceURL: "https://en.wikipedia.org/wiki/Fulton_Street_(Manhattan)",
     }
