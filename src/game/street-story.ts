@@ -39,8 +39,8 @@ const STORIES: StreetStory[] = [
     name: "Pearl Street",
     content: [
       "Pearl street dates back to the early 1600s and was named for the many oysters found in the river.",
-      "During British rule, it was called Great Queen Street, but then changed back to Pearl after the revolution.",
-      "Pearl ran along the waterfront until the latter half of the 18th century, when Water and Front streets were built from landfill.",
+      "It ran along the waterfront until the latter half of the 18th century, when Water and Front streets were built from landfill.",
+      "During British rule, it was called Great Queen Street, but changed back after the revolution.",
     ],
     sourceURL: "https://en.wikipedia.org/wiki/Pearl_Street_(Manhattan)",
   },
