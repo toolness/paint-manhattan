@@ -22,6 +22,7 @@ export type ManhattanOptions = {
   successSoundEffect: SoundEffect,
   missSoundEffect: SoundEffect,
   showStreetStories: boolean,
+  onlyShowStreetsWithStories: boolean,
 };
 
 export class Manhattan {

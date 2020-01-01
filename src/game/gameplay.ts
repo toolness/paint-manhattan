@@ -54,6 +54,9 @@ export class GameplayState extends ManhattanState {
         return this.countPixelsToBePainted(frame) >= game.options.minStreetSize;
       });
     }
+    if (game.options.onlyShowStreetsWithStories) {
+      highlightFrames = highlightFrames.filter(frame => StreetStoryState.existsForStreet(frame));
+    }
     this.highlightFrames = highlightFrames;
     this.currentHighlightFrameDetails = null;
   }

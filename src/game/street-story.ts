@@ -97,6 +97,10 @@ export class StreetStoryState extends ManhattanState {
     if (!story) return null;
     return new StreetStoryState(game, gameplayState, story);
   }
+
+  static existsForStreet(streetName: string): boolean {
+    return getStreetStory(streetName) !== null;
+  }
 }
 
 function getStreetStory(streetName: string): StreetStory|null {
