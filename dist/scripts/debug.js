@@ -1,6 +1,28 @@
 import { loadAsepriteSheet } from "../aseprite-sheet.js";
 import { SPRITESHEET_URL } from "../game/urls.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
+function getAllFormControls() {
+    return Array.from(document.querySelectorAll('input, select'));
+}
+function saveFormSetting(el) {
+    if (el instanceof HTMLInputElement && el.type === 'checkbox') {
+        window.sessionStorage.setItem(el.name, el.checked ? 'YUP' : '');
+    }
+    else {
+        window.sessionStorage.setItem(el.name, el.value);
+    }
+}
+function restoreFormSetting(el) {
+    const val = window.sessionStorage.getItem(el.name);
+    if (val === null)
+        return;
+    if (el instanceof HTMLInputElement && el.type === 'checkbox') {
+        el.checked = Boolean(val);
+    }
+    else {
+        el.value = val;
+    }
+}
 async function debugMain() {
     const sheet = await loadAsepriteSheet(SPRITESHEET_URL);
     const streetNames = getStreetFrames(sheet);
@@ -15,6 +37,10 @@ async function debugMain() {
         optionEl.setAttribute('value', name);
         streetEl.appendChild(optionEl);
     }
+    getAllFormControls().forEach(el => {
+        restoreFormSetting(el);
+        el.addEventListener('change', () => saveFormSetting(el));
+    });
 }
 debugMain().catch(e => {
     console.error(e);

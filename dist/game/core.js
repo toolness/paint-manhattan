@@ -14,7 +14,8 @@ export class Manhattan {
         this.pen = new Pen(canvas, this.updateAndDraw);
         this.resizer = new CanvasResizer(canvas);
         this.canvas = canvas;
-        this.currState = options.skipSplashScreen ? new GameplayState(this) : new SplashScreenState(this);
+        const gameplayState = new GameplayState(this);
+        this.currState = options.skipSplashScreen ? gameplayState : new SplashScreenState(this, gameplayState);
     }
     changeState(newState) {
         this.currState.exit();

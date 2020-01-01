@@ -32,6 +32,9 @@ export class GameplayState extends ManhattanState {
                 return this.countPixelsToBePainted(frame) >= game.options.minStreetSize;
             });
         }
+        if (game.options.onlyShowStreetsWithStories) {
+            highlightFrames = highlightFrames.filter(frame => StreetStoryState.existsForStreet(frame));
+        }
         this.highlightFrames = highlightFrames;
         this.currentHighlightFrameDetails = null;
     }
@@ -140,13 +143,24 @@ export class GameplayState extends ManhattanState {
         }
     }
     draw(ctx) {
-        const { game } = this;
-        game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-        this.drawStreetSkeleton(ctx);
-        ctx.drawImage(this.streetCanvas, 0, 0);
+        this.drawMap(ctx);
         this.drawPenCursor(ctx);
         this.drawStatusText(ctx);
         this.drawScore(ctx);
+    }
+    drawMap(ctx) {
+        this.game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
+        this.drawStreetSkeleton(ctx);
+        ctx.drawImage(this.streetCanvas, 0, 0);
+    }
+    drawDarkenedMap(ctx) {
+        const { width, height } = this.game.canvas;
+        ctx.save();
+        this.drawMap(ctx);
+        ctx.fillStyle = '#000000';
+        ctx.globalAlpha = 0.75;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
     }
     get paintRadius() {
         return this.game.pen.medium === 'touch' ? PAINT_RADIUS_TOUCH : PAINT_RADIUS_MOUSE;

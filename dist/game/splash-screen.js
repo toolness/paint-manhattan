@@ -1,46 +1,30 @@
-import { Timer } from "../timer.js";
+import { ActionPrompt } from "./action-prompt.js";
 import { initializeAudio } from "../audio.js";
-import { GameplayState } from "./gameplay.js";
-import { TERRAIN_FRAME, STREETS_FRAME } from "./sheet-frames.js";
 import { ManhattanState } from "./state.js";
-const TIMER_INTERVAL_MS = 1500;
 export class SplashScreenState extends ManhattanState {
-    constructor(game) {
+    constructor(game, gameplayState) {
         super(game);
         this.game = game;
-        this.splashTimer = new Timer(TIMER_INTERVAL_MS, this.game.updateAndDraw);
+        this.gameplayState = gameplayState;
+        this.prompt = new ActionPrompt(game, 'to start');
     }
     update() {
         const { game } = this;
         if (game.pen.justWentUp) {
             initializeAudio();
-            game.changeState(new GameplayState(game));
+            game.changeState(this.gameplayState);
             return;
         }
     }
     draw(ctx) {
-        const { game } = this;
-        game.canvas.style.cursor = 'default';
-        ctx.save();
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
-        ctx.globalAlpha = 0.33;
-        game.options.sheet.drawFrame(ctx, TERRAIN_FRAME, 0, 0);
-        ctx.globalAlpha = 0.04;
-        game.options.sheet.drawFrame(ctx, STREETS_FRAME, 0, 0);
-        ctx.globalAlpha = 1.0;
-        ctx.drawImage(game.options.splashImage, 0, 40);
-        if (this.splashTimer.tick % 2 === 0) {
-            ctx.globalAlpha = 0.75;
-            const { tinyFont } = game.options;
-            tinyFont.drawText(ctx, 'Click or tap to start', game.canvas.width / 2, game.canvas.height - tinyFont.options.charHeight, 'center');
-        }
-        ctx.restore();
+        this.gameplayState.drawDarkenedMap(ctx);
+        ctx.drawImage(this.game.options.splashImage, 0, 40);
+        this.prompt.draw(ctx);
     }
     enter() {
-        this.splashTimer.start();
+        this.prompt.start();
     }
     exit() {
-        this.splashTimer.stop();
+        this.prompt.stop();
     }
 }
