@@ -21,6 +21,9 @@ export class Pen {
         this.handleTouchEvent = this.handleTouchEvent.bind(this);
         this.onChange = onChange;
     }
+    get justWentUp() {
+        return this.wasDown && !this.isDown;
+    }
     updatePen(isDown, pctX, pctY) {
         let stateChanged = false;
         if (typeof (isDown) === 'boolean') {

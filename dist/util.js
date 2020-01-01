@@ -108,3 +108,31 @@ export function safeParseInt(s, defaultValue) {
         return defaultValue;
     return value;
 }
+/**
+ * Word-wrap the given string to a list of lines with the
+ * given maximum width.
+ *
+ * Taken from https://stackoverflow.com/a/51506718/2422398.
+ */
+export function wordWrap(s, width) {
+    return s.replace(new RegExp(`(?![^\\n]{1,${width}}$)([^\\n]{1,${width}})\\s`, 'g'), '$1\n').split('\n');
+}
+/**
+ * Convert a single paragraph or list of paragraphs into a list of
+ * word-wrapped lines, separated by blank lines.
+ */
+export function paragraphsToWordWrappedLines(content, width) {
+    const paragraphs = typeof (content) === 'string' ? [content] : content;
+    const lines = [];
+    let isFirst = true;
+    for (let p of paragraphs) {
+        if (isFirst) {
+            isFirst = false;
+        }
+        else {
+            lines.push('');
+        }
+        lines.push(...wordWrap(p, width));
+    }
+    return lines;
+}
