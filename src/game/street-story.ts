@@ -4,6 +4,7 @@ import { GameplayState } from "./gameplay.js";
 import { shortenStreetName } from "./streets.js";
 import { paragraphsToWordWrappedLines } from "../util.js";
 import { ActionPrompt } from "./action-prompt.js";
+import { Timer } from "../timer.js";
 
 export type StreetStory = {
   name: string,
@@ -60,20 +61,44 @@ const STORIES: StreetStory[] = [
 const STORY_CHARS_PER_LINE = 35;
 const STREET_NAME_Y = 15;
 const STREET_STORY_Y = 30;
+const MS_PER_CHAR = 40;
+
+type SubState = {
+  type: 'animating',
+  timer: Timer,
+} | {
+  type: 'waiting_for_user',
+  prompt: ActionPrompt,
+};
 
 export class StreetStoryState extends ManhattanState {
   private storyLines: string[];
-  private prompt: ActionPrompt;
+  private subState: SubState;
+  private charsToAnimate: number;
 
   constructor(readonly game: Manhattan, readonly gameplayState: GameplayState, readonly story: StreetStory) {
     super(game);
     this.storyLines = paragraphsToWordWrappedLines(story.content, STORY_CHARS_PER_LINE);
-    this.prompt = new ActionPrompt(game, 'to continue');
+    this.charsToAnimate = this.storyLines.reduce((total, line) => total + line.length, 0);
+    const timer = new Timer(MS_PER_CHAR, game.updateAndDraw);
+    this.subState = {type: 'animating', timer};
+    timer.start();
   }
 
   update() {
-    if (this.game.pen.justWentUp) {
-      this.game.changeState(this.gameplayState);
+    const { game, subState } = this;
+
+    if (subState.type === 'waiting_for_user') {
+      if (game.pen.justWentUp) {
+        game.changeState(this.gameplayState);
+      }
+    } else if (subState.type === 'animating') {
+      if (subState.timer.tick >= this.charsToAnimate || game.pen.justWentUp) {
+        subState.timer.stop();
+        const prompt = new ActionPrompt(game, 'to continue');
+        this.subState = {type: 'waiting_for_user', prompt};
+        prompt.start();
+      }
     }
   }
 
@@ -89,20 +114,43 @@ export class StreetStoryState extends ManhattanState {
     big.drawText(ctx, streetName, centerX, STREET_NAME_Y, 'center');
 
     let currY = STREET_STORY_Y;
-    for (let line of this.storyLines) {
+    for (let line of this.getAnimatingStoryLines()) {
       small.drawText(ctx, line, centerX, currY, 'center');
       currY += small.options.charHeight;
     }
 
-    this.prompt.draw(ctx);
+    if (this.subState.type === 'waiting_for_user') {
+      this.subState.prompt.draw(ctx);
+    }
   }
 
-  enter() {
-    this.prompt.start();
+  getAnimatingStoryLines() {
+    if (this.subState.type === 'waiting_for_user') {
+      return this.storyLines;
+    }
+
+    const maxChars = this.subState.timer.tick;
+    const lines: string[] = [];
+    let chars = 0;
+    for (let line of this.storyLines) {
+      if (chars + line.length < maxChars) {
+        chars += line.length;
+        lines.push(line);
+      } else {
+        const charsOfLine = maxChars - chars;
+        const truncatedLine = line.slice(0, charsOfLine) + spaces(line.length - charsOfLine);
+        lines.push(truncatedLine);
+        break;
+      }
+    }
+    return lines;
   }
 
   exit() {
-    this.prompt.stop();
+    if (this.subState.type !== 'waiting_for_user') {
+      throw new Error('Assertion failure, we should only exit the state when waiting for user!');
+    }
+    this.subState.prompt.stop();
   }
 
   static forStreet(game: Manhattan, gameplayState: GameplayState, streetName: string): StreetStoryState|null {
@@ -132,4 +180,16 @@ export function validateStreetStories(allStreetNames: string[]) {
       console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
     }
   }
+}
+
+function spaces(count: number): string {
+  let s: string[] = [];
+
+  if (count > 0) {
+    for (let i = 0; i < count; i++) {
+      s.push(' ');
+    }
+  }
+
+  return s.join('');
 }
