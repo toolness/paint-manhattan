@@ -91,6 +91,21 @@ const STORIES: StreetStory[] = [
     ],
     otherSources: [StorySource.Rogerson],
   },
+  {
+    name: "Catharine Street",
+    content: [
+      "Catharine street was named after Catharine Desbrosses, a member of a prominent family whose distillery was located at the foot of this street.",
+    ],
+    otherSources: [StorySource.Rogerson],
+  },
+  {
+    name: "Church Street",
+    content: [
+      "Church Street was named for St. Paul's Chapel, which stands at what was originally the foot of the street at Partition/Fulton.",
+      "In 1869, it was extended south to the Battery.",
+    ],
+    otherSources: [StorySource.Rogerson],
+  },
 ];
 
 const STORY_CHARS_PER_LINE = 35;
