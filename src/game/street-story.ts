@@ -106,6 +106,22 @@ const STORIES: StreetStory[] = [
     ],
     otherSources: [StorySource.Rogerson],
   },
+  {
+    name: "Beaver Street",
+    content: [
+      "Beaver Street was initially laid out along a branch of the canal that existed in Broad Street long ago.",
+      "It was named after the animal that was a prominent economic resource of New Amsterdam.",
+    ],
+    otherSources: [StorySource.Rogerson],
+  },
+  {
+    name: "Broad Street",
+    content: [
+      "In the early Dutch colony, a canal called the Heere Graft ran through the center of this street.",
+      "The British filled the canal in 1676, resulting in a very wide street that became known as The Broad Street.",
+    ],
+    otherSources: [StorySource.Rogerson],
+  },
 ];
 
 const STORY_CHARS_PER_LINE = 35;
