@@ -59,7 +59,16 @@ const STORIES: StreetStory[] = [
       "Eventually it extended to Pearl, and near their intersection in 1882 was built Pearl Street Station, the first commercial central power plant in the United States."
     ],
     sourceURL: "https://en.wikipedia.org/wiki/Fulton_Street_(Manhattan)",
-  }
+  },
+  {
+    name: "Stone Street",
+    content: [
+      "This was originally called Brewer Street because it was the location of the first commercial brewery in North America prior to 1646.",
+      "Around 1655, it became the first street in the city to be paved with cobblestone, which earned it the name Stone Street."
+    ],
+    // Also "Manhattan Street Names Past and Present" by Dan Rogerson.
+    sourceURL: "https://en.wikipedia.org/wiki/Stone_Street_(Manhattan)",
+  },
 ];
 
 const STORY_CHARS_PER_LINE = 35;
