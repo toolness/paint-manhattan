@@ -112,6 +112,44 @@ const STORIES = [
         ],
         otherSources: [StorySource.Rogerson],
     },
+    {
+        name: "Vesey Street",
+        content: [
+            "This street was named for the Reverend William Vesey, the first rector of Trinity Church.",
+            "It was ceded by the church to the city in 1761.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Rector Street",
+        content: [
+            "This street, first laid out in 1739, was so named because the residence of the rector of Trinity Church stood here.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Broadway",
+        content: [
+            "New Amsterdam had a large open area on the north side of its fort that formed the foot of \"De Breede Wegh\" which means \"The Broad Way\".",
+            "The open area became modern Bowling Green Park, while The Broad Way extended to Wall Street, where one of two city gates was located.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Liberty Street",
+        content: [
+            "Originally called Crown Street, this street was renamed Liberty in 1794 to remove references to the nation's former colonial status.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Ann Street",
+        content: [
+            "This 3-block street appeared on city maps as early as 1728.",
+            "In 1841, P.T. Barnum's American Museum opened at the corner of Ann and Vesey. It was was one of the most popular showplaces in the nation during the 19th century.",
+        ],
+        sourceURL: "https://en.wikipedia.org/wiki/Ann_Street_(Manhattan)"
+    }
 ];
 const STORY_CHARS_PER_LINE = 35;
 const STREET_NAME_Y = 15;
