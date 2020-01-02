@@ -13,7 +13,7 @@ const STORIES = [
     {
         name: "George/Spruce Street",
         content: [
-            "Built around 1725, George street was once named in honor of King George III, but eventually changed to Spruce after the Revolution.",
+            "Laid out around 1725, George street was once named in honor of King George III, but eventually changed to Spruce after the Revolution.",
             "Today it's home to a famous skyscraper by Frank Gehry, located between William and Nassau.",
         ],
         sources: ["https://en.wikipedia.org/wiki/Spruce_Street_(Manhattan)"],
@@ -71,7 +71,7 @@ const STORIES = [
     {
         name: "New Street",
         content: [
-            "In 1679, when this street opened, a common designation for new streets until a better name was settled on was \"the new street\".",
+            "In 1679, when this street opened, a common designation for new streets until a better name was settled on was \"the new street.\"",
             "However, a better name for this street was never settled on.",
         ],
         sources: [StorySource.Rogerson],
@@ -133,7 +133,7 @@ const STORIES = [
     {
         name: "Broadway",
         content: [
-            "New Amsterdam had a large open area on the north side of its fort that formed the foot of \"De Breede Wegh\" which means \"The Broad Way\".",
+            "New Amsterdam had a large open area on the north side of its fort that formed the foot of \"De Breede Wegh\" which means \"The Broad Way.\"",
             "The open area became modern Bowling Green Park, while The Broad Way extended to Wall Street, where one of two city gates was located.",
         ],
         sources: [StorySource.Rogerson],
