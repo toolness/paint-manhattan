@@ -3,6 +3,12 @@ import { shortenStreetName } from "./streets.js";
 import { paragraphsToWordWrappedLines } from "../util.js";
 import { ActionPrompt } from "./action-prompt.js";
 import { Timer } from "../timer.js";
+var StorySource;
+(function (StorySource) {
+    // "Manhattan Street Names Past and Present" by Dan Rogerson:
+    // https://www.amazon.com/dp/B00C0MTRUK
+    StorySource[StorySource["Rogerson"] = 0] = "Rogerson";
+})(StorySource || (StorySource = {}));
 const STORIES = [
     {
         name: "George/Spruce Street",
@@ -50,7 +56,62 @@ const STORIES = [
             "Eventually it extended to Pearl, and near their intersection in 1882 was built Pearl Street Station, the first commercial central power plant in the United States."
         ],
         sourceURL: "https://en.wikipedia.org/wiki/Fulton_Street_(Manhattan)",
-    }
+    },
+    {
+        name: "Stone Street",
+        content: [
+            "This was originally called Brewer Street because it was the location of the first commercial brewery in North America prior to 1646.",
+            "Around 1655, it became the first street in the city to be paved with cobblestone, which earned it the name Stone Street."
+        ],
+        sourceURL: "https://en.wikipedia.org/wiki/Stone_Street_(Manhattan)",
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "New Street",
+        content: [
+            "In 1679, when this street opened, a common designation for new streets until a better name was settled on was \"the new street\".",
+            "However, a better name for this street was never settled on.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Chatham/Park Row",
+        content: [
+            "Originally named after William Pitt, the Earl of Chatham and Prime Minister of England, this street was renamed Park Row by 1829 due to its location along City Hall Park.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Catharine Street",
+        content: [
+            "Catharine street was named after Catharine Desbrosses, a member of a prominent family whose distillery was located at the foot of this street.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Church Street",
+        content: [
+            "Church Street was named for St. Paul's Chapel, which stands at what was originally the foot of the street at Partition/Fulton.",
+            "In 1869, it was extended south to the Battery.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Beaver Street",
+        content: [
+            "Beaver Street was initially laid out along a branch of the canal that existed in Broad Street long ago.",
+            "It was named after the animal that was a prominent economic resource of New Amsterdam.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
+    {
+        name: "Broad Street",
+        content: [
+            "In the early Dutch colony, a canal called the Heere Graft ran through the center of this street.",
+            "The British filled the canal in 1676, resulting in a very wide street that became known as The Broad Street.",
+        ],
+        otherSources: [StorySource.Rogerson],
+    },
 ];
 const STORY_CHARS_PER_LINE = 35;
 const STREET_NAME_Y = 15;
