@@ -172,6 +172,19 @@ const STORIES: StreetStory[] = [
       "https://en.wikipedia.org/wiki/African_Free_School",
       "https://www.nyhistory.org/web/africanfreeschool/timeline/timeline-print.html",
     ],
+  },
+  {
+    name: "Maiden Lane",
+    content: [
+      "This lane once ran along a stream leading to the East River. It was used by young women for washing clothes.",
+      "In 1712, over twenty enslaved Africans gathered in an orchard near Broadway and set fire to a building.",
+      "Bloodshed ensued, and strict laws were passed: slaves could no longer gather in groups of more than 3.",
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://herb.ashp.cuny.edu/items/show/690",
+      "https://en.wikipedia.org/wiki/New_York_Slave_Revolt_of_1712",
+    ],
   }
 ];
 
