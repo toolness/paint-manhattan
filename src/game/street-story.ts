@@ -6,10 +6,17 @@ import { paragraphsToWordWrappedLines } from "../util.js";
 import { ActionPrompt } from "./action-prompt.js";
 import { Timer } from "../timer.js";
 
+enum StorySource {
+  // "Manhattan Street Names Past and Present" by Dan Rogerson:
+  // https://www.amazon.com/dp/B00C0MTRUK
+  Rogerson,
+}
+
 export type StreetStory = {
   name: string,
   content: string|string[],
   sourceURL?: string,
+  otherSources?: StorySource[],
 };
 
 const STORIES: StreetStory[] = [
@@ -66,8 +73,16 @@ const STORIES: StreetStory[] = [
       "This was originally called Brewer Street because it was the location of the first commercial brewery in North America prior to 1646.",
       "Around 1655, it became the first street in the city to be paved with cobblestone, which earned it the name Stone Street."
     ],
-    // Also "Manhattan Street Names Past and Present" by Dan Rogerson.
     sourceURL: "https://en.wikipedia.org/wiki/Stone_Street_(Manhattan)",
+    otherSources: [StorySource.Rogerson],
+  },
+  {
+    name: "New Street",
+    content: [
+      "In 1679, when this street opened, a common designation for new streets until a better name was settled on was \"the new street\".",
+      "However, a better name for this street was never settled on.",
+    ],
+    otherSources: [StorySource.Rogerson],
   },
 ];
 
