@@ -88,7 +88,8 @@ const STORIES: StreetStory[] = [
   {
     name: "Chatham/Park Row",
     content: [
-      "Originally named after William Pitt, the Earl of Chatham and Prime Minister of England, this street was renamed Park Row by 1829 due to its location along City Hall Park.",
+      "Originally named after William Pitt, the Earl of Chatham and Prime Minister of England, Chatham Row was renamed Park Row by 1829 due to its location along City Hall Park.",
+      "By 1886, all of Chatham Street would be renamed Park Row as well.",
     ],
     sources: [StorySource.Rogerson],
   },
@@ -184,6 +185,17 @@ const STORIES: StreetStory[] = [
       StorySource.Rogerson,
       "https://herb.ashp.cuny.edu/items/show/690",
       "https://en.wikipedia.org/wiki/New_York_Slave_Revolt_of_1712",
+    ],
+  },
+  {
+    name: "Chatham Street/Park Row",
+    content: [
+      "In 1854, Elizabeth Jennings, a Black woman who taught at the African Free School, was forcibly ejected from a streetcar at Chatham and Pearl on account of the color of her skin.",
+      "She sued and won, which led to the eventual desegregation of all the city's transit systems by 1865."
+    ],
+    sources: [
+      "https://www.nytimes.com/2005/11/13/nyregion/thecity/the-schoolteacher-on-the-streetcar.html",
+      "https://en.wikipedia.org/wiki/Elizabeth_Jennings_Graham",
     ],
   }
 ];
