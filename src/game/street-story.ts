@@ -160,6 +160,18 @@ const STORIES: StreetStory[] = [
       "In 1841, P.T. Barnum's American Museum opened at the corner of Ann and Vesey. It was was one of the most popular showplaces in the nation during the 19th century.",
     ],
     sources: ["https://en.wikipedia.org/wiki/Ann_Street_(Manhattan)"],
+  },
+  {
+    name: "Cliff Street",
+    content: [
+      "In 1796, the African Free School built a school house at 65 Cliff, near present-day Fulton.",
+      "It was founded to provide education to children of slaves and free people of color.",
+      "Its parent organization, the New York Manumission Society, fought to promote the gradual abolition of slavery.",
+    ],
+    sources: [
+      "https://en.wikipedia.org/wiki/African_Free_School",
+      "https://www.nyhistory.org/web/africanfreeschool/timeline/timeline-print.html",
+    ],
   }
 ];
 
