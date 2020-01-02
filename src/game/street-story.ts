@@ -84,6 +84,13 @@ const STORIES: StreetStory[] = [
     ],
     otherSources: [StorySource.Rogerson],
   },
+  {
+    name: "Chatham/Park Row",
+    content: [
+      "Originally named after William Pitt, the Earl of Chatham and Prime Minister of England, this street was renamed Park Row by 1829 due to its location along City Hall Park.",
+    ],
+    otherSources: [StorySource.Rogerson],
+  },
 ];
 
 const STORY_CHARS_PER_LINE = 35;
