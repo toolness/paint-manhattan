@@ -152,6 +152,14 @@ const STORIES: StreetStory[] = [
     ],
     otherSources: [StorySource.Rogerson],
   },
+  {
+    name: "Ann Street",
+    content: [
+      "This 3-block street appeared on city maps as early as 1728.",
+      "In 1841, P.T. Barnum's American Museum opened at the corner of Ann and Vesey. It was was one of the most popular showplaces in the nation during the 19th century.",
+    ],
+    sourceURL: "https://en.wikipedia.org/wiki/Ann_Street_(Manhattan)"
+  }
 ];
 
 const STORY_CHARS_PER_LINE = 35;
