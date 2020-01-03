@@ -53,22 +53,22 @@ async function registerServiceWorker() {
   const pageURL = new URL(window.location.href);
   const workerURL = new URL('./service-worker.js', pageURL);
   const registration = await window.navigator.serviceWorker.register(workerURL.href);
-  console.log('Service worker registration succeeded:', registration);
+  console.log('Service worker registration succeeded.');
   window.navigator.serviceWorker.oncontrollerchange = () => {
-    console.log("Controller changed!!");
+    console.log("Controller changed.");
     // For some reason this event seems to fire prematurely, so we won't reload here.
     // window.location.reload();
   };
   registration.onupdatefound = () => {
-    console.log("Noice, an update was found.");
+    console.log("A service worker update was found.");
     const { installing } = registration;
     if (installing) {
-      console.log("Neat installing!", installing);
+      console.log("Service worker is installing.");
       installing.onstatechange = () => {
         if (installing.state === 'installed') {
-          console.log("Noice, it is installed.");
+          console.log("Service worker installed.");
         } else if (installing.state === 'activated') {
-          console.log("Dang it is ACTIVE.");
+          console.log("Service worker is ACTIVE.");
           window.location.reload();
         }
       };
