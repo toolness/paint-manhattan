@@ -5,8 +5,10 @@ import { ActionPrompt } from "./action-prompt.js";
 import { Timer } from "../timer.js";
 var StorySource;
 (function (StorySource) {
-    // "Manhattan Street Names Past and Present" by Dan Rogerson:
-    // https://www.amazon.com/dp/B00C0MTRUK
+    /**
+     * "Manhattan Street Names Past and Present" by Dan Rogerson:
+     * https://www.amazon.com/dp/B00C0MTRUK
+     */
     StorySource[StorySource["Rogerson"] = 0] = "Rogerson";
 })(StorySource || (StorySource = {}));
 const STORIES = [
