@@ -200,6 +200,17 @@ const STORIES = [
             StorySource.Rogerson,
             "https://en.wikipedia.org/wiki/Radio_Row",
         ]
+    },
+    {
+        name: "Dey Street",
+        content: [
+            "Laid out before 1767 and named after a local landowner, Dey Street was home to the American Telephone and Telegraph Company for most of the 20th century.",
+            "The company's headquarters at Broadway and Dey was the New York end of the first transatlantic telephone call, made to London in 1927."
+        ],
+        sources: [
+            StorySource.Rogerson,
+            "https://en.wikipedia.org/wiki/195_Broadway"
+        ]
     }
 ];
 const STORY_CHARS_PER_LINE = 35;
