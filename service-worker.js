@@ -1,4 +1,4 @@
-importScripts("./service-worker-metadata.js");
+importScripts("./dist/service-worker-metadata.js");
 
 const MY_URL = new URL(self.location.href);
 

@@ -14,11 +14,11 @@ const GLOBS = [
   'debug.html',
 ];
 
-const FILE_NAME = 'service-worker-metadata.js';
+const FILE_NAME = path.join('dist', 'service-worker-metadata.js');
 
 const WRITE_FILE_DELAY_MS = 500;
 
-const watcher = chokidar.watch(GLOBS);
+const watcher = chokidar.watch(GLOBS, {ignored: [FILE_NAME]});
 
 const files = new Set();
 
@@ -72,7 +72,7 @@ watcher.on('change', path => {
 });
 
 watcher.on('unlink', path => {
-  files.delete('path');
+  files.delete(path);
   scheduleWriteFile();
 });
 
