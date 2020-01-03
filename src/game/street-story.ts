@@ -145,7 +145,7 @@ const STORIES: StreetStory[] = [
     name: "Broadway",
     content: [
       "New Amsterdam had a large open area on the north side of its fort that formed the foot of \"De Breede Wegh\" which means \"The Broad Way.\"",
-      "The open area became modern Bowling Green Park, while The Broad Way extended to Wall Street, where one of two city gates was located.",
+      "The open area became modern Bowling Green Park, while The Broad Way extended to what was then the city wall at Wall Street, where one of two city gates was located.",
     ],
     sources: [StorySource.Rogerson],
   },
