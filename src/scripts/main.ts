@@ -47,6 +47,40 @@ async function main() {
   manhattan.start();
 }
 
-main().catch(e => {
+async function registerServiceWorker() {
+  if (!('serviceWorker' in window.navigator)) return;
+
+  const pageURL = new URL(window.location.href);
+  const workerURL = new URL('./service-worker.js', pageURL);
+  const registration = await window.navigator.serviceWorker.register(workerURL.href);
+  console.log('Service worker registration succeeded:', registration);
+  window.navigator.serviceWorker.oncontrollerchange = () => {
+    console.log("Controller changed!!");
+    // For some reason this event seems to fire prematurely, so we won't reload here.
+    // window.location.reload();
+  };
+  registration.onupdatefound = () => {
+    console.log("Noice, an update was found.");
+    const { installing } = registration;
+    if (installing) {
+      console.log("Neat installing!", installing);
+      installing.onstatechange = () => {
+        if (installing.state === 'installed') {
+          console.log("Noice, it is installed.");
+        } else if (installing.state === 'activated') {
+          console.log("Dang it is ACTIVE.");
+          window.location.reload();
+        }
+      };
+    }
+  };
+  registration.update();
+}
+
+function reportError(e: Error) {
   console.error(e);
-});
+}
+
+main().catch(reportError);
+
+registerServiceWorker().catch(reportError);
