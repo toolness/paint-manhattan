@@ -15,6 +15,20 @@ function getPixelsLeftText(pixelsLeft) {
     const pixels = pixelsLeft === 1 ? 'pixel' : 'pixels';
     return `${pixelsLeft} ${pixels} left`;
 }
+function getFirstStreetWithStory(streets) {
+    for (let street of streets) {
+        if (StreetStoryState.existsForStreet(street)) {
+            return street;
+        }
+    }
+    return null;
+}
+function moveStoriedStreetToTopOfArray(streets) {
+    const streetWithStory = getFirstStreetWithStory(streets);
+    if (!streetWithStory)
+        return streets;
+    return moveToTopOfArray(streets, streetWithStory);
+}
 export class GameplayState extends ManhattanState {
     constructor(game) {
         super(game);
@@ -26,6 +40,9 @@ export class GameplayState extends ManhattanState {
         let highlightFrames = shuffleArray(getStreetFrames(game.options.sheet));
         if (game.options.startWithStreet) {
             moveToTopOfArray(highlightFrames, game.options.startWithStreet);
+        }
+        else {
+            moveStoriedStreetToTopOfArray(highlightFrames);
         }
         if (game.options.minStreetSize > 0) {
             highlightFrames = highlightFrames.filter(frame => {
@@ -205,6 +222,8 @@ export class GameplayState extends ManhattanState {
         }
     }
     drawScore(ctx) {
+        if (!this.game.options.showScore)
+            return;
         const { tinyFont } = this.game.options;
         const x = 1;
         const y = this.game.canvas.height - tinyFont.options.charHeight - 1;
