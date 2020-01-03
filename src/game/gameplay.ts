@@ -34,6 +34,21 @@ function getPixelsLeftText(pixelsLeft: number): string {
   return `${pixelsLeft} ${pixels} left`;
 }
 
+function getFirstStreetWithStory(streets: string[]): string|null {
+  for (let street of streets) {
+    if (StreetStoryState.existsForStreet(street)) {
+      return street;
+    }
+  }
+  return null;
+}
+
+function moveStoriedStreetToTopOfArray(streets: string[]): string[] {
+  const streetWithStory = getFirstStreetWithStory(streets);
+  if (!streetWithStory) return streets;
+  return moveToTopOfArray(streets, streetWithStory);
+}
+
 export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
   private readonly highlightFrames: string[];
@@ -48,6 +63,8 @@ export class GameplayState extends ManhattanState {
     let highlightFrames = shuffleArray(getStreetFrames(game.options.sheet));
     if (game.options.startWithStreet) {
       moveToTopOfArray(highlightFrames, game.options.startWithStreet);
+    } else {
+      moveStoriedStreetToTopOfArray(highlightFrames);
     }
     if (game.options.minStreetSize > 0) {
       highlightFrames = highlightFrames.filter(frame => {
