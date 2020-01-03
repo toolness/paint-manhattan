@@ -220,6 +220,14 @@ const STORIES: StreetStory[] = [
       StorySource.Rogerson,
       "https://en.wikipedia.org/wiki/195_Broadway"
     ]
+  },
+  {
+    name: "Rose Street",
+    content: [
+      "Lewis Tappan, a wealthy abolitionist merchant, had a mansion on Rose Street which was ransacked by a mob of anti-abolitionists in 1834.",
+      "Today, only a small piece of Rose Street survives, under the approach to the Brooklyn Bridge."
+    ],
+    sources: ["https://forgotten-ny.com/1999/09/lower-manhattan-necrology/"]
   }
 ];
 
