@@ -7,8 +7,10 @@ import { ActionPrompt } from "./action-prompt.js";
 import { Timer } from "../timer.js";
 
 enum StorySource {
-  // "Manhattan Street Names Past and Present" by Dan Rogerson:
-  // https://www.amazon.com/dp/B00C0MTRUK
+  /**
+   * "Manhattan Street Names Past and Present" by Dan Rogerson:
+   * https://www.amazon.com/dp/B00C0MTRUK
+   */
   Rogerson,
 }
 
