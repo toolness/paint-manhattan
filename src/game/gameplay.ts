@@ -267,6 +267,8 @@ export class GameplayState extends ManhattanState {
   }
 
   private drawScore(ctx: CanvasRenderingContext2D) {
+    if (!this.game.options.showScore) return;
+
     const { tinyFont } = this.game.options;
 
     const x = 1;

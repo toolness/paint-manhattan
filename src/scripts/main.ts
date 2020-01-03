@@ -39,6 +39,7 @@ async function main() {
     showStreetStories: !(qs.get('nostreetstories') === 'on'),
     onlyShowStreetsWithStories: qs.get('streetstoriesonly') === 'on',
     startWithStreet: qs.get('street') || undefined,
+    showScore: qs.get('score') === 'on',
     successSoundEffect: new OptionalSoundEffect(urls.SUCCESS_AUDIO_URL),
     missSoundEffect: new OptionalSoundEffect(urls.MISS_AUDIO_URL),
   });

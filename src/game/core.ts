@@ -23,6 +23,7 @@ export type ManhattanOptions = {
   missSoundEffect: SoundEffect,
   showStreetStories: boolean,
   onlyShowStreetsWithStories: boolean,
+  showScore: boolean,
 };
 
 export class Manhattan {
