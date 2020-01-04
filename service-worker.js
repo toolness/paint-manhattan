@@ -43,6 +43,12 @@ function normalizeRequest(request) {
   return request;
 }
 
+self.addEventListener('message', event => {
+  if (event.data === 'ping') {
+    event.source.postMessage(`pong ${FILE_CONTENT_HASH}`);
+  }
+});
+
 self.addEventListener('install', event => {
   console.log(`Service worker ${SHORT_VER} is installing at ${self.location.href}.`);
   const install = async () => {

@@ -1,6 +1,34 @@
 /** Location of the service worker script relative to our web pages. */
 const SERVICE_WORKER_SCRIPT = './service-worker.js';
 
+/** The content hash for the current offline version. */
+let offlineVersion = '';
+
+/** Listeners to notify when offline state changes. */
+const changeListeners: Function[] = [];
+
+/**
+ * Return the content hash for the current offline version, or an empty string if
+ * we don't know.
+ */
+export function getOfflineVersion(): string {
+  return offlineVersion;
+}
+
+/**
+ * Register a function to be called when information about the offline
+ * state changes. Returns a function to unsubscribe from updates.
+ */
+export function onOfflineStateChange(cb: Function): Function {
+  changeListeners.push(cb);
+  return () => {
+    const idx = changeListeners.indexOf(cb);
+    if (idx !== -1) {
+      changeListeners.splice(idx, 1);
+    }
+  };
+}
+
 /** Returns whether the user wants offline support. */
 export function wantsOfflineSupport(): boolean {
   const qs = new URLSearchParams(window.location.search);
@@ -31,6 +59,14 @@ export async function enableOfflineSupport() {
     // For some reason this event seems to fire prematurely, so we won't reload here.
     // window.location.reload();
   };
+  window.navigator.serviceWorker.onmessage = event => {
+    if (typeof(event.data) === 'string' && event.data.startsWith('pong ')) {
+      offlineVersion = event.data.split(' ')[1];
+    }
+  };
+  if (registration.active) {
+    registration.active.postMessage('ping');
+  }
   registration.onupdatefound = () => {
     console.log("A service worker update was found.");
     const { installing } = registration;
