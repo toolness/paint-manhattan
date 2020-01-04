@@ -6,13 +6,14 @@
   "author": "Atul Varma <varmaa@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^13.1.4",
     "chokidar": "^3.3.1",
     "concurrently": "^5.0.2",
     "http-server": "^0.12.0",
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "build": "tsc && node build-service-worker-metadata.js",
-    "start": "concurrently --kill-others \"node build-service-worker-metadata.js --watch\" \"tsc --watch --preserveWatchOutput\" \"http-server -c-1 -p 8000\""
+    "build": "tsc && node dist/scripts/build-service-worker-metadata.js",
+    "start": "concurrently --kill-others \"node dist/scripts/build-service-worker-metadata.js --watch\" \"tsc --watch --preserveWatchOutput\" \"http-server -c-1 -p 8000\""
   }
 }

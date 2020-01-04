@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
-const chokidar = require('chokidar');
+const fs: typeof import('fs') = require('fs');
+const path: typeof import('path') = require('path');
+const nodeCrypto: typeof import('crypto') = require('crypto');
+const chokidar: typeof import('chokidar') = require('chokidar');
 
 const GLOBS = [
   'graphics/**/*.png',
@@ -16,13 +16,20 @@ const GLOBS = [
 
 const FILE_NAME = path.join('dist', 'service-worker-metadata.js');
 
+const FILES_TO_EXCLUDE_FROM_METADATA = [
+  FILE_NAME,
+  path.join('dist', 'scripts', 'build-service-worker-metadata.js'),
+];
+
 const WRITE_FILE_DELAY_MS = 500;
 
-const watcher = chokidar.watch(GLOBS, {ignored: [FILE_NAME]});
+const watcher = chokidar.watch(GLOBS, {
+  ignored: FILES_TO_EXCLUDE_FROM_METADATA,
+});
 
-const files = new Set();
+const files = new Set<string>();
 
-let timeout = null;
+let timeout: NodeJS.Timeout|null = null;
 
 function clearWriteFileTimeout() {
   if (timeout !== null) {
@@ -33,7 +40,7 @@ function clearWriteFileTimeout() {
 
 function writeFile() {
   clearWriteFileTimeout();
-  const hasher = crypto.createHash('sha256');
+  const hasher = nodeCrypto.createHash('sha256');
   const fileList = Array.from(files).sort();
   let totalBytes = 0;
   for (let filename of fileList) {
