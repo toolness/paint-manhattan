@@ -6,6 +6,7 @@ import { OptionalSoundEffect } from "../audio.js";
 import * as urls from '../game/urls.js';
 import { validateStreetStories } from "../game/street-story.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
+import { enableOfflineSupport } from "../offline.js";
 const FONT_OPTIONS = {
     charWidth: 6,
     charHeight: 8,
@@ -42,6 +43,7 @@ async function main() {
     });
     validateStreetStories(getStreetFrames(sheet));
     manhattan.start();
+    await enableOfflineSupport();
 }
 main().catch(e => {
     console.error(e);
