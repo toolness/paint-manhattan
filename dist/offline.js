@@ -54,6 +54,7 @@ export async function enableOfflineSupport() {
     window.navigator.serviceWorker.onmessage = event => {
         if (typeof (event.data) === 'string' && event.data.startsWith('pong ')) {
             offlineVersion = event.data.split(' ')[1];
+            changeListeners.forEach(cb => cb());
         }
     };
     if (registration.active) {
