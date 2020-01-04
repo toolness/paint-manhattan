@@ -32,13 +32,22 @@ export function initializeAudio() {
     audioInitCallbacks.splice(0);
 }
 async function loadAudio(url) {
+    if (!url.endsWith('.mp3')) {
+        throw new Error('Only MP3 audio is currently supported!');
+    }
     const audio = document.createElement('audio');
+    const response = await fetch(url);
+    if (response.status !== 200) {
+        throw new Error(`GET ${url} returned HTTP ${response.status}`);
+    }
+    const buf = await response.arrayBuffer();
+    const objectURL = URL.createObjectURL(new Blob([buf], { type: 'audio/mpeg' }));
     return new Promise((resolve, reject) => {
         audioInitCallbacks.push(() => audio.load());
         audio.oncanplay = () => {
             resolve(audio);
         };
         audio.onerror = reject;
-        audio.src = url;
+        audio.src = objectURL;
     });
 }
