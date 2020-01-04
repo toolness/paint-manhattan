@@ -6,6 +6,7 @@ import { OptionalSoundEffect } from "../audio.js";
 import * as urls from '../game/urls.js';
 import { validateStreetStories } from "../game/street-story.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
+import { enableOfflineSupport } from "../offline.js";
 
 const FONT_OPTIONS: BitmapFontOptions = {
   charWidth: 6,
@@ -45,42 +46,10 @@ async function main() {
   });
   validateStreetStories(getStreetFrames(sheet));
   manhattan.start();
+
+  await enableOfflineSupport();
 }
 
-async function registerServiceWorker() {
-  if (!('serviceWorker' in window.navigator)) return;
-
-  const pageURL = new URL(window.location.href);
-  const workerURL = new URL('./service-worker.js', pageURL);
-  const registration = await window.navigator.serviceWorker.register(workerURL.href);
-  console.log('Service worker registration succeeded.');
-  window.navigator.serviceWorker.oncontrollerchange = () => {
-    console.log("Controller changed.");
-    // For some reason this event seems to fire prematurely, so we won't reload here.
-    // window.location.reload();
-  };
-  registration.onupdatefound = () => {
-    console.log("A service worker update was found.");
-    const { installing } = registration;
-    if (installing) {
-      console.log("Service worker is installing.");
-      installing.onstatechange = () => {
-        if (installing.state === 'installed') {
-          console.log("Service worker installed.");
-        } else if (installing.state === 'activated') {
-          console.log("Service worker is ACTIVE.");
-          window.location.reload();
-        }
-      };
-    }
-  };
-  registration.update();
-}
-
-function reportError(e: Error) {
+main().catch(e => {
   console.error(e);
-}
-
-main().catch(reportError);
-
-registerServiceWorker().catch(reportError);
+});

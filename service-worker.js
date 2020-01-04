@@ -12,19 +12,36 @@ function isOldCache(cacheName) {
   return cacheName.startsWith(PREFIX) && cacheName !== VERSION;
 }
 
+function clientWantsOfflineContent(client, url) {
+  if (client) {
+    url = client.url;
+  }
+
+  const qs = new URLSearchParams(new URL(url).search);
+
+  // Note that `src/offline.ts` uses the same logic to determine
+  // if the requesting/requested page wants offline support, so if this
+  // logic changes, make sure it changes there too.
+  return qs.get('offline') === 'on';
+}
+
 function normalizeRequest(request) {
   const url = new URL(request.url);
   const rootDir = new URL('./', MY_URL);
   const indexHTML = new URL('./index.html', MY_URL);
-  if (url.origin === MY_URL.origin && (url.pathname === rootDir.pathname || url.pathname === indexHTML.pathname)) {
-    // The root directory and the index.html both refer to the same physical file. Also,
-    // we want to strip off any querystring arguments to ensure that we have a cache hit.
-    return new Request(indexHTML.href);
+  const debugHTML = new URL('./debug.html', MY_URL);
+  if (url.origin === MY_URL.origin) {
+    // If the request is one of our HTML files, we want to strip off any querystring arguments
+    // to ensure that we have a cache hit.
+    if (url.pathname === rootDir.pathname || url.pathname === indexHTML.pathname) {
+      // The root directory and the index.html both refer to the same physical file.
+      return new Request(indexHTML.href);
+    } else if (url.pathname === debugHTML.pathname) {
+      return new Request(debugHTML.href);
+    }
   }
   return request;
 }
-
-console.log(`Service worker ${SHORT_VER} is running.`);
 
 self.addEventListener('install', event => {
   console.log(`Service worker ${SHORT_VER} is installing at ${self.location.href}.`);
@@ -53,14 +70,17 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const respond = async () => {
-    const request = normalizeRequest(event.request);
-    const response = await caches.match(request);
-    if (response) {
-      return response;
+    const client = await clients.get(event.clientId);
+    let request = event.request;
+    if (clientWantsOfflineContent(client, request.url)) {
+      request = normalizeRequest(event.request);
+      const response = await caches.match(request);
+      if (response) {
+        return response;
+      }
+      throw new Error(`Unexpected network request: ${request.url}`);
     }
-    console.log(`Fetching ${request.url} from the network.`, request);
-    throw new Error(`Unexpected network request: ${request.url}`);
-    // return fetch(request);
+    return fetch(request);
   };
   event.respondWith(respond());
 });
