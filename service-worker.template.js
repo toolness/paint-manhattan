@@ -1,4 +1,20 @@
-importScripts("./dist/service-worker-metadata.js");
+// Here begins service-worker.template.js.
+//
+// This file will be used as a template for the actual service worker.
+// Specfically, the following variable definitions will be pre-pended
+// to the beginning:
+//
+// * `FILE_LIST` will be an array of strings corresponding to the files
+//   that the app needs.
+//
+// * `FILE_CONTENT_HASH` will be a string hash of all the contents of the
+//   files in `FILE_LIST`.
+//
+// Note that we used to store these variables in a separate file and
+// import them via importScripts(), but it seems not all browsers actually
+// check to see if files imported via importScripts() have changed when
+// checking for service worker updates, so we're just embedding it in
+// the service worker instead.
 
 const MY_URL = new URL(self.location.href);
 

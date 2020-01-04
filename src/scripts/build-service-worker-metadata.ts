@@ -3,6 +3,8 @@ const path: typeof import('path') = require('path');
 const nodeCrypto: typeof import('crypto') = require('crypto');
 const chokidar: typeof import('chokidar') = require('chokidar');
 
+const TEMPLATE_FILE_NAME = 'service-worker.template.js';
+
 const GLOBS = [
   'graphics/**/*.png',
   'graphics/**/*.json',
@@ -12,19 +14,19 @@ const GLOBS = [
   'favicon.ico',
   'index.html',
   'debug.html',
+  TEMPLATE_FILE_NAME,
 ];
 
-const FILE_NAME = path.join('dist', 'service-worker-metadata.js');
+const FILE_NAME = 'service-worker.js';
 
-const FILES_TO_EXCLUDE_FROM_METADATA = [
-  FILE_NAME,
+const FILES_TO_IGNORE = [
   path.join('dist', 'scripts', 'build-service-worker-metadata.js'),
 ];
 
 const WRITE_FILE_DELAY_MS = 500;
 
 const watcher = chokidar.watch(GLOBS, {
-  ignored: FILES_TO_EXCLUDE_FROM_METADATA,
+  ignored: FILES_TO_IGNORE,
 });
 
 const files = new Set<string>();
@@ -41,7 +43,7 @@ function clearWriteFileTimeout() {
 function writeFile() {
   clearWriteFileTimeout();
   const hasher = nodeCrypto.createHash('sha256');
-  const fileList = Array.from(files).sort();
+  const fileList = Array.from(files).filter(f => f !== TEMPLATE_FILE_NAME).sort();
   let totalBytes = 0;
   for (let filename of fileList) {
     const buf = fs.readFileSync(filename);
@@ -60,7 +62,8 @@ function writeFile() {
     ``,
     `const FILE_LIST = ${JSON.stringify(posixFileList, null, 2)};`
   ].join('\n');
-  fs.writeFileSync(FILE_NAME, js);
+  const template = fs.readFileSync(TEMPLATE_FILE_NAME, {encoding: 'utf-8'});
+  fs.writeFileSync(FILE_NAME, [js, template].join('\n\n'));
   console.log(`Wrote ${FILE_NAME} (${fileList.length} files / ${totalBytes} bytes / hash ${hash.slice(0, 10)}).`);
 }
 
