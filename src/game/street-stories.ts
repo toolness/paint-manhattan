@@ -6,10 +6,16 @@ enum StorySource {
   Rogerson,
 }
 
+enum Era {
+  Dutch = 1664,
+  British = 1776,
+}
+
 export type StreetStory = {
   name: string,
   content: string|string[],
   sources: (string|StorySource)[],
+  time?: number|Era,
 };
 
 const STREET_STORIES: StreetStory[] = [
@@ -20,11 +26,13 @@ const STREET_STORIES: StreetStory[] = [
       "Today it's home to a famous skyscraper by Frank Gehry, located between William and Nassau.",
     ],
     sources: ["https://en.wikipedia.org/wiki/Spruce_Street_(Manhattan)"],
+    time: 1725,
   },
   {
     name: "Bridge Street",
     content: "Bridge street was given its name because it was one of three bridges that crossed a canal located at present-day Broad Street.",
     sources: ["https://en.wikipedia.org/wiki/Bridge_Street_(Manhattan)"],
+    time: Era.Dutch,
   },
   {
     name: "Front Street",
@@ -34,6 +42,7 @@ const STREET_STORIES: StreetStory[] = [
     ],
     // Weirdly, the Wikipedia entry for "Front Street (Manhattan)" actually redirects to Lower Manhattan and includes no information about Front street.
     sources: ["https://en.wikipedia.org/wiki/South_Street_(Manhattan)"],
+    time: 1787,  // Regulated (Rogerson).
   },
   {
     name: "Pearl Street",
@@ -43,6 +52,7 @@ const STREET_STORIES: StreetStory[] = [
       "During British rule, it was called Great Queen Street, but changed back after the revolution.",
     ],
     sources: ["https://en.wikipedia.org/wiki/Pearl_Street_(Manhattan)"],
+    time: Era.Dutch,
   },
   {
     name: "Wall Street",
@@ -51,6 +61,7 @@ const STREET_STORIES: StreetStory[] = [
       "The city directly benefited from the sale of slaves by implementing taxes on every person who was bought and sold there.",
     ],
     sources: ["https://en.wikipedia.org/wiki/Wall_Street"],
+    time: 1653,  // Ordered built (Rogerson).
   },
   {
     name: "Fair/Fulton Street",
@@ -59,6 +70,7 @@ const STREET_STORIES: StreetStory[] = [
       "Eventually it extended to Pearl, and near their intersection in 1882 was built Pearl Street Station, the first commercial central power plant in the United States."
     ],
     sources: ["https://en.wikipedia.org/wiki/Fulton_Street_(Manhattan)"],
+    time: 1696,  // Laid out prior to (Rogerson).
   },
   {
     name: "Stone Street",
@@ -70,6 +82,7 @@ const STREET_STORIES: StreetStory[] = [
       "https://en.wikipedia.org/wiki/Stone_Street_(Manhattan)",
       StorySource.Rogerson,
     ],
+    time: 1646,  // Brewery established on the street at this time (Rogerson).
   },
   {
     name: "New Street",
@@ -78,6 +91,7 @@ const STREET_STORIES: StreetStory[] = [
       "However, a better name for this street was never settled on.",
     ],
     sources: [StorySource.Rogerson],
+    time: 1679,
   },
   {
     name: "Chatham/Park Row",
@@ -86,6 +100,7 @@ const STREET_STORIES: StreetStory[] = [
       "By 1886, all of Chatham Street would be renamed Park Row as well.",
     ],
     sources: [StorySource.Rogerson],
+    time: 1774,  // Named (Rogerson).
   },
   {
     name: "Catharine Street",
@@ -93,6 +108,9 @@ const STREET_STORIES: StreetStory[] = [
       "Catharine street was named after Catharine Desbrosses, a member of a prominent family whose distillery was located at the foot of this street.",
     ],
     sources: [StorySource.Rogerson],
+    // According to "The Old Merchants of New York City, Volume 5" by Walter Barrett, the Desbrosses were
+    // a prominent family just before hte American Revolution.
+    time: Era.British,
   },
   {
     name: "Church Street",
@@ -101,6 +119,7 @@ const STREET_STORIES: StreetStory[] = [
       "In 1869, it was extended south to the Battery.",
     ],
     sources: [StorySource.Rogerson],
+    time: 1767,  // Laid out (Rogerson).
   },
   {
     name: "Beaver Street",
@@ -109,6 +128,7 @@ const STREET_STORIES: StreetStory[] = [
       "It was named after the animal that was a prominent economic resource of New Amsterdam.",
     ],
     sources: [StorySource.Rogerson],
+    time: Era.Dutch,
   },
   {
     name: "Broad Street",
@@ -117,6 +137,7 @@ const STREET_STORIES: StreetStory[] = [
       "The British filled the canal in 1676, resulting in a very wide street that became known as The Broad Street.",
     ],
     sources: [StorySource.Rogerson],
+    time: Era.Dutch,
   },
   {
     name: "Vesey Street",
@@ -125,6 +146,7 @@ const STREET_STORIES: StreetStory[] = [
       "It was ceded by the church to the city in 1761.",
     ],
     sources: [StorySource.Rogerson],
+    time: 1761,  // Regulated (Rogerson).
   },
   {
     name: "Rector Street",
@@ -132,6 +154,7 @@ const STREET_STORIES: StreetStory[] = [
       "This street, first laid out in 1739, was so named because the residence of the rector of Trinity Church stood here.",
     ],
     sources: [StorySource.Rogerson],
+    time: 1739,  // Laid out (Rogerson).
   },
   {
     name: "Broadway",
@@ -140,6 +163,7 @@ const STREET_STORIES: StreetStory[] = [
       "The open area became modern Bowling Green Park, while The Broad Way extended to what was then the city wall at Wall Street, where one of two city gates was located.",
     ],
     sources: [StorySource.Rogerson],
+    time: Era.Dutch,
   },
   {
     name: "Liberty Street",
@@ -147,6 +171,9 @@ const STREET_STORIES: StreetStory[] = [
       "Originally called Crown Street, this street was renamed Liberty in 1794 to remove references to the nation's former colonial status.",
     ],
     sources: [StorySource.Rogerson],
+    // Rogerson makes no mention of this having any name other than "Crown", which was of British origin,
+    // so we'll assume it was created during British rule.
+    time: Era.British,
   },
   {
     name: "Ann Street",
@@ -155,6 +182,8 @@ const STREET_STORIES: StreetStory[] = [
       "In 1841, P.T. Barnum's American Museum opened at the corner of Ann and Vesey. It was was one of the most popular showplaces in the nation during the 19th century.",
     ],
     sources: ["https://en.wikipedia.org/wiki/Ann_Street_(Manhattan)"],
+    // Rogerson mentions Ann is present on the Bradford Map of 1730.
+    time: 1730,
   },
   {
     name: "Cliff Street",
@@ -167,6 +196,7 @@ const STREET_STORIES: StreetStory[] = [
       "https://en.wikipedia.org/wiki/African_Free_School",
       "https://www.nyhistory.org/web/africanfreeschool/timeline/timeline-print.html",
     ],
+    time: 1686,  // Laid out some time prior to (Rogerson).
   },
   {
     name: "Maiden Lane",
@@ -180,6 +210,7 @@ const STREET_STORIES: StreetStory[] = [
       "https://herb.ashp.cuny.edu/items/show/690",
       "https://en.wikipedia.org/wiki/New_York_Slave_Revolt_of_1712",
     ],
+    time: Era.Dutch,
   },
   {
     name: "Chatham Street/Park Row",
@@ -191,6 +222,7 @@ const STREET_STORIES: StreetStory[] = [
       "https://www.nytimes.com/2005/11/13/nyregion/thecity/the-schoolteacher-on-the-streetcar.html",
       "https://en.wikipedia.org/wiki/Elizabeth_Jennings_Graham",
     ],
+    time: 1774,  // Named (Rogerson).
   },
   {
     name: "Courtlandt Street",
@@ -202,7 +234,8 @@ const STREET_STORIES: StreetStory[] = [
     sources: [
       StorySource.Rogerson,
       "https://en.wikipedia.org/wiki/Radio_Row",
-    ]
+    ],
+    time: 1733,  // Laid out (Rogerson).
   },
   {
     name: "Dey Street",
@@ -213,7 +246,8 @@ const STREET_STORIES: StreetStory[] = [
     sources: [
       StorySource.Rogerson,
       "https://en.wikipedia.org/wiki/195_Broadway"
-    ]
+    ],
+    time: 1767,  // Laid out prior to (Rogerson).
   },
   {
     name: "Rose Street",
@@ -221,7 +255,10 @@ const STREET_STORIES: StreetStory[] = [
       "Lewis Tappan, a wealthy abolitionist merchant, had a mansion on Rose Street which was ransacked by a mob of anti-abolitionists in 1834.",
       "Today, only a small piece of Rose Street survives, under the approach to the Brooklyn Bridge."
     ],
-    sources: ["https://forgotten-ny.com/1999/09/lower-manhattan-necrology/"]
+    sources: ["https://forgotten-ny.com/1999/09/lower-manhattan-necrology/"],
+    // According to Rogerson, the street was renamed from Prince to Rose in 1794, so
+    // it existed *before* this time...
+    time: 1794,
   }
 ];
 
