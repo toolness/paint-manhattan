@@ -262,13 +262,17 @@ const STREET_STORIES: StreetStory[] = [
   }
 ];
 
-export function getStreetStory(streetName: string): StreetStory|null {
-  for (let story of STREET_STORIES) {
-    if (story.name === streetName) {
-      return story;
-    }
+const storiesByName: Map<string, StreetStory> = new Map();
+
+STREET_STORIES.forEach(story => {
+  if (storiesByName.has(story.name)) {
+    console.warn(`Multiple street stories for "${story.name}" exist.`);
   }
-  return null;
+  storiesByName.set(story.name, story);
+});
+
+export function getStreetStory(streetName: string): StreetStory|null {
+  return storiesByName.get(streetName) || null;
 }
 
 export function validateStreetStories(allStreetNames: string[]) {
