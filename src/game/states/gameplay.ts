@@ -5,7 +5,7 @@ import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.j
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
 import { shortenStreetName } from "../street-util.js";
-import { sortStreetsChronologically } from "../street-stories.js";
+import { sortStreetsChronologically, getStreetsInNarrativeOrder } from "../street-stories.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -65,6 +65,8 @@ export class GameplayState extends ManhattanState {
     let highlightFrames = getStreetFrames(game.options.sheet);
     if (game.options.showStreetsChronologically) {
       sortStreetsChronologically(highlightFrames).reverse();
+    } else if (game.options.showStreetsInNarrativeOrder) {
+      highlightFrames = getStreetsInNarrativeOrder().reverse();
     } else {
       shuffleArray(highlightFrames);
     }

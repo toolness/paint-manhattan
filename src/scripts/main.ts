@@ -44,6 +44,7 @@ async function main() {
     successSoundEffect: new OptionalSoundEffect(urls.SUCCESS_AUDIO_URL),
     missSoundEffect: new OptionalSoundEffect(urls.MISS_AUDIO_URL),
     showStreetsChronologically: qs.get('chrono') === 'on',
+    showStreetsInNarrativeOrder: qs.get('narrative') === 'on',
   });
   validateStreetStories(getStreetFrames(sheet));
   manhattan.start();

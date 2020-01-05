@@ -25,6 +25,7 @@ export type ManhattanOptions = {
   onlyShowStreetsWithStories: boolean,
   showScore: boolean,
   showStreetsChronologically: boolean,
+  showStreetsInNarrativeOrder: boolean,
 };
 
 export class Manhattan {
