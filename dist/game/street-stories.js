@@ -6,6 +6,11 @@ var StorySource;
      */
     StorySource[StorySource["Rogerson"] = 0] = "Rogerson";
 })(StorySource || (StorySource = {}));
+var Era;
+(function (Era) {
+    Era[Era["Dutch"] = 1664] = "Dutch";
+    Era[Era["British"] = 1776] = "British";
+})(Era || (Era = {}));
 const STREET_STORIES = [
     {
         name: "George/Spruce Street",
@@ -14,11 +19,13 @@ const STREET_STORIES = [
             "Today it's home to a famous skyscraper by Frank Gehry, located between William and Nassau.",
         ],
         sources: ["https://en.wikipedia.org/wiki/Spruce_Street_(Manhattan)"],
+        time: 1725,
     },
     {
         name: "Bridge Street",
         content: "Bridge street was given its name because it was one of three bridges that crossed a canal located at present-day Broad Street.",
         sources: ["https://en.wikipedia.org/wiki/Bridge_Street_(Manhattan)"],
+        time: Era.Dutch,
     },
     {
         name: "Front Street",
@@ -28,6 +35,7 @@ const STREET_STORIES = [
         ],
         // Weirdly, the Wikipedia entry for "Front Street (Manhattan)" actually redirects to Lower Manhattan and includes no information about Front street.
         sources: ["https://en.wikipedia.org/wiki/South_Street_(Manhattan)"],
+        time: 1787,
     },
     {
         name: "Pearl Street",
@@ -37,6 +45,7 @@ const STREET_STORIES = [
             "During British rule, it was called Great Queen Street, but changed back after the revolution.",
         ],
         sources: ["https://en.wikipedia.org/wiki/Pearl_Street_(Manhattan)"],
+        time: Era.Dutch,
     },
     {
         name: "Wall Street",
@@ -45,6 +54,7 @@ const STREET_STORIES = [
             "The city directly benefited from the sale of slaves by implementing taxes on every person who was bought and sold there.",
         ],
         sources: ["https://en.wikipedia.org/wiki/Wall_Street"],
+        time: 1653,
     },
     {
         name: "Fair/Fulton Street",
@@ -53,6 +63,7 @@ const STREET_STORIES = [
             "Eventually it extended to Pearl, and near their intersection in 1882 was built Pearl Street Station, the first commercial central power plant in the United States."
         ],
         sources: ["https://en.wikipedia.org/wiki/Fulton_Street_(Manhattan)"],
+        time: 1696,
     },
     {
         name: "Stone Street",
@@ -64,6 +75,7 @@ const STREET_STORIES = [
             "https://en.wikipedia.org/wiki/Stone_Street_(Manhattan)",
             StorySource.Rogerson,
         ],
+        time: 1646,
     },
     {
         name: "New Street",
@@ -72,6 +84,7 @@ const STREET_STORIES = [
             "However, a better name for this street was never settled on.",
         ],
         sources: [StorySource.Rogerson],
+        time: 1679,
     },
     {
         name: "Chatham/Park Row",
@@ -80,6 +93,7 @@ const STREET_STORIES = [
             "By 1886, all of Chatham Street would be renamed Park Row as well.",
         ],
         sources: [StorySource.Rogerson],
+        time: 1774,
     },
     {
         name: "Catharine Street",
@@ -87,6 +101,9 @@ const STREET_STORIES = [
             "Catharine street was named after Catharine Desbrosses, a member of a prominent family whose distillery was located at the foot of this street.",
         ],
         sources: [StorySource.Rogerson],
+        // According to "The Old Merchants of New York City, Volume 5" by Walter Barrett, the Desbrosses were
+        // a prominent family just before hte American Revolution.
+        time: Era.British,
     },
     {
         name: "Church Street",
@@ -95,6 +112,7 @@ const STREET_STORIES = [
             "In 1869, it was extended south to the Battery.",
         ],
         sources: [StorySource.Rogerson],
+        time: 1767,
     },
     {
         name: "Beaver Street",
@@ -103,6 +121,7 @@ const STREET_STORIES = [
             "It was named after the animal that was a prominent economic resource of New Amsterdam.",
         ],
         sources: [StorySource.Rogerson],
+        time: Era.Dutch,
     },
     {
         name: "Broad Street",
@@ -111,6 +130,7 @@ const STREET_STORIES = [
             "The British filled the canal in 1676, resulting in a very wide street that became known as The Broad Street.",
         ],
         sources: [StorySource.Rogerson],
+        time: Era.Dutch,
     },
     {
         name: "Vesey Street",
@@ -119,6 +139,7 @@ const STREET_STORIES = [
             "It was ceded by the church to the city in 1761.",
         ],
         sources: [StorySource.Rogerson],
+        time: 1761,
     },
     {
         name: "Rector Street",
@@ -126,6 +147,7 @@ const STREET_STORIES = [
             "This street, first laid out in 1739, was so named because the residence of the rector of Trinity Church stood here.",
         ],
         sources: [StorySource.Rogerson],
+        time: 1739,
     },
     {
         name: "Broadway",
@@ -134,6 +156,7 @@ const STREET_STORIES = [
             "The open area became modern Bowling Green Park, while The Broad Way extended to what was then the city wall at Wall Street, where one of two city gates was located.",
         ],
         sources: [StorySource.Rogerson],
+        time: Era.Dutch,
     },
     {
         name: "Liberty Street",
@@ -141,6 +164,9 @@ const STREET_STORIES = [
             "Originally called Crown Street, this street was renamed Liberty in 1794 to remove references to the nation's former colonial status.",
         ],
         sources: [StorySource.Rogerson],
+        // Rogerson makes no mention of this having any name other than "Crown", which was of British origin,
+        // so we'll assume it was created during British rule.
+        time: Era.British,
     },
     {
         name: "Ann Street",
@@ -149,6 +175,8 @@ const STREET_STORIES = [
             "In 1841, P.T. Barnum's American Museum opened at the corner of Ann and Vesey. It was was one of the most popular showplaces in the nation during the 19th century.",
         ],
         sources: ["https://en.wikipedia.org/wiki/Ann_Street_(Manhattan)"],
+        // Rogerson mentions Ann is present on the Bradford Map of 1730.
+        time: 1730,
     },
     {
         name: "Cliff Street",
@@ -161,6 +189,7 @@ const STREET_STORIES = [
             "https://en.wikipedia.org/wiki/African_Free_School",
             "https://www.nyhistory.org/web/africanfreeschool/timeline/timeline-print.html",
         ],
+        time: 1686,
     },
     {
         name: "Maiden Lane",
@@ -174,6 +203,7 @@ const STREET_STORIES = [
             "https://herb.ashp.cuny.edu/items/show/690",
             "https://en.wikipedia.org/wiki/New_York_Slave_Revolt_of_1712",
         ],
+        time: Era.Dutch,
     },
     {
         name: "Chatham Street/Park Row",
@@ -185,6 +215,7 @@ const STREET_STORIES = [
             "https://www.nytimes.com/2005/11/13/nyregion/thecity/the-schoolteacher-on-the-streetcar.html",
             "https://en.wikipedia.org/wiki/Elizabeth_Jennings_Graham",
         ],
+        time: 1774,
     },
     {
         name: "Courtlandt Street",
@@ -196,7 +227,8 @@ const STREET_STORIES = [
         sources: [
             StorySource.Rogerson,
             "https://en.wikipedia.org/wiki/Radio_Row",
-        ]
+        ],
+        time: 1733,
     },
     {
         name: "Dey Street",
@@ -207,7 +239,8 @@ const STREET_STORIES = [
         sources: [
             StorySource.Rogerson,
             "https://en.wikipedia.org/wiki/195_Broadway"
-        ]
+        ],
+        time: 1767,
     },
     {
         name: "Rose Street",
@@ -215,16 +248,21 @@ const STREET_STORIES = [
             "Lewis Tappan, a wealthy abolitionist merchant, had a mansion on Rose Street which was ransacked by a mob of anti-abolitionists in 1834.",
             "Today, only a small piece of Rose Street survives, under the approach to the Brooklyn Bridge."
         ],
-        sources: ["https://forgotten-ny.com/1999/09/lower-manhattan-necrology/"]
+        sources: ["https://forgotten-ny.com/1999/09/lower-manhattan-necrology/"],
+        // According to Rogerson, the street was renamed from Prince to Rose in 1794, so
+        // it existed *before* this time...
+        time: 1794,
     }
 ];
-export function getStreetStory(streetName) {
-    for (let story of STREET_STORIES) {
-        if (story.name === streetName) {
-            return story;
-        }
+const storiesByName = new Map();
+STREET_STORIES.forEach(story => {
+    if (storiesByName.has(story.name)) {
+        console.warn(`Multiple street stories for "${story.name}" exist.`);
     }
-    return null;
+    storiesByName.set(story.name, story);
+});
+export function getStreetStory(streetName) {
+    return storiesByName.get(streetName) || null;
 }
 export function validateStreetStories(allStreetNames) {
     const allStreetSet = new Set(allStreetNames);
@@ -233,4 +271,37 @@ export function validateStreetStories(allStreetNames) {
             console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
         }
     }
+}
+/**
+ * Sort the streets chronologically, in ascending order, then alphabetically.
+ *
+ * If a street doesn't have chronology information, it is regarded as having
+ * been built very recently, i.e. it will appear near the end of the list.
+ */
+export function sortStreetsChronologically(streetNames) {
+    return streetNames.sort((a, b) => {
+        const aStory = storiesByName.get(a);
+        const bStory = storiesByName.get(b);
+        if (aStory && bStory) {
+            if (aStory.time < bStory.time) {
+                return -1;
+            }
+            else if (aStory.time > bStory.time) {
+                return 1;
+            }
+        }
+        else if (aStory && !bStory) {
+            return -1;
+        }
+        else if (!aStory && bStory) {
+            return 1;
+        }
+        if (a < b) {
+            return -1;
+        }
+        else if (a > b) {
+            return 1;
+        }
+        return 0;
+    });
 }
