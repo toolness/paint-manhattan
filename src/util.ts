@@ -97,20 +97,19 @@ export function setPixel(im: ImageData, idx: number, r: number, g: number, b: nu
 }
 
 /**
- * Move the given item to the top of the array in-place, so that a
- * subsequent call to `pop()` will return the item.
+ * Move the given item to the beginning of the array in-place.
  * 
  * If the item doesn't exist, a console message will be logged and the
  * array will be returned unmodified.
  */
-export function moveToTopOfArray<T>(arr: T[], item: T): T[] {
+export function moveToStartOfArray<T>(arr: T[], item: T): T[] {
   const idx = arr.indexOf(item);
   if (idx === -1) {
     console.warn(`"${item}" is not in ${JSON.stringify(arr)}`);
     return arr;
   }
   arr.splice(idx, 1);
-  arr.push(item);
+  arr.unshift(item);
   return arr;
 }
 

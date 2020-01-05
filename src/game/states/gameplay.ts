@@ -1,5 +1,5 @@
 import { Manhattan } from "../core.js";
-import { createCanvas, shuffleArray, moveToTopOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel } from "../../util.js";
+import { createCanvas, shuffleArray, moveToStartOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel } from "../../util.js";
 import { BitmapFont } from "../../font.js";
 import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.js";
 import { ManhattanState } from "../state.js";
@@ -35,8 +35,7 @@ function getPixelsLeftText(pixelsLeft: number): string {
   return `${pixelsLeft} ${pixels} left`;
 }
 
-function getLatestStreetWithStory(streets: string[]): string|null {
-  streets = streets.slice().reverse();
+function getFirstStreetWithStory(streets: string[]): string|null {
   for (let street of streets) {
     if (StreetStoryState.existsForStreet(street)) {
       return street;
@@ -45,10 +44,10 @@ function getLatestStreetWithStory(streets: string[]): string|null {
   return null;
 }
 
-function moveStoriedStreetToTopOfArray(streets: string[]): string[] {
-  const streetWithStory = getLatestStreetWithStory(streets);
+function moveStoriedStreetToStartOfArray(streets: string[]): string[] {
+  const streetWithStory = getFirstStreetWithStory(streets);
   if (!streetWithStory) return streets;
-  return moveToTopOfArray(streets, streetWithStory);
+  return moveToStartOfArray(streets, streetWithStory);
 }
 
 export class GameplayState extends ManhattanState {
@@ -64,16 +63,16 @@ export class GameplayState extends ManhattanState {
     this.streetCanvas = streetCanvas;
     let highlightFrames = getStreetFrames(game.options.sheet);
     if (game.options.showStreetsChronologically) {
-      sortStreetsChronologically(highlightFrames).reverse();
+      sortStreetsChronologically(highlightFrames);
     } else if (game.options.showStreetsInNarrativeOrder) {
-      highlightFrames = getStreetsInNarrativeOrder().reverse();
+      highlightFrames = getStreetsInNarrativeOrder();
     } else {
       shuffleArray(highlightFrames);
     }
     if (game.options.startWithStreet) {
-      moveToTopOfArray(highlightFrames, game.options.startWithStreet);
+      moveToStartOfArray(highlightFrames, game.options.startWithStreet);
     } else {
-      moveStoriedStreetToTopOfArray(highlightFrames);
+      moveStoriedStreetToStartOfArray(highlightFrames);
     }
     if (game.options.minStreetSize > 0) {
       highlightFrames = highlightFrames.filter(frame => {
@@ -112,7 +111,7 @@ export class GameplayState extends ManhattanState {
   }
 
   private getNextHighlightFrame(): CurrentHighlightFrameDetails|null {
-    const name = this.highlightFrames.pop();
+    const name = this.highlightFrames.shift();
     if (!name) {
       return null;
     }
