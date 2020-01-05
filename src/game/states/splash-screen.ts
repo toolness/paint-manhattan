@@ -4,6 +4,7 @@ import { initializeAudio } from "../../audio.js";
 import { GameplayState } from "./gameplay.js";
 import { ManhattanState } from "../state.js";
 import { onOfflineStateChange, getOfflineVersion } from "../../offline.js";
+import { requestFullscreen } from "../../fullscreen.js";
 
 export class SplashScreenState extends ManhattanState {
   prompt: ActionPrompt;
@@ -17,6 +18,9 @@ export class SplashScreenState extends ManhattanState {
   update() {
     const { game } = this;
     if (game.pen.justWentUp) {
+      if (game.options.enableFullscreen) {
+        requestFullscreen();
+      }
       initializeAudio();
       game.changeState(this.gameplayState);
       return;

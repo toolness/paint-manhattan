@@ -70,6 +70,18 @@
       <p>Scoring rewards accuracy over speed: it goes up whenever the player finishes a street, and down whenever the player clicks or taps the map but misses the current street.</p>
     </div>
     <div class="row">
+      <label for="fullscreen">
+        <input type="checkbox" name="fullscreen" id="fullscreen">
+        Enable fullscreen mode (requires browser support)
+      </label>
+      <p class="fullscreen-support" style="display: none">
+        Good news! This browser seems to support fullscreen mode.
+      </p>
+      <p class="no-fullscreen-support" style="display: none">
+        Alas, this browser does <strong>not</strong> support fullscreen mode.
+      </p>
+    </div>
+    <div class="row">
       <label for="offline">
         <input type="checkbox" name="offline" id="offline">
         Enable experimental offline mode (requires browser support)

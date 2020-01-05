@@ -2,6 +2,7 @@ import { loadAsepriteSheet } from "../aseprite-sheet.js";
 import { SPRITESHEET_URL } from "../game/urls.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
 import { canSupportOffline } from "../offline.js";
+import { canSupportFullscreen } from "../fullscreen.js";
 
 type FormControl = HTMLInputElement|HTMLSelectElement;
 
@@ -27,10 +28,10 @@ function restoreFormSetting(el: FormControl) {
   }
 }
 
-function showOfflineSupport() {
-  const offlineSelector = canSupportOffline() ? '.offline-support' : '.no-offline-support';
+function showSupport(baseClassName: string, canSupportFn: () => boolean) {
+  const selector = canSupportFn() ? `.${baseClassName}` : `.no-${baseClassName}`;
 
-  Array.from(document.querySelectorAll(offlineSelector)).forEach(el => {
+  Array.from(document.querySelectorAll(selector)).forEach(el => {
     if (el instanceof HTMLElement) {
       el.style.removeProperty('display');
     }
@@ -38,7 +39,8 @@ function showOfflineSupport() {
 }
 
 async function debugMain() {
-  showOfflineSupport();
+  showSupport('offline-support', canSupportOffline);
+  showSupport('fullscreen-support', canSupportFullscreen);
 
   const sheet = await loadAsepriteSheet(SPRITESHEET_URL);
   const streetNames = getStreetFrames(sheet);
