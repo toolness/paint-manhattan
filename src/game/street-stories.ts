@@ -15,7 +15,7 @@ export type StreetStory = {
   name: string,
   content: string|string[],
   sources: (string|StorySource)[],
-  time?: number|Era,
+  time: number|Era,
 };
 
 const STREET_STORIES: StreetStory[] = [
@@ -282,4 +282,34 @@ export function validateStreetStories(allStreetNames: string[]) {
       console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
     }
   }
+}
+
+/**
+ * Sort the streets chronologically, in ascending order, then alphabetically.
+ * 
+ * If a street doesn't have chronology information, it is regarded as having
+ * been built very recently, i.e. it will appear near the end of the list.
+ */
+export function sortStreetsChronologically(streetNames: string[]): string[] {
+  return streetNames.sort((a, b) => {
+    const aStory = storiesByName.get(a);
+    const bStory = storiesByName.get(b);
+    if (aStory && bStory) {
+      if (aStory.time < bStory.time) {
+        return -1;
+      } else if (aStory.time > bStory.time) {
+        return 1;
+      }
+    } else if (aStory && !bStory) {
+      return -1;
+    } else if (!aStory && bStory) {
+      return 1;
+    }
+    if (a < b) {
+      return -1;
+    } else if (a > b) {
+      return 1;
+    }
+    return 0;
+  });
 }

@@ -5,6 +5,7 @@ import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.j
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
 import { shortenStreetName } from "../street-util.js";
+import { sortStreetsChronologically } from "../street-stories.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -34,7 +35,8 @@ function getPixelsLeftText(pixelsLeft: number): string {
   return `${pixelsLeft} ${pixels} left`;
 }
 
-function getFirstStreetWithStory(streets: string[]): string|null {
+function getLatestStreetWithStory(streets: string[]): string|null {
+  streets = streets.slice().reverse();
   for (let street of streets) {
     if (StreetStoryState.existsForStreet(street)) {
       return street;
@@ -44,7 +46,7 @@ function getFirstStreetWithStory(streets: string[]): string|null {
 }
 
 function moveStoriedStreetToTopOfArray(streets: string[]): string[] {
-  const streetWithStory = getFirstStreetWithStory(streets);
+  const streetWithStory = getLatestStreetWithStory(streets);
   if (!streetWithStory) return streets;
   return moveToTopOfArray(streets, streetWithStory);
 }
@@ -60,7 +62,12 @@ export class GameplayState extends ManhattanState {
     super(game);
     const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
     this.streetCanvas = streetCanvas;
-    let highlightFrames = shuffleArray(getStreetFrames(game.options.sheet));
+    let highlightFrames = getStreetFrames(game.options.sheet);
+    if (game.options.showStreetsChronologically) {
+      sortStreetsChronologically(highlightFrames).reverse();
+    } else {
+      shuffleArray(highlightFrames);
+    }
     if (game.options.startWithStreet) {
       moveToTopOfArray(highlightFrames, game.options.startWithStreet);
     } else {
