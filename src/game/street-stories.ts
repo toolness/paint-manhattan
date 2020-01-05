@@ -73,8 +73,9 @@ const STREET_STORIES: StreetStory[] = [
   {
     name: "Wall Street",
     content: [
+      "Built in 1653, this was named for the wooden city wall that ran across the northern edge of New Amsterdam.",
       "From 1711 to 1762, at the corner of Wall and Pearl, the city operated its first official market for the sale and rental of enslaved Africans and Indians.",
-      "The city directly benefited from the sale of slaves by implementing taxes on every person who was bought and sold there.",
+      "The city directly benefited from the sale of slaves through taxes.",
     ],
     sources: ["https://en.wikipedia.org/wiki/Wall_Street"],
     time: 1653,  // Ordered built (Rogerson).
