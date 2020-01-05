@@ -4,7 +4,7 @@ import { BitmapFont } from "../font.js";
 import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "./sheet-frames.js";
 import { ManhattanState } from "./state.js";
 import { StreetStoryState } from "./street-story.js";
-import { shortenStreetName } from "./streets.js";
+import { shortenStreetName } from "./street-util.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
