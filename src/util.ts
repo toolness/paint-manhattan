@@ -163,3 +163,21 @@ export function spaces(count: number): string {
 
   return s.join('');
 }
+
+/**
+ * Return a new array such that if the passed-in array has duplicate
+ * entries, we remove the ones that appear after the first occurrence.
+ */
+export function uniqueArray<T>(arr: T[]): T[] {
+  const result: T[] = [];
+  const set: Set<T> = new Set();
+
+  for (let item of arr) {
+    if (!set.has(item)) {
+      set.add(item);
+      result.push(item);
+    }
+  }
+
+  return result;
+}

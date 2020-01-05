@@ -1,5 +1,5 @@
 import { Manhattan } from "../core.js";
-import { createCanvas, shuffleArray, moveToStartOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel } from "../../util.js";
+import { createCanvas, shuffleArray, moveToStartOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel, uniqueArray } from "../../util.js";
 import { BitmapFont } from "../../font.js";
 import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.js";
 import { ManhattanState } from "../state.js";
@@ -65,7 +65,7 @@ export class GameplayState extends ManhattanState {
     if (game.options.showStreetsChronologically) {
       sortStreetsChronologically(highlightFrames);
     } else if (game.options.showStreetsInNarrativeOrder) {
-      highlightFrames = getStreetsInNarrativeOrder();
+      highlightFrames = uniqueArray(getStreetsInNarrativeOrder().concat(shuffleArray(highlightFrames)));
     } else {
       shuffleArray(highlightFrames);
     }
