@@ -238,46 +238,15 @@ const STREET_NAME_Y = 15;
 const STREET_STORY_Y = 30;
 const MS_PER_CHAR = 40;
 
-type SubState = {
-  type: 'animating',
-  timer: Timer,
-} | {
-  type: 'waiting_for_user',
-  prompt: ActionPrompt,
-};
+class BaseSubState extends ManhattanState {
+  protected storyLines: string[];
 
-export class StreetStoryState extends ManhattanState {
-  private storyLines: string[];
-  private subState: SubState;
-  private charsToAnimate: number;
-
-  constructor(readonly game: Manhattan, readonly gameplayState: GameplayState, readonly story: StreetStory) {
+  constructor(game: Manhattan, protected readonly gameplayState: GameplayState, protected readonly story: StreetStory) {
     super(game);
     this.storyLines = paragraphsToWordWrappedLines(story.content, STORY_CHARS_PER_LINE);
-    this.charsToAnimate = this.storyLines.reduce((total, line) => total + line.length, 0);
-    const timer = new Timer(MS_PER_CHAR, game.updateAndDraw);
-    this.subState = {type: 'animating', timer};
-    timer.start();
   }
 
-  update() {
-    const { game, subState } = this;
-
-    if (subState.type === 'waiting_for_user') {
-      if (game.pen.justWentUp) {
-        game.changeState(this.gameplayState);
-      }
-    } else if (subState.type === 'animating') {
-      if (subState.timer.tick >= this.charsToAnimate || game.pen.justWentUp) {
-        subState.timer.stop();
-        const prompt = new ActionPrompt(game, 'to continue');
-        this.subState = {type: 'waiting_for_user', prompt};
-        prompt.start();
-      }
-    }
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
+  protected drawStory(ctx: CanvasRenderingContext2D, storyLines: string[]) {
     const { game } = this;
     const { font: big, tinyFont: small } = game.options;
     const { width } = this.game.canvas;
@@ -289,22 +258,25 @@ export class StreetStoryState extends ManhattanState {
     big.drawText(ctx, streetName, centerX, STREET_NAME_Y, 'center');
 
     let currY = STREET_STORY_Y;
-    for (let line of this.getAnimatingStoryLines()) {
+    for (let line of storyLines) {
       small.drawText(ctx, line, centerX, currY, 'center');
       currY += small.options.charHeight;
     }
+  }
+}
 
-    if (this.subState.type === 'waiting_for_user') {
-      this.subState.prompt.draw(ctx);
-    }
+class AnimatingSubState extends BaseSubState {
+  private charsToAnimate: number;
+  private timer: Timer;
+
+  constructor(game: Manhattan, gameplayState: GameplayState, story: StreetStory) {
+    super(game, gameplayState, story);
+    this.charsToAnimate = this.storyLines.reduce((total, line) => total + line.length, 0);
+    this.timer = new Timer(MS_PER_CHAR, game.updateAndDraw);
   }
 
-  getAnimatingStoryLines() {
-    if (this.subState.type === 'waiting_for_user') {
-      return this.storyLines;
-    }
-
-    const maxChars = this.subState.timer.tick;
+  private getAnimatingStoryLines() {
+    const maxChars = this.timer.tick;
     const lines: string[] = [];
     let chars = 0;
     for (let line of this.storyLines) {
@@ -321,17 +293,58 @@ export class StreetStoryState extends ManhattanState {
     return lines;
   }
 
-  exit() {
-    if (this.subState.type !== 'waiting_for_user') {
-      throw new Error('Assertion failure, we should only exit the state when waiting for user!');
-    }
-    this.subState.prompt.stop();
+  draw(ctx: CanvasRenderingContext2D) {
+    this.drawStory(ctx, this.getAnimatingStoryLines());
   }
 
-  static forStreet(game: Manhattan, gameplayState: GameplayState, streetName: string): StreetStoryState|null {
+  update() {
+    if (this.timer.tick >= this.charsToAnimate || this.game.pen.justWentUp) {
+      this.game.changeState(new WaitingForUserSubState(this.game, this.gameplayState, this.story));
+    }
+  }
+
+  enter() {
+    this.timer.start();
+  }
+
+  exit() {
+    this.timer.stop();
+  }
+}
+
+class WaitingForUserSubState extends BaseSubState {
+  private prompt: ActionPrompt;
+
+  constructor(game: Manhattan, gameplayState: GameplayState, story: StreetStory) {
+    super(game, gameplayState, story);    
+    this.prompt = new ActionPrompt(game, 'to continue');
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    this.drawStory(ctx, this.storyLines);
+    this.prompt.draw(ctx);
+  }
+
+  update() {
+    if (this.game.pen.justWentUp) {
+      this.game.changeState(this.gameplayState);
+    }
+  }
+
+  enter() {
+    this.prompt.start();
+  }
+
+  exit() {
+    this.prompt.stop();
+  }
+}
+
+export class StreetStoryState {
+  static forStreet(game: Manhattan, gameplayState: GameplayState, streetName: string): AnimatingSubState|null {
     const story = getStreetStory(streetName);
     if (!story) return null;
-    return new StreetStoryState(game, gameplayState, story);
+    return new AnimatingSubState(game, gameplayState, story);
   }
 
   static existsForStreet(streetName: string): boolean {
