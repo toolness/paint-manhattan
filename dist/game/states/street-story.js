@@ -1,9 +1,9 @@
-import { ManhattanState } from "./state.js";
-import { shortenStreetName } from "./street-util.js";
-import { paragraphsToWordWrappedLines } from "../util.js";
-import { ActionPrompt } from "./action-prompt.js";
-import { Timer } from "../timer.js";
-import { STREET_STORIES } from "./street-stories.js";
+import { ManhattanState } from "../state.js";
+import { shortenStreetName } from "../street-util.js";
+import { paragraphsToWordWrappedLines, spaces } from "../../util.js";
+import { ActionPrompt } from "../action-prompt.js";
+import { Timer } from "../../timer.js";
+import { getStreetStory } from "../street-stories.js";
 const STORY_CHARS_PER_LINE = 35;
 const STREET_NAME_Y = 15;
 const STREET_STORY_Y = 30;
@@ -98,29 +98,4 @@ class WaitingForUserSubState extends StreetStoryState {
     exit() {
         this.prompt.stop();
     }
-}
-function getStreetStory(streetName) {
-    for (let story of STREET_STORIES) {
-        if (story.name === streetName) {
-            return story;
-        }
-    }
-    return null;
-}
-export function validateStreetStories(allStreetNames) {
-    const allStreetSet = new Set(allStreetNames);
-    for (let story of STREET_STORIES) {
-        if (!allStreetSet.has(story.name)) {
-            console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
-        }
-    }
-}
-function spaces(count) {
-    let s = [];
-    if (count > 0) {
-        for (let i = 0; i < count; i++) {
-            s.push(' ');
-        }
-    }
-    return s.join('');
 }

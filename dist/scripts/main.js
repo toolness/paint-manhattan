@@ -4,7 +4,7 @@ import { BitmapFont } from "../font.js";
 import { Manhattan } from "../game/core.js";
 import { OptionalSoundEffect } from "../audio.js";
 import * as urls from '../game/urls.js';
-import { validateStreetStories } from "../game/street-story.js";
+import { validateStreetStories } from "../game/street-stories.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
 import { enableOfflineSupport } from "../offline.js";
 const FONT_OPTIONS = {

@@ -1,7 +1,7 @@
-import { ActionPrompt } from "./action-prompt.js";
-import { initializeAudio } from "../audio.js";
-import { ManhattanState } from "./state.js";
-import { onOfflineStateChange, getOfflineVersion } from "../offline.js";
+import { ActionPrompt } from "../action-prompt.js";
+import { initializeAudio } from "../../audio.js";
+import { ManhattanState } from "../state.js";
+import { onOfflineStateChange, getOfflineVersion } from "../../offline.js";
 export class SplashScreenState extends ManhattanState {
     constructor(game, gameplayState) {
         super(game);

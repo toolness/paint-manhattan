@@ -2,8 +2,8 @@ import { getCanvasCtx2D, createCanvas } from '../util.js';
 import { CanvasResizer } from '../canvas-resizer.js';
 import { Pen } from '../pen.js';
 import { TERRAIN_FRAME } from './sheet-frames.js';
-import { GameplayState } from './gameplay.js';
-import { SplashScreenState } from './splash-screen.js';
+import { GameplayState } from './states/gameplay.js';
+import { SplashScreenState } from './states/splash-screen.js';
 export class Manhattan {
     constructor(options) {
         this.options = options;

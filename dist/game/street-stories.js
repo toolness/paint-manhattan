@@ -6,7 +6,7 @@ var StorySource;
      */
     StorySource[StorySource["Rogerson"] = 0] = "Rogerson";
 })(StorySource || (StorySource = {}));
-export const STREET_STORIES = [
+const STREET_STORIES = [
     {
         name: "George/Spruce Street",
         content: [
@@ -218,3 +218,19 @@ export const STREET_STORIES = [
         sources: ["https://forgotten-ny.com/1999/09/lower-manhattan-necrology/"]
     }
 ];
+export function getStreetStory(streetName) {
+    for (let story of STREET_STORIES) {
+        if (story.name === streetName) {
+            return story;
+        }
+    }
+    return null;
+}
+export function validateStreetStories(allStreetNames) {
+    const allStreetSet = new Set(allStreetNames);
+    for (let story of STREET_STORIES) {
+        if (!allStreetSet.has(story.name)) {
+            console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
+        }
+    }
+}
