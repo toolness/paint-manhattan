@@ -151,3 +151,16 @@ export function paragraphsToWordWrappedLines(content: string|string[], width: nu
   }
   return lines;
 }
+
+/** Return a string containing the given number of space characters. */
+export function spaces(count: number): string {
+  let s: string[] = [];
+
+  if (count > 0) {
+    for (let i = 0; i < count; i++) {
+      s.push(' ');
+    }
+  }
+
+  return s.join('');
+}

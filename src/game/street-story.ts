@@ -2,7 +2,7 @@ import { ManhattanState } from "./state.js";
 import { Manhattan } from "./core.js";
 import { GameplayState } from "./gameplay.js";
 import { shortenStreetName } from "./street-util.js";
-import { paragraphsToWordWrappedLines } from "../util.js";
+import { paragraphsToWordWrappedLines, spaces } from "../util.js";
 import { ActionPrompt } from "./action-prompt.js";
 import { Timer } from "../timer.js";
 import { StreetStory, getStreetStory } from "./street-stories.js";
@@ -122,16 +122,4 @@ class WaitingForUserSubState extends StreetStoryState {
   exit() {
     this.prompt.stop();
   }
-}
-
-function spaces(count: number): string {
-  let s: string[] = [];
-
-  if (count > 0) {
-    for (let i = 0; i < count; i++) {
-      s.push(' ');
-    }
-  }
-
-  return s.join('');
 }
