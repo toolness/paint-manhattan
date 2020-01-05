@@ -1,10 +1,10 @@
-import { Manhattan } from "./core.js";
-import { createCanvas, shuffleArray, moveToTopOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel } from "../util.js";
-import { BitmapFont } from "../font.js";
-import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "./sheet-frames.js";
-import { ManhattanState } from "./state.js";
+import { Manhattan } from "../core.js";
+import { createCanvas, shuffleArray, moveToTopOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel } from "../../util.js";
+import { BitmapFont } from "../../font.js";
+import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.js";
+import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
-import { shortenStreetName } from "./street-util.js";
+import { shortenStreetName } from "../street-util.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 

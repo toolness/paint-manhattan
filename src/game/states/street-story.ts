@@ -1,11 +1,11 @@
-import { ManhattanState } from "./state.js";
-import { Manhattan } from "./core.js";
+import { ManhattanState } from "../state.js";
+import { Manhattan } from "../core.js";
 import { GameplayState } from "./gameplay.js";
-import { shortenStreetName } from "./street-util.js";
-import { paragraphsToWordWrappedLines, spaces } from "../util.js";
-import { ActionPrompt } from "./action-prompt.js";
-import { Timer } from "../timer.js";
-import { StreetStory, getStreetStory } from "./street-stories.js";
+import { shortenStreetName } from "../street-util.js";
+import { paragraphsToWordWrappedLines, spaces } from "../../util.js";
+import { ActionPrompt } from "../action-prompt.js";
+import { Timer } from "../../timer.js";
+import { StreetStory, getStreetStory } from "../street-stories.js";
 
 const STORY_CHARS_PER_LINE = 35;
 const STREET_NAME_Y = 15;

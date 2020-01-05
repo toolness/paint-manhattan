@@ -5,8 +5,8 @@ import { CanvasResizer } from '../canvas-resizer.js';
 import { Pen } from '../pen.js';
 import { SoundEffect } from '../audio.js';
 import { TERRAIN_FRAME } from './sheet-frames.js';
-import { GameplayState } from './gameplay.js';
-import { SplashScreenState } from './splash-screen.js';
+import { GameplayState } from './states/gameplay.js';
+import { SplashScreenState } from './states/splash-screen.js';
 import { ManhattanState } from './state.js';
 
 export type ManhattanOptions = {
