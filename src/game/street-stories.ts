@@ -77,7 +77,7 @@ const STREET_STORIES: StreetStory[] = [
       "From 1711 to 1762, at the corner of Wall and Pearl, the city operated its first official market for the sale and rental of enslaved Africans and Indians.",
       "The city directly benefited from the sale of slaves through taxes.",
     ],
-    sources: ["https://en.wikipedia.org/wiki/Wall_Street"],
+    sources: ["https://en.wikipedia.org/wiki/Wall_Street", StorySource.Rogerson],
     time: 1653,  // Ordered built (Rogerson).
   },
   {
