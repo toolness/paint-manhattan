@@ -238,7 +238,7 @@ const STREET_NAME_Y = 15;
 const STREET_STORY_Y = 30;
 const MS_PER_CHAR = 40;
 
-class BaseSubState extends ManhattanState {
+export abstract class StreetStoryState extends ManhattanState {
   protected storyLines: string[];
 
   constructor(game: Manhattan, protected readonly gameplayState: GameplayState, protected readonly story: StreetStory) {
@@ -263,9 +263,19 @@ class BaseSubState extends ManhattanState {
       currY += small.options.charHeight;
     }
   }
+
+  static forStreet(game: Manhattan, gameplayState: GameplayState, streetName: string): StreetStoryState|null {
+    const story = getStreetStory(streetName);
+    if (!story) return null;
+    return new AnimatingSubState(game, gameplayState, story);
+  }
+
+  static existsForStreet(streetName: string): boolean {
+    return getStreetStory(streetName) !== null;
+  }
 }
 
-class AnimatingSubState extends BaseSubState {
+class AnimatingSubState extends StreetStoryState {
   private charsToAnimate: number;
   private timer: Timer;
 
@@ -312,7 +322,7 @@ class AnimatingSubState extends BaseSubState {
   }
 }
 
-class WaitingForUserSubState extends BaseSubState {
+class WaitingForUserSubState extends StreetStoryState {
   private prompt: ActionPrompt;
 
   constructor(game: Manhattan, gameplayState: GameplayState, story: StreetStory) {
@@ -337,18 +347,6 @@ class WaitingForUserSubState extends BaseSubState {
 
   exit() {
     this.prompt.stop();
-  }
-}
-
-export class StreetStoryState {
-  static forStreet(game: Manhattan, gameplayState: GameplayState, streetName: string): AnimatingSubState|null {
-    const story = getStreetStory(streetName);
-    if (!story) return null;
-    return new AnimatingSubState(game, gameplayState, story);
-  }
-
-  static existsForStreet(streetName: string): boolean {
-    return getStreetStory(streetName) !== null;
   }
 }
 
