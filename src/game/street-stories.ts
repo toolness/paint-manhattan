@@ -12,7 +12,7 @@ export type StreetStory = {
   sources: (string|StorySource)[],
 };
 
-export const STREET_STORIES: StreetStory[] = [
+const STREET_STORIES: StreetStory[] = [
   {
     name: "George/Spruce Street",
     content: [
@@ -224,3 +224,21 @@ export const STREET_STORIES: StreetStory[] = [
     sources: ["https://forgotten-ny.com/1999/09/lower-manhattan-necrology/"]
   }
 ];
+
+export function getStreetStory(streetName: string): StreetStory|null {
+  for (let story of STREET_STORIES) {
+    if (story.name === streetName) {
+      return story;
+    }
+  }
+  return null;
+}
+
+export function validateStreetStories(allStreetNames: string[]) {
+  const allStreetSet = new Set(allStreetNames);
+  for (let story of STREET_STORIES) {
+    if (!allStreetSet.has(story.name)) {
+      console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { shortenStreetName } from "./street-util.js";
 import { paragraphsToWordWrappedLines } from "../util.js";
 import { ActionPrompt } from "./action-prompt.js";
 import { Timer } from "../timer.js";
-import { StreetStory, STREET_STORIES } from "./street-stories.js";
+import { StreetStory, getStreetStory } from "./street-stories.js";
 
 const STORY_CHARS_PER_LINE = 35;
 const STREET_NAME_Y = 15;
@@ -121,24 +121,6 @@ class WaitingForUserSubState extends StreetStoryState {
 
   exit() {
     this.prompt.stop();
-  }
-}
-
-function getStreetStory(streetName: string): StreetStory|null {
-  for (let story of STREET_STORIES) {
-    if (story.name === streetName) {
-      return story;
-    }
-  }
-  return null;
-}
-
-export function validateStreetStories(allStreetNames: string[]) {
-  const allStreetSet = new Set(allStreetNames);
-  for (let story of STREET_STORIES) {
-    if (!allStreetSet.has(story.name)) {
-      console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
-    }
   }
 }
 
