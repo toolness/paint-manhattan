@@ -84,20 +84,19 @@ export function setPixel(im, idx, r, g, b, a) {
     im.data[idx + ALPHA_OFFSET] = a;
 }
 /**
- * Move the given item to the top of the array in-place, so that a
- * subsequent call to `pop()` will return the item.
+ * Move the given item to the beginning of the array in-place.
  *
  * If the item doesn't exist, a console message will be logged and the
  * array will be returned unmodified.
  */
-export function moveToTopOfArray(arr, item) {
+export function moveToStartOfArray(arr, item) {
     const idx = arr.indexOf(item);
     if (idx === -1) {
         console.warn(`"${item}" is not in ${JSON.stringify(arr)}`);
         return arr;
     }
     arr.splice(idx, 1);
-    arr.push(item);
+    arr.unshift(item);
     return arr;
 }
 export function safeParseInt(s, defaultValue) {
@@ -145,4 +144,19 @@ export function spaces(count) {
         }
     }
     return s.join('');
+}
+/**
+ * Return a new array such that if the passed-in array has duplicate
+ * entries, we remove the ones that appear after the first occurrence.
+ */
+export function uniqueArray(arr) {
+    const result = [];
+    const set = new Set();
+    for (let item of arr) {
+        if (!set.has(item)) {
+            set.add(item);
+            result.push(item);
+        }
+    }
+    return result;
 }
