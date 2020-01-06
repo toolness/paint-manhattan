@@ -43,6 +43,7 @@ async function main() {
         showStreetsChronologically: qs.get('chrono') === 'on',
         showStreetsInNarrativeOrder: qs.get('narrative') === 'on',
         enableFullscreen: qs.get('fullscreen') === 'on',
+        resizeCanvas: !(qs.get('noresize') === 'on'),
     });
     validateStreetStories(getStreetFrames(sheet));
     manhattan.start();

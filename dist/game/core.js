@@ -12,7 +12,9 @@ export class Manhattan {
         options.root.appendChild(canvas);
         this.updateAndDraw = this.updateAndDraw.bind(this);
         this.pen = new Pen(canvas, this.updateAndDraw);
-        this.resizer = new CanvasResizer(canvas);
+        if (options.resizeCanvas) {
+            this.resizer = new CanvasResizer(canvas);
+        }
         this.canvas = canvas;
         const gameplayState = new GameplayState(this);
         this.currState = options.skipSplashScreen ? gameplayState : new SplashScreenState(this, gameplayState);
@@ -33,14 +35,18 @@ export class Manhattan {
         this.pen.updateHistory();
     }
     start() {
-        this.resizer.start();
+        if (this.resizer) {
+            this.resizer.start();
+        }
         this.pen.start();
         this.currState.enter();
         this.updateAndDraw();
     }
     stop() {
         this.currState.exit();
-        this.resizer.stop();
+        if (this.resizer) {
+            this.resizer.stop();
+        }
         this.pen.stop();
     }
 }
