@@ -7,11 +7,10 @@ import { OfflineStateChangeNotifier, getOfflineVersion } from "../../offline.js"
 import { requestFullscreen } from "../../fullscreen.js";
 
 export class SplashScreenState extends ManhattanState {
-  prompt: ActionPrompt;
+  private prompt = new ActionPrompt(this.game, 'to start');
 
   constructor(readonly game: Manhattan, readonly gameplayState: GameplayState) {
     super(game);
-    this.prompt = new ActionPrompt(game, 'to start');
     this.bindToLifetime(this.prompt, new OfflineStateChangeNotifier(this.game.updateAndDraw));
   }
 

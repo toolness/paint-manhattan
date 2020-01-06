@@ -4,10 +4,9 @@ import { Manhattan } from "./core.js";
 const TIMER_INTERVAL_MS = 1500;
 
 export class ActionPrompt {
-  private readonly blinkTimer: Timer;
+  private readonly blinkTimer = new Timer(TIMER_INTERVAL_MS, this.game.updateAndDraw);
 
   constructor(readonly game: Manhattan, readonly actionConsequence: string) {
-    this.blinkTimer = new Timer(TIMER_INTERVAL_MS, this.game.updateAndDraw);
   }
 
   draw(ctx: CanvasRenderingContext2D) {

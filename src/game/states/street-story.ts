@@ -13,11 +13,10 @@ const STREET_STORY_Y = 30;
 const MS_PER_CHAR = 40;
 
 export abstract class StreetStoryState extends ManhattanState {
-  protected storyLines: string[];
+  protected storyLines = paragraphsToWordWrappedLines(this.story.content, STORY_CHARS_PER_LINE);
 
   constructor(game: Manhattan, protected readonly gameplayState: GameplayState, protected readonly story: StreetStory) {
     super(game);
-    this.storyLines = paragraphsToWordWrappedLines(story.content, STORY_CHARS_PER_LINE);
   }
 
   protected drawStory(ctx: CanvasRenderingContext2D, storyLines: string[]) {
@@ -50,13 +49,11 @@ export abstract class StreetStoryState extends ManhattanState {
 }
 
 class AnimatingSubState extends StreetStoryState {
-  private charsToAnimate: number;
-  private timer: Timer;
+  private charsToAnimate = this.storyLines.reduce((total, line) => total + line.length, 0);
+  private timer = new Timer(MS_PER_CHAR, this.game.updateAndDraw);
 
   constructor(game: Manhattan, gameplayState: GameplayState, story: StreetStory) {
     super(game, gameplayState, story);
-    this.charsToAnimate = this.storyLines.reduce((total, line) => total + line.length, 0);
-    this.timer = new Timer(MS_PER_CHAR, game.updateAndDraw);
     this.bindToLifetime(this.timer);
   }
 
@@ -90,11 +87,10 @@ class AnimatingSubState extends StreetStoryState {
 }
 
 class WaitingForUserSubState extends StreetStoryState {
-  private prompt: ActionPrompt;
+  private prompt = new ActionPrompt(this.game, 'to continue');
 
   constructor(game: Manhattan, gameplayState: GameplayState, story: StreetStory) {
-    super(game, gameplayState, story);    
-    this.prompt = new ActionPrompt(game, 'to continue');
+    super(game, gameplayState, story);
     this.bindToLifetime(this.prompt);
   }
 
