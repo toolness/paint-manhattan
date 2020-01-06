@@ -57,6 +57,7 @@ class AnimatingSubState extends StreetStoryState {
     super(game, gameplayState, story);
     this.charsToAnimate = this.storyLines.reduce((total, line) => total + line.length, 0);
     this.timer = new Timer(MS_PER_CHAR, game.updateAndDraw);
+    this.bindToLifetime(this.timer);
   }
 
   private getAnimatingStoryLines() {
@@ -86,14 +87,6 @@ class AnimatingSubState extends StreetStoryState {
       this.game.changeState(new WaitingForUserSubState(this.game, this.gameplayState, this.story));
     }
   }
-
-  enter() {
-    this.timer.start();
-  }
-
-  exit() {
-    this.timer.stop();
-  }
 }
 
 class WaitingForUserSubState extends StreetStoryState {
@@ -102,6 +95,7 @@ class WaitingForUserSubState extends StreetStoryState {
   constructor(game: Manhattan, gameplayState: GameplayState, story: StreetStory) {
     super(game, gameplayState, story);    
     this.prompt = new ActionPrompt(game, 'to continue');
+    this.bindToLifetime(this.prompt);
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -113,13 +107,5 @@ class WaitingForUserSubState extends StreetStoryState {
     if (this.game.pen.justWentUp) {
       this.game.changeState(this.gameplayState);
     }
-  }
-
-  enter() {
-    this.prompt.start();
-  }
-
-  exit() {
-    this.prompt.stop();
   }
 }

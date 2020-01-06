@@ -285,11 +285,13 @@ export class GameplayState extends ManhattanState {
   }
 
   enter() {
+    super.enter();
     this.prevCursor = this.game.canvas.style.cursor;
     this.game.canvas.style.cursor = 'none';
   }
 
   exit() {
+    super.exit();
     if (typeof(this.prevCursor) === 'string') {
       this.game.canvas.style.cursor = this.prevCursor;
     }

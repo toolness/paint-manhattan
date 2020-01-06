@@ -181,3 +181,13 @@ export function uniqueArray<T>(arr: T[]): T[] {
 
   return result;
 }
+
+/**
+ * Return the class name of the given instance, or "<unknown>" if we don't know.
+ */
+export function getClassName(obj: any): string {
+  if (obj && obj.constructor && typeof(obj.constructor.name) === 'string') {
+    return obj.constructor.name;
+  }
+  return '<unknown>';
+}
