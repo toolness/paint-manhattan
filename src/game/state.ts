@@ -2,7 +2,7 @@ import { Manhattan } from "./core.js";
 import { getClassName } from "../util.js";
 
 /** Whether to log state-related debug information. */
-const DEBUG = true;
+const DEBUG = false;
 
 /** Anything that can be started and stopped, possibly multiple times. */
 type Startable = {
