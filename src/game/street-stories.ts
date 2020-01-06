@@ -135,6 +135,24 @@ const STREET_STORIES: StreetStory[] = [
     time: 1686,  // Laid out some time prior to (Rogerson).
   },
   {
+    name: "Nassau Street",
+    content: [
+      "This street was named in honor of William of Orange, Prince of Nassau, who became King William III in 1689.",
+      "The portion between Wall Street and Maiden's Lane was called Pie Woman's Lane, in honor of a once-famous but now unknown merchant of pies."
+    ],
+    sources: [StorySource.Rogerson],
+    time: 1689,  // Laid out (Rogerson).
+  },
+  {
+    name: "John Street",
+    content: [
+      "John Street is named for John Harpendingh, one of five shoemakers who purchased and developed the area around 1696.",
+      "The portion east of William was once called Golden Hill Street, after a nearby hilled pasture with golden wildflowers.",
+    ],
+    sources: [StorySource.Rogerson],
+    time: 1696, // When Harpendingh bought the property and developed it into lots (Rogerson).
+  },
+  {
     name: "Chatham/Park Row",
     content: [
       "Originally named after William Pitt, the Earl of Chatham and Prime Minister of England, Chatham Row was renamed Park Row by 1829 due to its location along City Hall Park.",
@@ -171,6 +189,18 @@ const STREET_STORIES: StreetStory[] = [
     sources: ["https://en.wikipedia.org/wiki/Ann_Street_(Manhattan)"],
     // Rogerson mentions Ann is present on the Bradford Map of 1730.
     time: 1730,
+  },
+  {
+    name: "Gold Street",
+    content: [
+      "This street is named after Golden Hill, a nearby hilled pasture with golden wildflowers.",
+      "In 1770, this area was the site of the Battle of Golden Hill, a clash between British soldiers and the Sons of Liberty that hastened the Revolution."
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://en.wikipedia.org/wiki/Battle_of_Golden_Hill",
+    ],
+    time: 1730, // First appears on maps (Rogerson).
   },
   {
     name: "Courtlandt Street",
@@ -243,6 +273,18 @@ const STREET_STORIES: StreetStory[] = [
     sources: [StorySource.Rogerson],
     // According to "The Old Merchants of New York City, Volume 5" by Walter Barrett, the Desbrosses were
     // a prominent family just before hte American Revolution.
+    time: Era.British,
+  },
+  {
+    name: "Bancker/Madison Street",
+    content: [
+      "Originally part of the estate of Revolutionary War hero and philanthropist Henry Rutgers, this street was named after a close family member.",
+      "It was renamed to Madison Street in 1826 after the neighborhood fell into disrepair and the Rutgers family wanted nothing to do with it.",
+    ],
+    sources: [
+      "https://en.wikipedia.org/wiki/Henry_Rutgers",
+      StorySource.Rogerson
+    ],
     time: Era.British,
   },
   {
