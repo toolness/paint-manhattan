@@ -24,7 +24,6 @@ export type ManhattanOptions = {
   showStreetStories: boolean,
   onlyShowStreetsWithStories: boolean,
   showScore: boolean,
-  showStreetsChronologically: boolean,
   showStreetsInNarrativeOrder: boolean,
   enableFullscreen: boolean,
   resizeCanvas: boolean,

@@ -355,36 +355,6 @@ export function validateStreetStories(allStreetNames: string[]) {
 }
 
 /**
- * Sort the streets chronologically, in ascending order, then alphabetically.
- * 
- * If a street doesn't have chronology information, it is regarded as having
- * been built very recently, i.e. it will appear near the end of the list.
- */
-export function sortStreetsChronologically(streetNames: string[]): string[] {
-  return streetNames.sort((a, b) => {
-    const aStory = storiesByName.get(a);
-    const bStory = storiesByName.get(b);
-    if (aStory && bStory) {
-      if (aStory.time < bStory.time) {
-        return -1;
-      } else if (aStory.time > bStory.time) {
-        return 1;
-      }
-    } else if (aStory && !bStory) {
-      return -1;
-    } else if (!aStory && bStory) {
-      return 1;
-    }
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
-    }
-    return 0;
-  });
-}
-
-/**
  * Returns a list of streets in a predefined order that is roughly chronological,
  * but also designed to aid in learning how the streets are laid out: for instance,
  * every street is built off a street earlier in the list.

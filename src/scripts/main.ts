@@ -43,7 +43,6 @@ async function main() {
     showScore: qs.get('score') === 'on',
     successSoundEffect: new OptionalSoundEffect(urls.SUCCESS_AUDIO_URL),
     missSoundEffect: new OptionalSoundEffect(urls.MISS_AUDIO_URL),
-    showStreetsChronologically: qs.get('chrono') === 'on',
     showStreetsInNarrativeOrder: qs.get('narrative') === 'on',
     enableFullscreen: qs.get('fullscreen') === 'on',
     resizeCanvas: !(qs.get('noresize') === 'on'),
