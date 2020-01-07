@@ -1,15 +1,15 @@
 import { ActionPrompt } from "../action-prompt.js";
 import { initializeAudio } from "../../audio.js";
 import { ManhattanState } from "../state.js";
-import { onOfflineStateChange, getOfflineVersion } from "../../offline.js";
+import { OfflineStateChangeNotifier, getOfflineVersion } from "../../offline.js";
 import { requestFullscreen } from "../../fullscreen.js";
 export class SplashScreenState extends ManhattanState {
     constructor(game, gameplayState) {
         super(game);
         this.game = game;
         this.gameplayState = gameplayState;
-        this.unsubscribeOffline = null;
-        this.prompt = new ActionPrompt(game, 'to start');
+        this.prompt = new ActionPrompt(this.game, 'to start');
+        this.bindToLifetime(this.prompt, new OfflineStateChangeNotifier(this.game.updateAndDraw));
     }
     update() {
         const { game } = this;
@@ -38,20 +38,5 @@ export class SplashScreenState extends ManhattanState {
         ctx.drawImage(this.game.options.splashImage, 0, 40);
         this.drawVersion(ctx);
         this.prompt.draw(ctx);
-    }
-    clearOfflineSubscription() {
-        if (this.unsubscribeOffline) {
-            this.unsubscribeOffline();
-            this.unsubscribeOffline = null;
-        }
-    }
-    enter() {
-        this.clearOfflineSubscription();
-        this.unsubscribeOffline = onOfflineStateChange(this.game.updateAndDraw);
-        this.prompt.start();
-    }
-    exit() {
-        this.clearOfflineSubscription();
-        this.prompt.stop();
     }
 }

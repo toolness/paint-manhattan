@@ -11,19 +11,6 @@ const changeListeners = [];
 export function getOfflineVersion() {
     return offlineVersion;
 }
-/**
- * Register a function to be called when information about the offline
- * state changes. Returns a function to unsubscribe from updates.
- */
-export function onOfflineStateChange(cb) {
-    changeListeners.push(cb);
-    return () => {
-        const idx = changeListeners.indexOf(cb);
-        if (idx !== -1) {
-            changeListeners.splice(idx, 1);
-        }
-    };
-}
 /** Returns whether the user wants offline support. */
 export function wantsOfflineSupport() {
     const qs = new URLSearchParams(window.location.search);
@@ -77,4 +64,25 @@ export async function enableOfflineSupport() {
         }
     };
     registration.update();
+}
+/** A class that can subscribe/unsubscribe to changes in offline state. */
+export class OfflineStateChangeNotifier {
+    constructor(callback) {
+        this.callback = callback;
+    }
+    reset() {
+        const idx = changeListeners.indexOf(this.callback);
+        if (idx !== -1) {
+            changeListeners.splice(idx, 1);
+        }
+    }
+    /** Start listening for changes in offline state. */
+    start() {
+        this.reset();
+        changeListeners.push(this.callback);
+    }
+    /** Stop listening for changes in offline state. */
+    stop() {
+        this.reset();
+    }
 }

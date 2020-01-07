@@ -13,7 +13,7 @@ export class StreetStoryState extends ManhattanState {
         super(game);
         this.gameplayState = gameplayState;
         this.story = story;
-        this.storyLines = paragraphsToWordWrappedLines(story.content, STORY_CHARS_PER_LINE);
+        this.storyLines = paragraphsToWordWrappedLines(this.story.content, STORY_CHARS_PER_LINE);
     }
     drawStory(ctx, storyLines) {
         const { game } = this;
@@ -43,7 +43,8 @@ class AnimatingSubState extends StreetStoryState {
     constructor(game, gameplayState, story) {
         super(game, gameplayState, story);
         this.charsToAnimate = this.storyLines.reduce((total, line) => total + line.length, 0);
-        this.timer = new Timer(MS_PER_CHAR, game.updateAndDraw);
+        this.timer = new Timer(MS_PER_CHAR, this.game.updateAndDraw);
+        this.bindToLifetime(this.timer);
     }
     getAnimatingStoryLines() {
         const maxChars = this.timer.tick;
@@ -71,17 +72,12 @@ class AnimatingSubState extends StreetStoryState {
             this.game.changeState(new WaitingForUserSubState(this.game, this.gameplayState, this.story));
         }
     }
-    enter() {
-        this.timer.start();
-    }
-    exit() {
-        this.timer.stop();
-    }
 }
 class WaitingForUserSubState extends StreetStoryState {
     constructor(game, gameplayState, story) {
         super(game, gameplayState, story);
-        this.prompt = new ActionPrompt(game, 'to continue');
+        this.prompt = new ActionPrompt(this.game, 'to continue');
+        this.bindToLifetime(this.prompt);
     }
     draw(ctx) {
         this.drawStory(ctx, this.storyLines);
@@ -91,11 +87,5 @@ class WaitingForUserSubState extends StreetStoryState {
         if (this.game.pen.justWentUp) {
             this.game.changeState(this.gameplayState);
         }
-    }
-    enter() {
-        this.prompt.start();
-    }
-    exit() {
-        this.prompt.stop();
     }
 }

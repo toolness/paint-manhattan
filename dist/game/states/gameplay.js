@@ -3,7 +3,7 @@ import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.j
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
 import { shortenStreetName } from "../street-util.js";
-import { sortStreetsChronologically, getStreetsInNarrativeOrder } from "../street-stories.js";
+import { getStreetsInNarrativeOrder } from "../street-stories.js";
 const PAINT_RADIUS_MOUSE = 5;
 const PAINT_RADIUS_TOUCH = 10;
 const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
@@ -38,15 +38,9 @@ export class GameplayState extends ManhattanState {
         this.prevCursor = null;
         const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
         this.streetCanvas = streetCanvas;
-        let highlightFrames = getStreetFrames(game.options.sheet);
-        if (game.options.showStreetsChronologically) {
-            sortStreetsChronologically(highlightFrames);
-        }
-        else if (game.options.showStreetsInNarrativeOrder) {
-            highlightFrames = uniqueArray(getStreetsInNarrativeOrder().concat(shuffleArray(highlightFrames)));
-        }
-        else {
-            shuffleArray(highlightFrames);
+        let highlightFrames = shuffleArray(getStreetFrames(game.options.sheet));
+        if (game.options.showStreetsInNarrativeOrder) {
+            highlightFrames = uniqueArray(getStreetsInNarrativeOrder().concat(highlightFrames));
         }
         if (game.options.startWithStreet) {
             moveToStartOfArray(highlightFrames, game.options.startWithStreet);
@@ -240,10 +234,12 @@ export class GameplayState extends ManhattanState {
         tinyFont.drawText(ctx, `Score: ${this.score}`, x, y);
     }
     enter() {
+        super.enter();
         this.prevCursor = this.game.canvas.style.cursor;
         this.game.canvas.style.cursor = 'none';
     }
     exit() {
+        super.exit();
         if (typeof (this.prevCursor) === 'string') {
             this.game.canvas.style.cursor = this.prevCursor;
         }
