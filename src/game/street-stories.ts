@@ -213,6 +213,28 @@ const STREET_STORIES: StreetStory[] = [
     time: 1730, // First appears on maps (Rogerson).
   },
   {
+    name: "Beekman Street",
+    content: [
+      "This street was named for Willem Beekman, a public servant who owned a pasture in the area.",
+      "Aside from being the mayor of New York City in 1683, Beekman was also a brewer and once paid his taxes using beer."
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://en.wikipedia.org/wiki/Wilhelmus_Beekman",
+    ],
+    time: 1730,  // Opened sometime before (Rogerson).
+  },
+  {
+    name: "William Street",
+    content: [
+      "This street was either named in honor of William of Orange, a man who became King William III of England, or for William Beekman, a man who paid his taxes using beer."
+    ],
+    sources: [
+      StorySource.Rogerson,
+    ],
+    time: Era.British,
+  },
+  {
     name: "Courtlandt Street",
     content: [
       "This street was laid out in 1733 in honor of the Van Courtlandt family of early Dutch settlers.",
@@ -231,6 +253,18 @@ const STREET_STORIES: StreetStory[] = [
       "This street, first laid out in 1739, was so named because the residence of the rector of Trinity Church stood here.",
     ],
     sources: [StorySource.Rogerson],
+    time: 1739,  // Laid out (Rogerson).
+  },
+  {
+    name: "Greenwich Street",
+    content: [
+      "This street was first laid out along the high water mark of the Hudson River in 1739, and led to a hamlet called Greenwich Village.",
+      "The route was scenic, but often flooded until the 19th century, when landfill moved the river further away.",
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://en.wikipedia.org/wiki/Greenwich_Street",
+    ],
     time: 1739,  // Laid out (Rogerson).
   },
   {
