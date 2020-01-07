@@ -35,6 +35,16 @@ const STREET_STORIES: StreetStory[] = [
     time: Era.Dutch,
   },
   {
+    name: "Whitehall Street",
+    content: [
+      "This street is one of the oldest in the city, dating back to at least 1658.",
+      "At its foot stood a large white house that was built for Peter Stuyvesant, the last governor of the Dutch colony.",
+      "When the British took over, they nicknamed the house Whitehall after the seat of government in England.",
+    ],
+    sources: [StorySource.Rogerson],
+    time: 1658,  // First known mention as Marckvelt (Rogerson).
+  },
+  {
     name: "Broad Street",
     content: [
       "In the early Dutch colony, a canal called the Heere Graft ran through the center of this street.",
@@ -296,6 +306,18 @@ const STREET_STORIES: StreetStory[] = [
     // Weirdly, the Wikipedia entry for "Front Street (Manhattan)" actually redirects to Lower Manhattan and includes no information about Front street.
     sources: ["https://en.wikipedia.org/wiki/South_Street_(Manhattan)"],
     time: 1787,  // Regulated (Rogerson).
+  },
+  {
+    name: "State Street",
+    content: [
+      "Laid out in 1792 at the site of the first Dutch fort on the island, State Street was located on the west side of a new Government House that was meant to be George Washington's executive mansion.",
+      "However, before it was completed, the federal government relocated to Philadelphia, and eventually it became the state governor's residence instead."
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://en.wikipedia.org/wiki/Government_House_(New_York_City)",
+    ],
+    time: 1792,  // Laid out as Copsey Street before it was changed to State a year later (Rogerson).
   },
   {
     name: "Rose Street",
