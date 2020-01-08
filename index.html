@@ -20,6 +20,7 @@
         margin: 0;
         overflow: hidden;
         background: black;
+        color: white;
 
         /**
          * We want pixelated image rendering, but if the browser doesn't support it,
@@ -40,6 +41,16 @@
     <title>Paint Manhattan Circa 1799</title>
   </head>
   <body>
+    <noscript>
+      Sorry, but you need JavaScript enabled to play this game.
+    </noscript>
     <script type="module" src="./dist/scripts/main.js"></script>
+    <script nomodule>
+      onload = function() {
+        var el = document.createElement('div');
+        el.textContent = "Sorry, but you need a newer web browser to play this game.";
+        document.body.appendChild(el);
+      };
+    </script>
   </body>
 </html>
