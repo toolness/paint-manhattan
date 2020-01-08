@@ -332,6 +332,31 @@ const STREET_STORIES: StreetStory[] = [
     time: Era.British,
   },
   {
+    name: "Henry Street",
+    content: [
+      "This street was named in honor of Henry Rutgers, whose land this street passed through.",
+      "In 1893, the poor condition of immigrants living in squalid tenements in this area led a nurse named Lillian Wald to found The Henry Street Settlement, which changed the landscape of public health care in the city."
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://en.wikipedia.org/wiki/Henry_Street_Settlement",
+      "https://en.wikipedia.org/wiki/Lillian_Wald",
+    ],
+    time: 1797,  // Laid out prior to (Rogerson).
+  },
+  {
+    name: "Harman Street/East Broadway",
+    content: [
+      "Harman Street was named in honor of Harman Rutgers, the grandfather of Henry Rutgers.",
+      "In 1831, some of the street's residents and property owners petitioned to dub it East Broadway."
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://en.wikipedia.org/wiki/Henry_Rutgers",
+    ],
+    time: Era.British,
+  },
+  {
     name: "Front Street",
     content: [
       "Front street was originally built on landfill in the latter half of the 18th century.",
