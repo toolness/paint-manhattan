@@ -1,5 +1,5 @@
+const LEFT_MOUSE_BTN = 0;
 const MOUSE_EVENTS = [
-    'mouseleave',
     'mousemove',
     'mouseup',
     'mousedown',
@@ -13,6 +13,7 @@ const TOUCH_EVENTS = [
 export class Pen {
     constructor(canvas, onChange) {
         this.canvas = canvas;
+        this.isMouseDown = false;
         this.wasDown = false;
         this.isDown = false;
         this.pos = null;
@@ -51,6 +52,14 @@ export class Pen {
             this.onChange();
         }
     }
+    getPctCoords(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const offsetX = Math.max(e.clientX - rect.left, 0);
+        const offsetY = Math.max(e.clientY - rect.top, 0);
+        const pctX = Math.min(offsetX, rect.width) / rect.width;
+        const pctY = Math.min(offsetY, rect.height) / rect.height;
+        return [pctX, pctY];
+    }
     updatePenFromTouch(e) {
         this.medium = 'touch';
         if (e.type === 'touchcancel' || e.type === 'touchend') {
@@ -58,30 +67,19 @@ export class Pen {
             return;
         }
         const touch = e.touches[0];
-        const rect = this.canvas.getBoundingClientRect();
-        const offsetX = Math.max(touch.clientX - rect.left, 0);
-        const offsetY = Math.max(touch.clientY - rect.top, 0);
-        const pctX = Math.min(offsetX, rect.width) / rect.width;
-        const pctY = Math.min(offsetY, rect.height) / rect.height;
+        const [pctX, pctY] = this.getPctCoords(touch);
         this.updatePen(true, pctX, pctY);
     }
     updatePenFromMouse(e) {
         this.medium = 'mouse';
-        const visibleSize = this.canvas.getBoundingClientRect();
-        const pctX = e.offsetX / visibleSize.width;
-        const pctY = e.offsetY / visibleSize.height;
-        if (e.type === 'mouseup') {
-            this.updatePen(false, pctX, pctY);
+        if (e.type === 'mouseup' && e.button === LEFT_MOUSE_BTN) {
+            this.isMouseDown = false;
         }
-        else if (e.type === 'mouseleave') {
-            this.updatePen(false, null, null);
+        else if (e.type === 'mousedown' && e.button === LEFT_MOUSE_BTN) {
+            this.isMouseDown = true;
         }
-        else if (e.type === 'mousedown') {
-            this.updatePen(true, pctX, pctY);
-        }
-        else if (e.type === 'mousemove') {
-            this.updatePen(undefined, pctX, pctY);
-        }
+        const [pctX, pctY] = this.getPctCoords(e);
+        this.updatePen(this.isMouseDown, pctX, pctY);
     }
     handleTouchEvent(e) {
         e.preventDefault();
@@ -94,11 +92,11 @@ export class Pen {
         this.wasDown = this.isDown;
     }
     start() {
-        MOUSE_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleMouseEvent));
+        MOUSE_EVENTS.forEach(name => window.addEventListener(name, this.handleMouseEvent));
         TOUCH_EVENTS.forEach(name => this.canvas.addEventListener(name, this.handleTouchEvent));
     }
     stop() {
-        MOUSE_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleMouseEvent));
+        MOUSE_EVENTS.forEach(name => window.removeEventListener(name, this.handleMouseEvent));
         TOUCH_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleTouchEvent));
     }
 }
