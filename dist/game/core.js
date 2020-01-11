@@ -29,10 +29,12 @@ export class Manhattan {
         this.currState.update();
     }
     updateAndDraw() {
+        this.pen.clearCursorState();
         this.currState.update();
         const ctx = getCanvasCtx2D(this.canvas);
         this.currState.draw(ctx);
         this.pen.updateHistory();
+        this.pen.applyCursorState();
     }
     start() {
         if (this.resizer) {

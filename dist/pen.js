@@ -14,6 +14,7 @@ export class Pen {
     constructor(canvas, onChange) {
         this.canvas = canvas;
         this.isMouseDown = false;
+        this.cursorThisFrame = 'default';
         this.wasDown = false;
         this.isDown = false;
         this.pos = null;
@@ -88,6 +89,39 @@ export class Pen {
     handleMouseEvent(e) {
         this.updatePenFromMouse(e);
     }
+    /**
+     * Set the OS cursor for the canvas.
+     *
+     * This needs to be called every frame, just like any other drawing
+     * operation. If it is not called every frame, the cursor will revert
+     * to `default`.
+     */
+    setCursor(cursorType) {
+        this.cursorThisFrame = cursorType;
+    }
+    /**
+     * Use this at the beginning of a frame update to reset the cursor style.
+     *
+     * Clients should call `setCursor()` if they want to change the cursor style
+     * for this frame.
+     */
+    clearCursorState() {
+        this.cursorThisFrame = 'default';
+    }
+    /**
+     * Use this at the end of a frame update to apply any cursor state set
+     * by clients to the canvas.
+     */
+    applyCursorState() {
+        if (this.canvas.style.cursor != this.cursorThisFrame) {
+            console.log("Changing cursor to", this.cursorThisFrame);
+            this.canvas.style.cursor = this.cursorThisFrame;
+        }
+    }
+    /**
+     * This effectively tells the pen that time has passed, which changes
+     * its conception of whether the pen was recently down or not.
+     */
     updateHistory() {
         this.wasDown = this.isDown;
     }
