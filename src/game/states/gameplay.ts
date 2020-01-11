@@ -139,7 +139,9 @@ export class GameplayState extends ManhattanState {
 
     const { game } = this;
     const curr = this.currentHighlightFrameDetails;
-  
+
+    game.pen.setCursor('none');
+
     if (!curr) return;
 
     const { pen } = game;
@@ -282,14 +284,9 @@ export class GameplayState extends ManhattanState {
 
   enter() {
     super.enter();
-    this.prevCursor = this.game.canvas.style.cursor;
-    this.game.canvas.style.cursor = 'none';
   }
 
   exit() {
     super.exit();
-    if (typeof(this.prevCursor) === 'string') {
-      this.game.canvas.style.cursor = this.prevCursor;
-    }
   }
 }
