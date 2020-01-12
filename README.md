@@ -62,6 +62,14 @@ am pretty sure I created it myself, but it was a long time ago.
 
 I created all the other graphics in December 2019.
 
+## Deployment
+
+To build the project and deploy it to GitHub pages, run:
+
+```
+yarn deploy
+```
+
 [plan]: https://digitalcollections.nypl.org/items/5e66b3e8-e8ff-d471-e040-e00a180654d7
 [Aseprite]: https://www.aseprite.org/
 [pman-sdl]: https://github.com/toolness/pman-sdl/

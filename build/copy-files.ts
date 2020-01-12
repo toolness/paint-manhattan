@@ -33,9 +33,9 @@ async function main() {
     if (!fs.existsSync(destDir)) {
       fs.mkdirSync(destDir, {recursive: true});
     }
-    console.log(`Copying ${srcFile} to ${OUTPUT_DIR}/.`);
     fs.copyFileSync(srcFile, destFile);
   }
+  console.log(`Copied ${files.length} files to ${OUTPUT_DIR}/.`);
 }
 
 if (module.parent === null) {
