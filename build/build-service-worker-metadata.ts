@@ -4,7 +4,7 @@ import nodeCrypto from 'crypto';
 import chokidar from 'chokidar';
 import * as metadata from './metadata';
 
-const TEMPLATE_FILE_NAME = 'service-worker.template.js';
+const TEMPLATE_FILE_NAME = path.join('workers', 'service-worker.template.js');
 
 const FILE_NAME = metadata.SERVICE_WORKER_FILENAME;
 

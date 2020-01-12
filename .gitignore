@@ -3,3 +3,5 @@ build/*.js
 public/
 dist/
 service-worker.js
+.vscode/
+workers/*.js
