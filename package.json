@@ -1,7 +1,6 @@
 {
   "name": "paint-manhattan",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/toolness/paint-manhattan",
   "author": "Atul Varma <varmaa@gmail.com>",
   "license": "MIT",
@@ -13,7 +12,7 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "build": "tsc && node dist/scripts/build-service-worker-metadata.js",
-    "start": "concurrently --kill-others \"node dist/scripts/build-service-worker-metadata.js --watch\" \"tsc --watch --preserveWatchOutput\" \"http-server -c-1 -p 8000\""
+    "build": "tsc -p build && tsc -p src && node build/build-service-worker-metadata.js",
+    "start": "tsc -p build && concurrently --kill-others \"node build/build-service-worker-metadata.js --watch\" \"tsc -p src --watch --preserveWatchOutput\" \"http-server -c-1 -p 8000\""
   }
 }
