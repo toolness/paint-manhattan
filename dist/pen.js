@@ -114,7 +114,6 @@ export class Pen {
      */
     applyCursorState() {
         if (this.canvas.style.cursor != this.cursorThisFrame) {
-            console.log("Changing cursor to", this.cursorThisFrame);
             this.canvas.style.cursor = this.cursorThisFrame;
         }
     }
