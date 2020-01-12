@@ -1,5 +1,3 @@
-import path from 'path';
-
 /**
  * Globs needed for running the game offline. Specifically,
  * these are the files that will be cached by the game's

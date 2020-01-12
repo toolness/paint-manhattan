@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import nodeCrypto from 'crypto';
 import chokidar from 'chokidar';
-import * as metadata from './build-metadata';
+import * as metadata from './metadata';
 
 const TEMPLATE_FILE_NAME = 'service-worker.template.js';
 
