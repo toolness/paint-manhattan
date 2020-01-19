@@ -4,6 +4,7 @@ type UPNG = typeof import("../vendor/upng");
 
 const UZIP_URL = 'vendor/uzip/UZIP.js';
 const UPNG_URL = 'vendor/upng/UPNG.js';
+const PNG_CONTENT_TYPE = 'image/png';
 
 let upngPromise: Promise<UPNG>|null = null;
 
@@ -100,23 +101,12 @@ export class AnimatedPngRecorder {
     return buf;
   }
 
-  async encodeToDataURL(scaleFactor: number): Promise<{byteLength: number, url: string}> {
+  async encodeToObjectURL(scaleFactor: number): Promise<{byteLength: number, url: string}> {
     const buf = await this.encode(scaleFactor);
     const { byteLength } = buf;
 
-    return new Promise((resolve, reject) => {
-      const blob = new Blob([buf], {type: 'image/png'});
-      const reader = new FileReader();
-      reader.onload = () => {
-        const url = reader.result;
-        if (typeof(url) !== 'string') {
-          reject(new Error(`Expected file reader result to be a string!`));
-          return;
-        }
-        resolve({byteLength, url});
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
+    const blob = new Blob([buf], {type: PNG_CONTENT_TYPE});
+    const url = URL.createObjectURL(blob);
+    return { byteLength, url };
   }
 }
