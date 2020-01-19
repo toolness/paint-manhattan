@@ -7,6 +7,7 @@ import * as urls from '../game/urls.js';
 import { validateStreetStories } from "../game/street-stories.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
 import { enableOfflineSupport } from "../offline.js";
+import { RecorderUI } from "../recorder-ui.js";
 const FONT_OPTIONS = {
     charWidth: 6,
     charHeight: 8,
@@ -43,6 +44,7 @@ async function main() {
         showStreetsInNarrativeOrder: qs.get('narrative') === 'on',
         enableFullscreen: qs.get('fullscreen') === 'on',
         resizeCanvas: !(qs.get('noresize') === 'on'),
+        onFrameDrawn: qs.get('record') === 'on' ? new RecorderUI().handleDrawFrame : undefined,
     });
     validateStreetStories(getStreetFrames(sheet));
     manhattan.start();
