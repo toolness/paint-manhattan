@@ -1,3 +1,5 @@
+import { createCanvas, getCanvasCtx2D } from "./util.js";
+
 type UPNG = typeof import("../vendor/upng");
 
 const UZIP_URL = 'vendor/uzip/UZIP.js';
@@ -50,7 +52,7 @@ function now(): number {
 export class AnimatedPngRecorder {
   state?: {
     timeOfLastFrame: number,
-    frames: ArrayBuffer[],
+    frames: Uint8ClampedArray[],
     delaysBetweenFrames: number[],
     width: number,
     height: number,
@@ -84,19 +86,22 @@ export class AnimatedPngRecorder {
     return this.state.frames.length;
   }
 
-  async encode(): Promise<ArrayBuffer> {
+  async encode(scaleFactor: number): Promise<ArrayBuffer> {
     const { state } = this;
     if (!state) {
       throw new Error("No frames have been added to the animation!");
     }
 
     const upng = await importUPNG();
-    const buf = upng.encode(state.frames, state.width, state.height, 0, state.delaysBetweenFrames);
+    const { width, height } = state;
+    const scaler = new FrameScaler(width, height, scaleFactor);
+    const frames = state.frames.map(scaler.scale);
+    const buf = upng.encode(frames, scaler.scaledWidth, scaler.scaledHeight, 0, state.delaysBetweenFrames);
     return buf;
   }
 
-  async encodeToDataURL(): Promise<{byteLength: number, url: string}> {
-    const buf = await this.encode();
+  async encodeToDataURL(scaleFactor: number): Promise<{byteLength: number, url: string}> {
+    const buf = await this.encode(scaleFactor);
     const { byteLength } = buf;
 
     return new Promise((resolve, reject) => {
@@ -113,5 +118,32 @@ export class AnimatedPngRecorder {
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
+  }
+}
+
+class FrameScaler {
+  readonly canvas: HTMLCanvasElement;
+  readonly ctx: CanvasRenderingContext2D;
+  readonly scaledCanvas: HTMLCanvasElement;
+  readonly scaledCtx: CanvasRenderingContext2D;
+  public readonly scaledHeight: number;
+  public readonly scaledWidth: number;
+
+  constructor(readonly width: number, readonly height: number, readonly scaleFactor: number) {
+    this.scaledWidth = width * scaleFactor;
+    this.scaledHeight = height * scaleFactor;
+    this.canvas = createCanvas(width, height);
+    this.scaledCanvas = createCanvas(this.scaledWidth, this.scaledHeight);
+    this.ctx = getCanvasCtx2D(this.canvas);
+    this.ctx.imageSmoothingEnabled = false;
+    this.scaledCtx = getCanvasCtx2D(this.scaledCanvas);
+    this.scaledCtx.imageSmoothingEnabled = false;
+    this.scale = this.scale.bind(this);
+  }
+
+  scale(frame: Uint8ClampedArray): Uint8ClampedArray {
+    this.ctx.putImageData(new ImageData(frame, this.width, this.height), 0, 0);
+    this.scaledCtx.drawImage(this.canvas, 0, 0, this.scaledWidth, this.scaledHeight);
+    return this.scaledCtx.getImageData(0, 0, this.scaledWidth, this.scaledHeight).data;
   }
 }
