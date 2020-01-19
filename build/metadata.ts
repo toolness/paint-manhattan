@@ -6,7 +6,8 @@
 export const OFFLINE_GLOBS = [
   'graphics/**/*.png',
   'graphics/**/*.json',
-  'vendor/**/*',
+  'vendor/**/*.css',
+  'vendor/**/*.js',
   'dist/**/*.js',
   'audio/**/*.mp3',
   'favicon.ico',

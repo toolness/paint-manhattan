@@ -27,6 +27,7 @@ export type ManhattanOptions = {
   showStreetsInNarrativeOrder: boolean,
   enableFullscreen: boolean,
   resizeCanvas: boolean,
+  onFrameDrawn?: (ctx: CanvasRenderingContext2D) => void,
 };
 
 export class Manhattan {
@@ -69,6 +70,9 @@ export class Manhattan {
     this.currState.draw(ctx);
     this.pen.updateHistory();
     this.pen.applyCursorState();
+    if (this.options.onFrameDrawn) {
+      this.options.onFrameDrawn(ctx);
+    }
   }
 
   start() {
