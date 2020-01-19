@@ -1,4 +1,4 @@
-import { createCanvas, getCanvasCtx2D } from "./util.js";
+import { FrameScaler } from "./frame-scaler.js";
 
 type UPNG = typeof import("../vendor/upng");
 
@@ -118,32 +118,5 @@ export class AnimatedPngRecorder {
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
-  }
-}
-
-class FrameScaler {
-  readonly canvas: HTMLCanvasElement;
-  readonly ctx: CanvasRenderingContext2D;
-  readonly scaledCanvas: HTMLCanvasElement;
-  readonly scaledCtx: CanvasRenderingContext2D;
-  public readonly scaledHeight: number;
-  public readonly scaledWidth: number;
-
-  constructor(readonly width: number, readonly height: number, readonly scaleFactor: number) {
-    this.scaledWidth = width * scaleFactor;
-    this.scaledHeight = height * scaleFactor;
-    this.canvas = createCanvas(width, height);
-    this.scaledCanvas = createCanvas(this.scaledWidth, this.scaledHeight);
-    this.ctx = getCanvasCtx2D(this.canvas);
-    this.ctx.imageSmoothingEnabled = false;
-    this.scaledCtx = getCanvasCtx2D(this.scaledCanvas);
-    this.scaledCtx.imageSmoothingEnabled = false;
-    this.scale = this.scale.bind(this);
-  }
-
-  scale(frame: Uint8ClampedArray): Uint8ClampedArray {
-    this.ctx.putImageData(new ImageData(frame, this.width, this.height), 0, 0);
-    this.scaledCtx.drawImage(this.canvas, 0, 0, this.scaledWidth, this.scaledHeight);
-    return this.scaledCtx.getImageData(0, 0, this.scaledWidth, this.scaledHeight).data;
   }
 }

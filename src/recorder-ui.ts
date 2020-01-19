@@ -1,6 +1,6 @@
 import { AnimatedPngRecorder } from "./animated-png-recorder.js";
 
-const SCALE_FACTOR = 2;
+const SCALE_FACTOR = 1;
 
 export class RecorderUI {
   readonly recorder = new AnimatedPngRecorder();
