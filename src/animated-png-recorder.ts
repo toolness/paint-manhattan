@@ -1,3 +1,5 @@
+import { FrameScaler } from "./frame-scaler.js";
+
 type UPNG = typeof import("../vendor/upng");
 
 const UZIP_URL = 'vendor/uzip/UZIP.js';
@@ -50,7 +52,7 @@ function now(): number {
 export class AnimatedPngRecorder {
   state?: {
     timeOfLastFrame: number,
-    frames: ArrayBuffer[],
+    frames: Uint8ClampedArray[],
     delaysBetweenFrames: number[],
     width: number,
     height: number,
@@ -84,19 +86,22 @@ export class AnimatedPngRecorder {
     return this.state.frames.length;
   }
 
-  async encode(): Promise<ArrayBuffer> {
+  async encode(scaleFactor: number): Promise<ArrayBuffer> {
     const { state } = this;
     if (!state) {
       throw new Error("No frames have been added to the animation!");
     }
 
     const upng = await importUPNG();
-    const buf = upng.encode(state.frames, state.width, state.height, 0, state.delaysBetweenFrames);
+    const { width, height } = state;
+    const scaler = new FrameScaler(width, height, scaleFactor);
+    const frames = state.frames.map(scaler.scale);
+    const buf = upng.encode(frames, scaler.scaledWidth, scaler.scaledHeight, 0, state.delaysBetweenFrames);
     return buf;
   }
 
-  async encodeToDataURL(): Promise<{byteLength: number, url: string}> {
-    const buf = await this.encode();
+  async encodeToDataURL(scaleFactor: number): Promise<{byteLength: number, url: string}> {
+    const buf = await this.encode(scaleFactor);
     const { byteLength } = buf;
 
     return new Promise((resolve, reject) => {

@@ -1,5 +1,7 @@
 import { AnimatedPngRecorder } from "./animated-png-recorder.js";
 
+const SCALE_FACTOR = 1;
+
 export class RecorderUI {
   readonly recorder = new AnimatedPngRecorder();
   readonly overlayEl: HTMLDivElement;
@@ -29,7 +31,7 @@ export class RecorderUI {
       buttonEl.disabled = true;
       buttonEl.textContent = "Encoding\u2026";
       const { frameCount } = this.recorder;
-      const { url, byteLength } = await this.recorder.encodeToDataURL();
+      const { url, byteLength } = await this.recorder.encodeToDataURL(SCALE_FACTOR);
       this.url = url;
       buttonEl.title = `Final recording is ${frameCount} frames (${byteLength} bytes).`;
       buttonEl.textContent = `Open recording`;
