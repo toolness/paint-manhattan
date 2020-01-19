@@ -5,6 +5,7 @@ type UPNG = typeof import("../vendor/upng");
 const UZIP_URL = 'vendor/uzip/UZIP.js';
 const UPNG_URL = 'vendor/upng/UPNG.js';
 const PNG_CONTENT_TYPE = 'image/png';
+const MIN_DELAY_BETWEEN_FRAMES_MS = 11;
 
 let upngPromise: Promise<UPNG>|null = null;
 
@@ -76,8 +77,16 @@ export class AnimatedPngRecorder {
       };
     } else if (this.state.frames.length < this.maxFrames) {
       const timeOfThisFrame = now();
+      const timeSinceLastFrame = timeOfThisFrame - this.state.timeOfLastFrame;
+      if (timeSinceLastFrame < MIN_DELAY_BETWEEN_FRAMES_MS) {
+        // If very little time has passed since the rendering of the last frame,
+        // just replace the most recent frame with this frame, rather than
+        // adding it as a new frame.
+        this.state.frames[this.state.frames.length - 1] = frameData;
+        return;
+      };
       this.state.frames.push(frameData);
-      this.state.delaysBetweenFrames.push(timeOfThisFrame - this.state.timeOfLastFrame);
+      this.state.delaysBetweenFrames.push(timeSinceLastFrame);
       this.state.timeOfLastFrame = timeOfThisFrame;
     }
   }
