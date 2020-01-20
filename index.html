@@ -38,12 +38,32 @@
         padding: 0 1em;
       }
 
-      img {
+      .img-responsive {
         width: 100%;
+        height: 0;
+        position: relative;
+        overflow: hidden;
       }
 
-      img.smaller {
+      .img-responsive {
+        /** Assume a 1.9:1 aspect ratio (widescreen). */
+        padding-top: 52.5%;
+      }
+
+      .img-responsive-4x3 > img {
+        /**
+         * We're going to treat a 4:3 aspect ratio image as though it's a widescreen image, but
+         * add empty space on either side so it's centered. Note that the percentage here is
+         * eyeballed, as I'm too lazy to do math right now.
+         */
         padding: 0 15%;
+      }
+
+      .img-responsive > img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
       }
 
       a {
@@ -70,7 +90,7 @@
     <title>About Paint Manhattan Circa 1799</title>
   </head>
   <body>
-    <img src="graphics/thumbnail.png">
+    <div class="img-responsive"><img src="graphics/thumbnail.png"></div>
     <div class="wrapper">
       <p>
         <em>Paint Manhattan Circa 1799</em> is a web-based game to help players learn the history of Manhattan, as told by its streets.
@@ -100,7 +120,7 @@
       <p>
         The game is played by &ldquo;painting&rdquo; the streets of the city: you are prompted with the name of a street to draw, which appears at the bottom-right corner of the screen. Drag your finger (or mouse) along the path of the street to paint it:
       </p>
-      <img src="graphics/recordings/paint-recording.png" class="smaller">
+      <div class="img-responsive img-responsive-4x3" data-has-animation><img src="graphics/recordings/paint-recording.png"></div>
       <p>
         Once you are done painting the street, you can release your finger, and will be given another street to paint.
       </p>
@@ -108,7 +128,7 @@
       <p>
         It&rsquo;s fine if you don&rsquo;t know where a street is! In fact, beginners can just wave their finger or mouse all over the screen to reveal the street:
       </p>
-      <img src="graphics/recordings/spam-recording.png" class="smaller">
+      <div class="img-responsive img-responsive-4x3" data-has-animation><img src="graphics/recordings/spam-recording.png"></div>
       <p>
         You are free to play the game like this forever, or you can try to learn where each street is. At some point a game mode may be introduced to reward accuracy, but for now surgical precision is a self-imposed challenge.
       </p>
@@ -131,5 +151,6 @@
         You can also visit the game&rsquo;s <a href="https://github.com/toolness/paint-manhattan">GitHub repository</a> for more technical details and source code.
       </p>
     </div>
+    <script type="module" src="./dist/scripts/index.js"></script>
   </body>
 </html>
