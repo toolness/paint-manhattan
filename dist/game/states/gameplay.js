@@ -10,7 +10,7 @@ const PAINT_HOVER_STYLE = 'rgba(255, 255, 255, 1.0)';
 const PAINT_INACTIVE_STREET_RGBA = [238, 195, 154, 255];
 const PAINT_ACTIVE_STREET_RGBA = [153, 229, 80, 255];
 const SCORE_BONUS_STREET_FINISHED = 10;
-const SCORE_PENALTY_COMPLETE_MISS = 2;
+const SCORE_BONUS_FLAWLESS_STREET_FINISHED = 100;
 const STREET_SKELETON_ALPHA = 0.33;
 function getPixelsLeftText(pixelsLeft) {
     const pixels = pixelsLeft === 1 ? 'pixel' : 'pixels';
@@ -85,7 +85,7 @@ export class GameplayState extends ManhattanState {
         if (!name) {
             return null;
         }
-        return { name, pixelsLeft: this.countPixelsToBePainted(name) };
+        return { name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce: false };
     }
     countPixelsToBePainted(frame) {
         const { sheet } = this.game.options;
@@ -156,11 +156,16 @@ export class GameplayState extends ManhattanState {
             curr.pixelsLeft -= pixelsAdded;
             if (curr.pixelsLeft === 0) {
                 game.options.successSoundEffect.play();
-                this.score += SCORE_BONUS_STREET_FINISHED;
+                if (curr.hasMissedOnce) {
+                    this.score += SCORE_BONUS_STREET_FINISHED;
+                }
+                else {
+                    this.score += SCORE_BONUS_FLAWLESS_STREET_FINISHED;
+                }
             }
         }
         else if (isCompleteMiss && curr.pixelsLeft > 0) {
-            this.score = Math.max(this.score - SCORE_PENALTY_COMPLETE_MISS, 0);
+            curr.hasMissedOnce = true;
             game.options.missSoundEffect.play();
         }
     }
