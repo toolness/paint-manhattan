@@ -26,6 +26,5 @@ export const SERVICE_WORKER_FILENAME = 'service-worker.js';
 export const ONLINE_GLOBS = [
   'icons/**/*.png',
   'manifest.json',
-  'thumbnail.png',
   SERVICE_WORKER_FILENAME,
 ];

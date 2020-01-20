@@ -38,7 +38,7 @@ function clientWantsOfflineContent(client: Client, url: string) {
   // Note that `src/offline.ts` uses the same logic to determine
   // if the requesting/requested page wants offline support, so if this
   // logic changes, make sure it changes there too.
-  return qs.get('offline') === 'on';
+  return qs.get('nooffline') !== 'on';
 }
 
 function normalizeRequest(request: Request) {
@@ -107,7 +107,8 @@ function run(self: ServiceWorkerGlobalScope) {
         if (response) {
           return response;
         }
-        throw new Error(`Unexpected network request: ${request.url}`);
+        // The following line can be uncommented for debugging purposes.
+        //throw new Error(`Unexpected network request: ${request.url}`);
       }
       return fetch(request);
     };

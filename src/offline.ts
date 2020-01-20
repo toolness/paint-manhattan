@@ -22,7 +22,7 @@ export function wantsOfflineSupport(): boolean {
   // Note that the service worker script uses the same logic to determine
   // if the requesting/requested page wants offline support, so if this
   // logic changes, make sure it changes in the service worker too.
-  return qs.get('offline') === 'on';
+  return qs.get('nooffline') !== 'on';
 }
 
 /** Returns whether the browser can support offline mode. */
