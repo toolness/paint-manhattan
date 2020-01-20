@@ -16,9 +16,17 @@ Streets which no longer exist in present-day Manhattan, or whose
 names were ambiguous, are not included in the game as streets for
 the player to paint, though they are still visible on the screen.
 
+The game also features stories about the streets. Most of these
+were taken from Wikipedia, Dan Rogerson's
+[Manhattan Street Names Past and Present][rogerson], 
+and the walking tour "Slavery and Resistance in NYC" offered by
+[Mariame Kaba][kaba].
+
 [You can play the game here.][game]
 
 [nec]: https://forgotten-ny.com/1999/09/lower-manhattan-necrology/
+[rogerson]: https://www.amazon.com/dp/B00C0MTRUK
+[kaba]: http://mariamekaba.com/
 
 ## Quick start
 
