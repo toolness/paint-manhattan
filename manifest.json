@@ -38,7 +38,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "index.html?offline=on",
+  "start_url": "index.html",
   "background_color": "#000000",
   "display": "fullscreen",
   "orientation": "landscape"

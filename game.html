@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./favicon.ico">
+    <link rel="manifest" href="./manifest.json">
+    <meta property="og:title" content="Play Paint Manhattan Circa 1799">
+    <meta property="og:description" content="A web-based game to help players learn the history of Manhattan, as told by its streets.">
+    <!-- Ideally we'd keep these open graph URLs relative, but it seems they must be absolute: https://stackoverflow.com/a/9858694/2422398 -->
+    <meta property="og:image" content="https://toolness.github.io/paint-manhattan/graphics/thumbnail.png">
+    <meta property="og:url" content="https://toolness.github.io/paint-manhattan/">
+    <meta name="twitter:card" content="summary_large_image">
+    <style>
+      html, body {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        color: white;
+
+        /**
+         * We want pixelated image rendering, but if the browser doesn't support it,
+         * crisp-edges is good enough.
+         */
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
+      }
+
+      .full-width {
+        width: 100vw;
+      }
+
+      .full-height {
+        height: 100vh;
+      }
+
+      .recorder-ui-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        font-family: sans-serif;
+        padding: 4px;
+        background: rgba(0, 0, 0, 0.5);
+        user-select: none;
+      }
+
+      .recorder-ui-overlay button:before {
+        content: '\2B24';
+        color: red;
+        padding-right: 4px;
+      }
+
+      .recorder-ui-overlay a {
+        font-family: inherit;
+        color: white;
+      }
+    </style>
+    <title>Paint Manhattan Circa 1799</title>
+  </head>
+  <body>
+    <noscript>
+      Sorry, but you need JavaScript enabled to play this game.
+    </noscript>
+    <script type="module" src="./dist/scripts/main.js"></script>
+    <script nomodule>
+      onload = function() {
+        var el = document.createElement('div');
+        el.textContent = "Sorry, but you need a newer web browser to play this game.";
+        document.body.appendChild(el);
+      };
+    </script>
+  </body>
+</html>

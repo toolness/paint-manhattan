@@ -7,7 +7,7 @@
 <div class="container">
   <h1>Debug Paint Manhattan Circa 1799</h1>
   <p>This form will help you debug the game, and/or create a custom game that plays your way.</p>
-  <form method="get" action="index.html">
+  <form method="get" action="game.html">
     <div class="row">
       <label for="minpix">Minimum street size, in pixels</label>
       <input type="number" value="0" name="minpix" id="minpix">
@@ -82,15 +82,16 @@
       </p>
     </div>
     <div class="row">
-      <label for="offline">
-        <input type="checkbox" name="offline" id="offline">
-        Enable experimental offline mode (requires browser support)
+      <label for="nooffline">
+        <input type="checkbox" name="nooffline" id="nooffline">
+        Disable offline mode
       </label>
+      <p>By default, the game uses a service worker to cache resources for offline play if browser support is available. Disabling offline mode will force the game to always use the internet to load its resources.</p>
       <p class="offline-support" style="display: none">
-        Good news! This browser seems to support offline mode. However, when you reload the page, you might not always get the very latest version of the game.
+        (This browser seems to support offline mode, so checking this box will forcibly disable it.)
       </p>
       <p class="no-offline-support" style="display: none">
-        Alas, this browser does <strong>not</strong> support offline mode.
+        (This browser does <strong>not</strong> support offline mode, so checking this box probably won't make a difference.)
       </p>
     </div>
     <div class="row">
@@ -101,6 +102,7 @@
       <p>A button at the bottom-left of the screen can be used to stop the recording and open it in a new tab.</p>
     </div>
     <button type="submit" class="button-primary">Start game</button>
+    <a href="index.html" class="button">Go back</a>
   </form>
   <script type="module" src="./dist/scripts/debug.js"></script>
 </div>
