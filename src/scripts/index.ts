@@ -21,11 +21,18 @@ import { enableOfflineSupport } from "../offline.js";
 function restartAnimations(entries: IntersectionObserverEntry[]) {
   for (let entry of entries) {
     if (!entry.isIntersecting) continue;
-    const img = entry.target.querySelector('img');
-    if (img) {
-      const { src } = img;
-      img.src = "";
-      img.src = src;
+    const { target } = entry;
+    const imgs = target.querySelectorAll('img');
+    if (imgs.length === 1) {
+      const img = imgs[0];
+      // I have no idea why, but on Firefox, creating a clone of the image and
+      // setting its source appears to work much faster than setting the image
+      // source to an empty string and then setting it back to its original value.
+      const imgClone = img.cloneNode() as HTMLImageElement;
+      imgClone.src = "";
+      target.appendChild(imgClone);
+      imgClone.src = img.src;
+      target.removeChild(img);
     }
   }
 }
