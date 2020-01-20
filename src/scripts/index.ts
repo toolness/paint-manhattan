@@ -1,3 +1,5 @@
+import { enableOfflineSupport } from "../offline.js";
+
 /**
  * Restart all animated images contained within the given entries that
  * have just intersected with the browser's viewport.
@@ -28,7 +30,7 @@ function restartAnimations(entries: IntersectionObserverEntry[]) {
   }
 }
 
-window.addEventListener('load', () => {
+function enableRestartAnimations() {
   if (!window.IntersectionObserver) return;
 
   const observer = new IntersectionObserver(restartAnimations);
@@ -36,4 +38,15 @@ window.addEventListener('load', () => {
   for (let apng of document.querySelectorAll('[data-has-animation]')) {
     observer.observe(apng);
   }
+}
+
+async function main() {
+  await enableOfflineSupport();
+  enableRestartAnimations();
+}
+
+window.addEventListener('load', () => {
+  main().catch(e => {
+    console.error(e);
+  });
 });
