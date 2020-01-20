@@ -13,7 +13,7 @@ export const OFFLINE_GLOBS = [
   'favicon.ico',
   'index.html',
   'debug.html',
-  'about.html',
+  'game.html',
 ];
 
 /** The game's service worker. */

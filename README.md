@@ -1,4 +1,5 @@
-This is a simple game to help me learn the streets of Manhattan.
+This is a web-based game to help players learn the history of Manhattan,
+as told by its streets.
 
 The streets are based on a map called [Plan of the City of New York][plan]
 that was created sometime between 1790 and 1799. The map is old but the

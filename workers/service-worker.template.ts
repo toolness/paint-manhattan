@@ -46,6 +46,7 @@ function normalizeRequest(request: Request) {
   const rootDir = new URL('./', MY_URL);
   const indexHTML = new URL('./index.html', MY_URL);
   const debugHTML = new URL('./debug.html', MY_URL);
+  const gameHTML = new URL('./game.html', MY_URL);
   if (url.origin === MY_URL.origin) {
     // If the request is one of our HTML files, we want to strip off any querystring arguments
     // to ensure that we have a cache hit.
@@ -54,6 +55,8 @@ function normalizeRequest(request: Request) {
       return new Request(indexHTML.href);
     } else if (url.pathname === debugHTML.pathname) {
       return new Request(debugHTML.href);
+    } else if (url.pathname === gameHTML.pathname) {
+      return new Request(gameHTML.href);
     }
   }
   return request;

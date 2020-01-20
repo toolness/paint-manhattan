@@ -7,7 +7,7 @@
 <div class="container">
   <h1>Debug Paint Manhattan Circa 1799</h1>
   <p>This form will help you debug the game, and/or create a custom game that plays your way.</p>
-  <form method="get" action="index.html">
+  <form method="get" action="game.html">
     <div class="row">
       <label for="minpix">Minimum street size, in pixels</label>
       <input type="number" value="0" name="minpix" id="minpix">
@@ -102,6 +102,7 @@
       <p>A button at the bottom-left of the screen can be used to stop the recording and open it in a new tab.</p>
     </div>
     <button type="submit" class="button-primary">Start game</button>
+    <a href="index.html" class="button">Go back</a>
   </form>
   <script type="module" src="./dist/scripts/debug.js"></script>
 </div>
