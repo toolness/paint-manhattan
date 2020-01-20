@@ -45,8 +45,8 @@ function enableRestartAnimations() {
     }
 }
 async function main() {
-    await enableOfflineSupport();
     enableRestartAnimations();
+    await enableOfflineSupport();
 }
 window.addEventListener('load', () => {
     main().catch(e => {
