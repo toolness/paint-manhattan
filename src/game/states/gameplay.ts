@@ -6,6 +6,7 @@ import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
 import { shortenStreetName } from "../street-util.js";
 import { getStreetsInNarrativeOrder } from "../street-stories.js";
+import { logAmplitudeEvent } from "../../amplitude.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -54,6 +55,7 @@ function moveStoriedStreetToStartOfArray(streets: string[]): string[] {
 export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
   private readonly highlightFrames: string[];
+  private initialStreetsToPaint: number;
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
   private score: number = 0;
   private prevCursor: string|null = null;
@@ -81,6 +83,7 @@ export class GameplayState extends ManhattanState {
     }
     this.highlightFrames = highlightFrames;
     this.currentHighlightFrameDetails = null;
+    this.initialStreetsToPaint = highlightFrames.length;
   }
 
   drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
@@ -110,6 +113,11 @@ export class GameplayState extends ManhattanState {
   private getNextHighlightFrame(): CurrentHighlightFrameDetails|null {
     const name = this.highlightFrames.shift();
     if (!name) {
+      logAmplitudeEvent({
+        name: 'Game won',
+        streetsPainted: this.initialStreetsToPaint,
+        finalScore: this.score,
+      });
       return null;
     }
     return {name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce: false};
@@ -199,6 +207,11 @@ export class GameplayState extends ManhattanState {
         } else {
           this.score += SCORE_BONUS_FLAWLESS_STREET_FINISHED;
         }
+        logAmplitudeEvent({
+          name: "Street painted",
+          streetName: curr.name,
+          missedAtLeastOnce: curr.hasMissedOnce,
+        });
       }
     } else if (isCompleteMiss && curr.pixelsLeft > 0) {
       curr.hasMissedOnce = true;
