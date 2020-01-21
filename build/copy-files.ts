@@ -26,7 +26,9 @@ async function getFiles(): Promise<string[]> {
 
 async function main() {
   const files = await getFiles();
-  fs.rmdirSync(OUTPUT_DIR, {recursive: true});
+  if (fs.existsSync(OUTPUT_DIR)) {
+    fs.rmdirSync(OUTPUT_DIR, {recursive: true});
+  }
   for (let srcFile of files) {
     const destFile = path.join(OUTPUT_DIR, srcFile);
     const destDir = path.dirname(destFile);
