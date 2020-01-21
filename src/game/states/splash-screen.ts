@@ -5,6 +5,7 @@ import { GameplayState } from "./gameplay.js";
 import { ManhattanState } from "../state.js";
 import { OfflineStateChangeNotifier, getOfflineVersion } from "../../offline.js";
 import { requestFullscreen } from "../../fullscreen.js";
+import { logAmplitudeEvent } from "../../amplitude.js";
 
 export class SplashScreenState extends ManhattanState {
   private prompt = new ActionPrompt(this.game, 'to start');
@@ -21,6 +22,14 @@ export class SplashScreenState extends ManhattanState {
         requestFullscreen();
       }
       initializeAudio();
+
+      const { showStreetSkeleton, showStreetsInNarrativeOrder } = this.game.options;
+      logAmplitudeEvent({
+        name: 'Game started',
+        showStreetSkeleton,
+        showStreetsInNarrativeOrder
+      });
+
       game.changeState(this.gameplayState);
       return;
     }

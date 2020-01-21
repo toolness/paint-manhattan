@@ -1,4 +1,5 @@
 import { enableOfflineSupport } from "../offline.js";
+import { logAmplitudeEvent } from "../amplitude.js";
 
 /**
  * Restart all animated images contained within the given entries that
@@ -50,6 +51,7 @@ function enableRestartAnimations() {
 async function main() {
   enableRestartAnimations();
   await enableOfflineSupport();
+  logAmplitudeEvent({name: 'Home page viewed'});
 }
 
 window.addEventListener('load', () => {
