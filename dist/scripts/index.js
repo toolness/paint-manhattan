@@ -1,4 +1,5 @@
 import { enableOfflineSupport } from "../offline.js";
+import { logAmplitudeEvent } from "../amplitude.js";
 /**
  * Restart all animated images contained within the given entries that
  * have just intersected with the browser's viewport.
@@ -47,6 +48,7 @@ function enableRestartAnimations() {
 async function main() {
     enableRestartAnimations();
     await enableOfflineSupport();
+    logAmplitudeEvent({ name: 'Home page viewed' });
 }
 window.addEventListener('load', () => {
     main().catch(e => {
