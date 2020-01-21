@@ -12,6 +12,10 @@ type AmplitudeEvent = {
   name: 'Game won',
   streetsPainted: number,
   finalScore: number,
+} | {
+  name: 'Home page viewed',
+} | {
+  name: 'Debug page viewed',
 };
 
 function getAmplitude(): AmplitudeInterface|null {

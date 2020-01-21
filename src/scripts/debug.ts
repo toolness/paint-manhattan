@@ -3,6 +3,7 @@ import { SPRITESHEET_URL } from "../game/urls.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
 import { canSupportOffline } from "../offline.js";
 import { canSupportFullscreen } from "../fullscreen.js";
+import { logAmplitudeEvent } from "../amplitude.js";
 
 type FormControl = HTMLInputElement|HTMLSelectElement;
 
@@ -63,6 +64,8 @@ async function debugMain() {
     restoreFormSetting(el);
     el.addEventListener('change', () => saveFormSetting(el));
   });
+
+  logAmplitudeEvent({name: 'Debug page viewed'});
 }
 
 debugMain().catch(e => {
