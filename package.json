@@ -8,13 +8,11 @@
     "@types/node": "^13.1.4",
     "chokidar": "^3.3.1",
     "concurrently": "^5.0.2",
-    "gh-pages": "^2.2.0",
     "http-server": "^0.12.0",
     "typescript": "^3.7.4"
   },
   "scripts": {
     "build": "tsc -p build && node build/clean.js && tsc -p src && tsc -p workers && node build/build-service-worker-metadata.js && node build/copy-files.js",
-    "deploy": "yarn build && gh-pages -d public",
     "start": "tsc -p build && tsc -p workers && concurrently --kill-others \"node build/build-service-worker-metadata.js --watch\" \"tsc -p src --watch --preserveWatchOutput\" \"tsc -p workers --watch --preserveWatchOutput\" \"tsc -p build --watch --preserveWatchOutput\" \"http-server . -c-1 -p 8000\""
   }
 }

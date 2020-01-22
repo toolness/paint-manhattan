@@ -73,11 +73,14 @@ I created all the other graphics in December 2019.
 
 ## Deployment
 
-To build the project and deploy it to GitHub pages, run:
+To build the project, run:
 
 ```
-yarn deploy
+yarn build
 ```
+
+The entire project is now in the `public` folder and can be copied to any standard
+static file host/server, such as Apache, Amazon S3, or Netlify.
 
 [plan]: https://digitalcollections.nypl.org/items/5e66b3e8-e8ff-d471-e040-e00a180654d7
 [Aseprite]: https://www.aseprite.org/
