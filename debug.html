@@ -1,118 +1,13 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="./vendor/skeleton/normalize.css">
-<link rel="stylesheet" href="./vendor/skeleton/skeleton.css">
-<title>Debug Paint Manhattan Circa 1799</title>
-<div class="container">
-  <h1>Debug Paint Manhattan Circa 1799</h1>
-  <p>This form will help you debug the game, and/or create a custom game that plays your way.</p>
-  <form method="get" action="game.html">
-    <div class="row">
-      <label for="minpix">Minimum street size, in pixels</label>
-      <input type="number" value="0" name="minpix" id="minpix">
-      <p>Streets with a pixel count below this value won't be shown to the player. You can set this absurdly high to instantly get a win screen, which can be useful for debugging that view.</p>
-    </div>
-    <div class="row">
-      <label for="street">Initial street</label>
-      <select name="street" id="street">
-        <option value="">(Random)</option>
-      </select>
-      <p>The initial street to prompt the player for painting. Note that if it is smaller than the minimum street size, it won't be shown!</p>
-    </div>
-    <div class="row">
-      <label for="nosplash">
-        <input type="checkbox" name="nosplash" id="nosplash">
-        Skip splash screen
-      </label>
-      <p>This will skip the intro splash screen, placing the user directly in the game. Note that audio on mobile browsers may not work when this option is in effect.</p>
-    </div>
-    <div class="row">
-      <label for="noresize">
-        <input type="checkbox" name="noresize" id="noresize">
-        Don't resize the game canvas
-      </label>
-      <p>This preserves the game screen at its original size of 160x120, which is very tiny but may be useful if you want to take pixel-perfect screenshots.</p>
-    </div>
-    <div class="row">
-      <label for="noskel">
-        <input type="checkbox" name="noskel" id="noskel">
-        Hide street skeleton
-      </label>
-      <p>This will prevent the "silhouette" of Manhattan's street layout from being displayed, which can make the game much harder.</p>
-    </div>
-    <div class="row">
-      <label for="nostreetstories">
-        <input type="checkbox" name="nostreetstories" id="nostreetstories">
-        Skip street stories
-      </label>
-      <p>This will skip the diplay of contextual historial information about relevant streets.</p>
-    </div>
-    <div class="row">
-      <label for="streetstoriesonly">
-        <input type="checkbox" name="streetstoriesonly" id="streetstoriesonly">
-        Show <em>only</em> streets that have stories
-      </label>
-      <p>The player will never be asked to paint streets that don't have stories associated with them.</p>
-    </div>
-    <div class="row">
-      <label for="narrative">
-        <input type="checkbox" name="narrative" id="narrative">
-        Show streets in narrative order
-      </label>
-      <p>This presents streets in a predefined order that is roughly chronological, but also designed to aid in learning how the streets are laid out.</p>
-    </div>
-    <div class="row">
-      <label for="score">
-        <input type="checkbox" name="score" id="score">
-        Show the player's score
-      </label>
-      <p>Scoring rewards precision: the player's score increases a lot when they paint a street without missing, and it only increases a bit if they miss.</p>
-    </div>
-    <div class="row">
-      <label for="fullscreen">
-        <input type="checkbox" name="fullscreen" id="fullscreen">
-        Enable fullscreen mode (requires browser support)
-      </label>
-      <p class="fullscreen-support" style="display: none">
-        Good news! This browser seems to support fullscreen mode.
-      </p>
-      <p class="no-fullscreen-support" style="display: none">
-        Alas, this browser does <strong>not</strong> support fullscreen mode.
-      </p>
-    </div>
-    <div class="row">
-      <label for="nooffline">
-        <input type="checkbox" name="nooffline" id="nooffline">
-        Disable offline mode
-      </label>
-      <p>By default, the game uses a service worker to cache resources for offline play if browser support is available. Disabling offline mode will force the game to always use the internet to load its resources.</p>
-      <p class="offline-support" style="display: none">
-        (This browser seems to support offline mode, so checking this box will forcibly disable it.)
-      </p>
-      <p class="no-offline-support" style="display: none">
-        (This browser does <strong>not</strong> support offline mode, so checking this box probably won't make a difference.)
-      </p>
-    </div>
-    <div class="row">
-      <label for="record">
-        <input type="checkbox" name="record" id="record">
-        Record the play session to an animated PNG
-      </label>
-      <p>A button at the bottom-left of the screen can be used to stop the recording and open it in a new tab.</p>
-    </div>
-    <div class="row">
-      <label for="noamplitude">
-        <input type="checkbox" name="noamplitude" id="noamplitude">
-        Disable Amplitude integration
-      </label>
-      <p>
-        By default, <a href="https://amplitude.com/">Amplitude</a> is used to collect basic analytics about how
-        the game is played, but this integration can be disabled.
-      </p>
-    </div>
-    <button type="submit" class="button-primary">Start game</button>
-    <a href="index.html" class="button">Go back</a>
-  </form>
-  <script type="module" src="./dist/scripts/debug.js"></script>
-</div>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="2;url=https://paint.toolness.org/" />
+    <link rel="icon" href="./favicon.ico">
+    <title>Paint Manhattan has moved!</title>
+  </head>
+  <body>
+    <p>Paint Manhattan has moved to <a href="https://paint.toolness.org/">paint.toolness.org</a>. You should be redirected there in a few seconds!</p>
+  </body>
+</html>
