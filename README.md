@@ -42,7 +42,7 @@ Then visit http://localhost:8000/.
 
 You can also visit http://localhost:8000/debug.html for some debugging options.
 
-[game]: https://toolness.github.io/paint-manhattan/
+[game]: https://paint.toolness.org/
 [NodeJS]: https://nodejs.org/
 [Yarn]: https://yarnpkg.com/
 
