@@ -113,11 +113,6 @@ export class GameplayState extends ManhattanState {
   private getNextHighlightFrame(): CurrentHighlightFrameDetails|null {
     const name = this.highlightFrames.shift();
     if (!name) {
-      logAmplitudeEvent({
-        name: 'Game won',
-        streetsPainted: this.initialStreetsToPaint,
-        finalScore: this.score,
-      });
       return null;
     }
     return {name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce: false};
@@ -212,6 +207,13 @@ export class GameplayState extends ManhattanState {
           streetName: curr.name,
           missedAtLeastOnce: curr.hasMissedOnce,
         });
+        if (this.highlightFrames.length === 0) {
+          logAmplitudeEvent({
+            name: 'Game won',
+            streetsPainted: this.initialStreetsToPaint,
+            finalScore: this.score,
+          });
+        }
       }
     } else if (isCompleteMiss && curr.pixelsLeft > 0) {
       curr.hasMissedOnce = true;
