@@ -1,5 +1,6 @@
 import { enableOfflineSupport } from "../offline.js";
 import { logAmplitudeEvent } from "../amplitude.js";
+import { setUserHasVisitedHomepage } from "../homepage-visited.js";
 
 /**
  * Restart all animated images contained within the given entries that
@@ -52,6 +53,7 @@ async function main() {
   enableRestartAnimations();
   await enableOfflineSupport();
   logAmplitudeEvent({name: 'Home page viewed'});
+  setUserHasVisitedHomepage();
 }
 
 window.addEventListener('load', () => {
