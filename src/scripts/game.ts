@@ -8,6 +8,7 @@ import { validateStreetStories } from "../game/street-stories.js";
 import { getStreetFrames } from "../game/sheet-frames.js";
 import { enableOfflineSupport } from "../offline.js";
 import { RecorderUI } from "../recorder-ui.js";
+import { hasUserVisitedHomepage } from "../homepage-visited.js";
 
 const FONT_OPTIONS: BitmapFontOptions = {
   charWidth: 6,
@@ -21,7 +22,24 @@ const TINY_FONT_OPTIONS: BitmapFontOptions = {
   charsPerLine: 16,
 };
 
+/**
+ * We don't want to show the back button if the user has already visited
+ * the homepage in this browser tab, since they can just press their
+ * browser's own back button to go back. However, if the user arrived
+ * here via a link directly to this page from an external site or
+ * bookmark, we do want to show the back button.
+ */
+function maybeRemoveBackButton() {
+  const backButton = document.getElementById('back-button');
+
+  if (backButton && backButton.parentNode && hasUserVisitedHomepage()) {
+    backButton.parentNode.removeChild(backButton);
+  }
+}
+
 async function main() {
+  maybeRemoveBackButton();
+
   const qs = new URLSearchParams(window.location.search);
   const sheet = await loadAsepriteSheet(urls.SPRITESHEET_URL);
   const fontImage = await loadImage(urls.FONT_URL);
