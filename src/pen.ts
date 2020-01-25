@@ -102,11 +102,13 @@ export class Pen {
   }
 
   private handleTouchEvent(e: TouchEvent) {
+    if (isFromInteractivePageElement(e)) return;
     e.preventDefault();
     this.updatePenFromTouch(e);
   }
 
   private handleMouseEvent(e: MouseEvent) {
+    if (isFromInteractivePageElement(e)) return;
     this.updatePenFromMouse(e);
   }
 
@@ -158,4 +160,8 @@ export class Pen {
     MOUSE_EVENTS.forEach(name => window.removeEventListener(name, this.handleMouseEvent as any));
     TOUCH_EVENTS.forEach(name => this.canvas.removeEventListener(name, this.handleTouchEvent as any));
   }
+}
+
+function isFromInteractivePageElement(e: Event): boolean {
+  return e.target instanceof HTMLButtonElement || e.target instanceof HTMLAnchorElement;
 }
