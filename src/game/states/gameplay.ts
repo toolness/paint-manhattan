@@ -5,7 +5,7 @@ import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.j
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
 import { shortenStreetName } from "../street-util.js";
-import { getStreetsInNarrativeOrder } from "../street-stories.js";
+import { getStreetsInNarrativeOrder, streetHasStory } from "../street-stories.js";
 import { logAmplitudeEvent } from "../../amplitude.js";
 import { AsepriteSheet } from "../../aseprite-sheet.js";
 
@@ -40,7 +40,7 @@ function getPixelsLeftText(pixelsLeft: number): string {
 
 function getFirstStreetWithStory(streets: string[]): string|null {
   for (let street of streets) {
-    if (StreetStoryState.existsForStreet(street)) {
+    if (streetHasStory(street)) {
       return street;
     }
   }
@@ -69,7 +69,7 @@ function createHighlightFrames(options: ManhattanOptions): string[] {
     });
   }
   if (options.onlyShowStreetsWithStories) {
-    highlightFrames = highlightFrames.filter(frame => StreetStoryState.existsForStreet(frame));
+    highlightFrames = highlightFrames.filter(frame => streetHasStory(frame));
   }
   return highlightFrames;
 }

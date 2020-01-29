@@ -404,6 +404,10 @@ export function getStreetStory(streetName: string): StreetStory|null {
   return storiesByName.get(streetName) || null;
 }
 
+export function streetHasStory(streetName: string): boolean {
+  return getStreetStory(streetName) !== null;
+}
+
 export function validateStreetStories(allStreetNames: string[]) {
   const allStreetSet = new Set(allStreetNames);
   for (let story of STREET_STORIES) {
