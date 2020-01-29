@@ -58,7 +58,6 @@ export class GameplayState extends ManhattanState {
   private initialStreetsToPaint: number;
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
   private score: number = 0;
-  private prevCursor: string|null = null;
 
   constructor(readonly game: Manhattan) {
     super(game);
