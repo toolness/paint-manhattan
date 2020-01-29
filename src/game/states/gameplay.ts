@@ -1,13 +1,11 @@
-import { Manhattan, ManhattanOptions } from "../core.js";
-import { createCanvas, shuffleArray, moveToStartOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel, uniqueArray } from "../../util.js";
+import { Manhattan } from "../core.js";
+import { createCanvas, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel, uniqueArray } from "../../util.js";
 import { BitmapFont } from "../../font.js";
-import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.js";
+import { STREETS_FRAME, TERRAIN_FRAME } from "../sheet-frames.js";
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
-import { shortenStreetName } from "../street-util.js";
-import { getStreetsInNarrativeOrder, streetHasStory } from "../street-stories.js";
+import { shortenStreetName, createStreetList, countStreetPixelsToBePainted } from "../street-util.js";
 import { logAmplitudeEvent } from "../../amplitude.js";
-import { AsepriteSheet } from "../../aseprite-sheet.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -38,55 +36,6 @@ function getPixelsLeftText(pixelsLeft: number): string {
   return `${pixelsLeft} ${pixels} left`;
 }
 
-function getFirstStreetWithStory(streets: string[]): string|null {
-  for (let street of streets) {
-    if (streetHasStory(street)) {
-      return street;
-    }
-  }
-  return null;
-}
-
-function moveStoriedStreetToStartOfArray(streets: string[]): string[] {
-  const streetWithStory = getFirstStreetWithStory(streets);
-  if (!streetWithStory) return streets;
-  return moveToStartOfArray(streets, streetWithStory);
-}
-
-function createHighlightFrames(options: ManhattanOptions): string[] {
-  let highlightFrames = shuffleArray(getStreetFrames(options.sheet));
-  if (options.showStreetsInNarrativeOrder) {
-    highlightFrames = uniqueArray(getStreetsInNarrativeOrder().concat(highlightFrames));
-  }
-  if (options.startWithStreet) {
-    moveToStartOfArray(highlightFrames, options.startWithStreet);
-  } else {
-    moveStoriedStreetToStartOfArray(highlightFrames);
-  }
-  if (options.minStreetSize > 0) {
-    highlightFrames = highlightFrames.filter(frame => {
-      return countPixelsToBePainted(options.sheet, frame) >= options.minStreetSize;
-    });
-  }
-  if (options.onlyShowStreetsWithStories) {
-    highlightFrames = highlightFrames.filter(frame => streetHasStory(frame));
-  }
-  return highlightFrames;
-}
-
-function countPixelsToBePainted(sheet: AsepriteSheet, frame: string, streetCanvas?: HTMLCanvasElement): number {
-  const sheetCtx = getCanvasCtx2D(sheet.canvas);
-  const frameIm = sheet.getFrameImageData(sheetCtx, frame);
-  const streetIm = streetCanvas ? getCanvasCtx2D(streetCanvas).getImageData(0, 0, streetCanvas.width, streetCanvas.height) : null;
-  let total = 0;
-  for (let idx of iterPixelIndices(frameIm)) {
-    if (!isImageEmptyAt(frameIm, idx) && (!streetIm || isImageEmptyAt(streetIm, idx))) {
-      total += 1;
-    }
-  }
-  return total;
-}
-
 export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
   private readonly highlightFrames: string[];
@@ -98,7 +47,7 @@ export class GameplayState extends ManhattanState {
     super(game);
     const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
     this.streetCanvas = streetCanvas;
-    this.highlightFrames = createHighlightFrames(game.options);
+    this.highlightFrames = createStreetList(game.options);
     this.currentHighlightFrameDetails = null;
     this.initialStreetsToPaint = this.highlightFrames.length;
   }
@@ -136,7 +85,7 @@ export class GameplayState extends ManhattanState {
   }
 
   private countPixelsToBePainted(frame: string) {
-    return countPixelsToBePainted(this.game.options.sheet, frame, this.streetCanvas);
+    return countStreetPixelsToBePainted(this.game.options.sheet, frame, this.streetCanvas);
   }
 
   update() {
