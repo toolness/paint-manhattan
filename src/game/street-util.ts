@@ -1,4 +1,3 @@
-import { ManhattanOptions } from "./core.js";
 import { shuffleArray, uniqueArray, moveToStartOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt } from "../util.js";
 import { getStreetFrames } from "./sheet-frames.js";
 import { getStreetsInNarrativeOrder, streetHasStory } from "./street-stories.js";
