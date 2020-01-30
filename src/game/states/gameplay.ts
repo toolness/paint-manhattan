@@ -25,7 +25,7 @@ const STREET_SKELETON_ALPHA = 0.33;
 
 type RGBA = [number, number, number, number];
 
-type CurrentHighlightFrameDetails = {
+type CurrentStreetDetails = {
   name: string,
   pixelsLeft: number,
   hasMissedOnce: boolean,
@@ -38,16 +38,15 @@ function getPixelsLeftText(pixelsLeft: number): string {
 
 export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
-  private initialStreetsToPaint: number;
-  private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
+  private nextStreetIndex: number = 0;
+  private currentStreetDetails: CurrentStreetDetails|null;
   private score: number = 0;
 
-  constructor(readonly game: Manhattan, readonly highlightFrames: string[]) {
+  constructor(readonly game: Manhattan, readonly streetList: string[]) {
     super(game);
     const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
     this.streetCanvas = streetCanvas;
-    this.currentHighlightFrameDetails = null;
-    this.initialStreetsToPaint = this.highlightFrames.length;
+    this.currentStreetDetails = null;
   }
 
   drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
@@ -74,12 +73,17 @@ export class GameplayState extends ManhattanState {
     streetCtx.putImageData(streetIm, 0, 0);
   }
 
-  private getNextHighlightFrame(): CurrentHighlightFrameDetails|null {
-    const name = this.highlightFrames.shift();
+  private shiftToNextStreet(): CurrentStreetDetails|null {
+    const name = this.streetList[this.nextStreetIndex];
     if (!name) {
       return null;
     }
+    this.nextStreetIndex++;
     return {name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce: false};
+  }
+
+  private hasStreetsLeft(): boolean {
+    return this.nextStreetIndex < this.streetList.length;
   }
 
   private countPixelsToBePainted(frame: string) {
@@ -89,13 +93,13 @@ export class GameplayState extends ManhattanState {
   update() {
     let maybeShowStreetStory = false;
 
-    if (!this.currentHighlightFrameDetails) {
-      this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+    if (!this.currentStreetDetails) {
+      this.currentStreetDetails = this.shiftToNextStreet();
       maybeShowStreetStory = true;
     }
 
     const { game } = this;
-    const curr = this.currentHighlightFrameDetails;
+    const curr = this.currentStreetDetails;
 
     game.pen.setCursor('none');
 
@@ -105,12 +109,12 @@ export class GameplayState extends ManhattanState {
 
     if (!pen.isDown && curr.pixelsLeft === 0) {
       this.unhighlightActiveStreet();
-      this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+      this.currentStreetDetails = this.shiftToNextStreet();
       maybeShowStreetStory = true;
     }
 
-    if (maybeShowStreetStory && this.currentHighlightFrameDetails && game.options.showStreetStories) {
-      const storyState = StreetStoryState.forStreet(game, this, this.currentHighlightFrameDetails.name);
+    if (maybeShowStreetStory && this.currentStreetDetails && game.options.showStreetStories) {
+      const storyState = StreetStoryState.forStreet(game, this, this.currentStreetDetails.name);
       if (storyState) {
         game.changeState(storyState);
         return;
@@ -160,10 +164,10 @@ export class GameplayState extends ManhattanState {
           streetName: curr.name,
           missedAtLeastOnce: curr.hasMissedOnce,
         });
-        if (this.highlightFrames.length === 0) {
+        if (this.hasStreetsLeft()) {
           logAmplitudeEvent({
             name: 'Game won',
-            streetsPainted: this.initialStreetsToPaint,
+            streetsPainted: this.streetList.length,
             finalScore: this.score,
           });
         }
@@ -216,7 +220,7 @@ export class GameplayState extends ManhattanState {
   private drawStatusText(ctx: CanvasRenderingContext2D) {
     const { width, height } = this.game.canvas;
     const { font: big, tinyFont: small } = this.game.options;
-    const curr = this.currentHighlightFrameDetails;
+    const curr = this.currentStreetDetails;
 
     type Line = {text: string, font: BitmapFont, rightPadding?: number};
     const lines: Line[] = [];
