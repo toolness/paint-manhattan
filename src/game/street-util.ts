@@ -25,8 +25,15 @@ function moveStoriedStreetToStartOfArray(streets: string[]): string[] {
   return moveToStartOfArray(streets, streetWithStory);
 }
 
-export function createStreetList(options: ManhattanOptions): string[] {
-  let highlightFrames = shuffleArray(getStreetFrames(options.sheet));
+export type CreateStreetListOptions = {
+  showStreetsInNarrativeOrder: boolean,
+  startWithStreet?: string,
+  minStreetSize: number,
+  onlyShowStreetsWithStories: boolean,
+};
+
+export function createStreetList(streetSheet: AsepriteSheet, options: CreateStreetListOptions): string[] {
+  let highlightFrames = shuffleArray(getStreetFrames(streetSheet));
   if (options.showStreetsInNarrativeOrder) {
     highlightFrames = uniqueArray(getStreetsInNarrativeOrder().concat(highlightFrames));
   }
@@ -37,7 +44,7 @@ export function createStreetList(options: ManhattanOptions): string[] {
   }
   if (options.minStreetSize > 0) {
     highlightFrames = highlightFrames.filter(frame => {
-      return countStreetPixelsToBePainted(options.sheet, frame) >= options.minStreetSize;
+      return countStreetPixelsToBePainted(streetSheet, frame) >= options.minStreetSize;
     });
   }
   if (options.onlyShowStreetsWithStories) {

@@ -8,8 +8,9 @@ import { TERRAIN_FRAME } from './sheet-frames.js';
 import { GameplayState } from './states/gameplay.js';
 import { SplashScreenState } from './states/splash-screen.js';
 import { ManhattanState } from './state.js';
+import { CreateStreetListOptions, createStreetList } from './street-util.js';
 
-export type ManhattanOptions = {
+export type ManhattanOptions = CreateStreetListOptions & {
   sheet: AsepriteSheet,
   font: BitmapFont,
   tinyFont: BitmapFont,
@@ -17,14 +18,10 @@ export type ManhattanOptions = {
   splashImage: HTMLImageElement,
   skipSplashScreen: boolean,
   showStreetSkeleton: boolean,
-  startWithStreet?: string,
-  minStreetSize: number,
   successSoundEffect: SoundEffect,
   missSoundEffect: SoundEffect,
   showStreetStories: boolean,
-  onlyShowStreetsWithStories: boolean,
   showScore: boolean,
-  showStreetsInNarrativeOrder: boolean,
   enableFullscreen: boolean,
   resizeCanvas: boolean,
   onFrameDrawn?: (ctx: CanvasRenderingContext2D) => void,
@@ -46,7 +43,8 @@ export class Manhattan {
       this.resizer = new CanvasResizer(canvas);
     }
     this.canvas = canvas;
-    const gameplayState = new GameplayState(this);
+    const streetsToPaint = createStreetList(options.sheet, options);
+    const gameplayState = new GameplayState(this, streetsToPaint);
     this.currState = options.skipSplashScreen ? gameplayState : new SplashScreenState(this, gameplayState);
   }
 

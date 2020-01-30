@@ -4,7 +4,7 @@ import { BitmapFont } from "../../font.js";
 import { STREETS_FRAME, TERRAIN_FRAME } from "../sheet-frames.js";
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
-import { shortenStreetName, createStreetList, countStreetPixelsToBePainted } from "../street-util.js";
+import { shortenStreetName, countStreetPixelsToBePainted } from "../street-util.js";
 import { logAmplitudeEvent } from "../../amplitude.js";
 
 const PAINT_RADIUS_MOUSE = 5;
@@ -38,16 +38,14 @@ function getPixelsLeftText(pixelsLeft: number): string {
 
 export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
-  private readonly highlightFrames: string[];
   private initialStreetsToPaint: number;
   private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
   private score: number = 0;
 
-  constructor(readonly game: Manhattan) {
+  constructor(readonly game: Manhattan, readonly highlightFrames: string[]) {
     super(game);
     const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
     this.streetCanvas = streetCanvas;
-    this.highlightFrames = createStreetList(game.options);
     this.currentHighlightFrameDetails = null;
     this.initialStreetsToPaint = this.highlightFrames.length;
   }
