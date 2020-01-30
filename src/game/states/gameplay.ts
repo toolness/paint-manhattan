@@ -4,7 +4,7 @@ import { BitmapFont } from "../../font.js";
 import { STREETS_FRAME, TERRAIN_FRAME } from "../sheet-frames.js";
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
-import { shortenStreetName, countStreetPixelsToBePainted } from "../street-util.js";
+import { shortenStreetName, countStreetPixelsToBePainted, areStreetNamesValid } from "../street-util.js";
 import { logAmplitudeEvent } from "../../amplitude.js";
 
 const PAINT_RADIUS_MOUSE = 5;
@@ -31,6 +31,16 @@ type CurrentStreetDetails = {
   hasMissedOnce: boolean,
 };
 
+type GameplayStateOptions = {
+  nextStreetIndex: number,
+  nextStreetHasMissedOnce?: boolean;
+  score: number;
+};
+
+export type GameplaySavegame = GameplayStateOptions & {
+  streetList: string[],
+};
+
 function getPixelsLeftText(pixelsLeft: number): string {
   const pixels = pixelsLeft === 1 ? 'pixel' : 'pixels';
   return `${pixelsLeft} ${pixels} left`;
@@ -38,15 +48,50 @@ function getPixelsLeftText(pixelsLeft: number): string {
 
 export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
-  private nextStreetIndex: number = 0;
+  private nextStreetIndex: number;
   private currentStreetDetails: CurrentStreetDetails|null;
-  private score: number = 0;
+  private score: number;
+  private nextStreetHasMissedOnce?: boolean;
 
-  constructor(readonly game: Manhattan, readonly streetList: string[]) {
+  constructor(readonly game: Manhattan, readonly streetList: string[], options: Partial<GameplayStateOptions> = {}) {
     super(game);
     const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
     this.streetCanvas = streetCanvas;
     this.currentStreetDetails = null;
+    this.nextStreetIndex = options.nextStreetIndex || 0;
+    this.nextStreetHasMissedOnce = options.nextStreetHasMissedOnce;
+    this.score = options.score || 0;
+  }
+
+  static fromSavegame(game: Manhattan, savegame: GameplaySavegame): GameplayState|null {
+    const { streetList, ...options } = savegame;
+    if (!areStreetNamesValid(game.options.sheet, streetList)) {
+      // The game has evolved since the saved game was made, and
+      // some of the street names are now invalid.
+      return null;
+    }
+    return new GameplayState(game, streetList, options);
+  }
+
+  getSavegame(): GameplaySavegame {
+    let { streetList, nextStreetIndex, score, nextStreetHasMissedOnce } = this;
+    const curr = this.currentStreetDetails;
+    if (curr) {
+      // The player is in the process of painting a street. If they
+      // have already made a mistake, make sure we remember, so that
+      // they can't just save scum to get a perfect score.
+      if (!(nextStreetIndex > 0 && nextStreetIndex < streetList.length)) {
+        console.log(`That's odd, nextStreetIndex has an unexpected value of ${nextStreetIndex}.`);
+      }
+      nextStreetIndex--;
+      nextStreetHasMissedOnce = curr.hasMissedOnce;
+    }
+    return {
+      streetList,
+      nextStreetIndex,
+      score,
+      nextStreetHasMissedOnce
+    };
   }
 
   drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
@@ -79,7 +124,12 @@ export class GameplayState extends ManhattanState {
       return null;
     }
     this.nextStreetIndex++;
-    return {name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce: false};
+    let hasMissedOnce = false;
+    if (typeof(this.nextStreetHasMissedOnce) === 'boolean') {
+      hasMissedOnce = this.nextStreetHasMissedOnce;
+      this.nextStreetHasMissedOnce = undefined;
+    }
+    return {name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce};
   }
 
   private hasStreetsLeft(): boolean {
@@ -165,17 +215,31 @@ export class GameplayState extends ManhattanState {
           missedAtLeastOnce: curr.hasMissedOnce,
         });
         if (this.hasStreetsLeft()) {
+          this.clearAutosave();
           logAmplitudeEvent({
             name: 'Game won',
             streetsPainted: this.streetList.length,
             finalScore: this.score,
           });
+        } else {
+          this.triggerAutosave();
         }
       }
     } else if (isCompleteMiss && curr.pixelsLeft > 0) {
-      curr.hasMissedOnce = true;
+      if (!curr.hasMissedOnce) {
+        curr.hasMissedOnce = true;
+        this.triggerAutosave();
+      }
       game.options.missSoundEffect.play();
     }
+  }
+
+  private triggerAutosave() {
+    this.game.autosave(this.getSavegame());
+  }
+
+  private clearAutosave() {
+    this.game.autosave(null);
   }
 
   draw(ctx: CanvasRenderingContext2D) {

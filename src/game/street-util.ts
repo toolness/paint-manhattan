@@ -31,6 +31,16 @@ export type CreateStreetListOptions = {
   onlyShowStreetsWithStories: boolean,
 };
 
+export function areStreetNamesValid(streetSheet: AsepriteSheet, names: string[]): boolean {
+  let allNames = new Set(getStreetFrames(streetSheet));
+  for (let name of names) {
+    if (!allNames.has(name)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function createStreetList(streetSheet: AsepriteSheet, options: CreateStreetListOptions): string[] {
   let highlightFrames = shuffleArray(getStreetFrames(streetSheet));
   if (options.showStreetsInNarrativeOrder) {
