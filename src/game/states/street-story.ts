@@ -42,10 +42,6 @@ export abstract class StreetStoryState extends ManhattanState {
     if (!story) return null;
     return new AnimatingSubState(game, gameplayState, story);
   }
-
-  static existsForStreet(streetName: string): boolean {
-    return getStreetStory(streetName) !== null;
-  }
 }
 
 class AnimatingSubState extends StreetStoryState {

@@ -33,7 +33,14 @@ function clientWantsOfflineContent(client: Client, url: string) {
     url = client.url;
   }
 
-  const qs = new URLSearchParams(new URL(url).search);
+  const urlObj = new URL(url);
+
+  if (urlObj.pathname.endsWith('test.html')) {
+    // The test suite should always be online.
+    return false;
+  }
+
+  const qs = new URLSearchParams(urlObj.search);
 
   // Note that `src/offline.ts` uses the same logic to determine
   // if the requesting/requested page wants offline support, so if this
@@ -63,7 +70,7 @@ function normalizeRequest(request: Request) {
 }
 
 // Argh, this is a weird workaround for https://github.com/Microsoft/TypeScript/issues/14877.
-function run(self: ServiceWorkerGlobalScope) {
+function runManhattanServiceWorker(self: ServiceWorkerGlobalScope) {
   self.addEventListener('message', event => {
     if (event.data === 'ping') {
       if (!event.source) {
@@ -119,4 +126,4 @@ function run(self: ServiceWorkerGlobalScope) {
   });  
 }
 
-run((self as any) as ServiceWorkerGlobalScope);
+runManhattanServiceWorker((self as any) as ServiceWorkerGlobalScope);

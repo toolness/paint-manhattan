@@ -1,12 +1,11 @@
 import { Manhattan } from "../core.js";
-import { createCanvas, shuffleArray, moveToStartOfArray, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel, uniqueArray } from "../../util.js";
+import { createCanvas, getCanvasCtx2D, iterPixelIndices, isImageEmptyAt, setPixel, uniqueArray } from "../../util.js";
 import { BitmapFont } from "../../font.js";
-import { STREETS_FRAME, getStreetFrames, TERRAIN_FRAME } from "../sheet-frames.js";
+import { STREETS_FRAME, TERRAIN_FRAME } from "../sheet-frames.js";
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
-import { shortenStreetName } from "../street-util.js";
-import { getStreetsInNarrativeOrder } from "../street-stories.js";
-import { logAmplitudeEvent } from "../../amplitude.js";
+import { shortenStreetName, countStreetPixelsToBePainted, areStreetNamesValid } from "../street-util.js";
+import { logAmplitudeEvent, AmplitudeGameDifficultyInfo } from "../../amplitude.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -26,10 +25,20 @@ const STREET_SKELETON_ALPHA = 0.33;
 
 type RGBA = [number, number, number, number];
 
-type CurrentHighlightFrameDetails = {
+type CurrentStreetDetails = {
   name: string,
   pixelsLeft: number,
   hasMissedOnce: boolean,
+};
+
+type GameplayStateOptions = {
+  nextStreetIndex: number,
+  nextStreetHasMissedOnce?: boolean;
+  score: number;
+};
+
+export type GameplaySavegame = GameplayStateOptions & {
+  streetList: string[],
 };
 
 function getPixelsLeftText(pixelsLeft: number): string {
@@ -37,53 +46,68 @@ function getPixelsLeftText(pixelsLeft: number): string {
   return `${pixelsLeft} ${pixels} left`;
 }
 
-function getFirstStreetWithStory(streets: string[]): string|null {
-  for (let street of streets) {
-    if (StreetStoryState.existsForStreet(street)) {
-      return street;
-    }
-  }
-  return null;
-}
-
-function moveStoriedStreetToStartOfArray(streets: string[]): string[] {
-  const streetWithStory = getFirstStreetWithStory(streets);
-  if (!streetWithStory) return streets;
-  return moveToStartOfArray(streets, streetWithStory);
-}
-
 export class GameplayState extends ManhattanState {
   private readonly streetCanvas: HTMLCanvasElement;
-  private readonly highlightFrames: string[];
-  private initialStreetsToPaint: number;
-  private currentHighlightFrameDetails: CurrentHighlightFrameDetails|null;
-  private score: number = 0;
-  private prevCursor: string|null = null;
+  private nextStreetIndex: number;
+  private currentStreetDetails: CurrentStreetDetails|null;
+  private score: number;
+  private nextStreetHasMissedOnce?: boolean;
+  private hasEnteredOnce = false;
 
-  constructor(readonly game: Manhattan) {
+  constructor(readonly game: Manhattan, readonly streetList: string[], options: Partial<GameplayStateOptions> = {}) {
     super(game);
     const streetCanvas = createCanvas(game.canvas.width, game.canvas.height);
     this.streetCanvas = streetCanvas;
-    let highlightFrames = shuffleArray(getStreetFrames(game.options.sheet));
-    if (game.options.showStreetsInNarrativeOrder) {
-      highlightFrames = uniqueArray(getStreetsInNarrativeOrder().concat(highlightFrames));
+    this.currentStreetDetails = null;
+    this.nextStreetIndex = options.nextStreetIndex || 0;
+    this.nextStreetHasMissedOnce = options.nextStreetHasMissedOnce;
+    this.score = options.score || 0;
+    this.autopaintStreets(this.nextStreetIndex);
+  }
+
+  private autopaintStreets(upToStreetIndex: number) {
+    const sheetCtx = getCanvasCtx2D(this.game.options.sheet.canvas);
+    const { width, height } = this.streetCanvas;
+    const streetCtx = getCanvasCtx2D(this.streetCanvas);
+    const streetData = streetCtx.getImageData(0, 0, width, height);
+    for (let i = 0; i < upToStreetIndex; i++) {
+      const streetName = this.streetList[i];
+      const frameData = this.game.options.sheet.getFrameImageData(sheetCtx, streetName);
+      for (let idx of iterPixelIndices(frameData)) {
+        const isPartOfStreet = !isImageEmptyAt(frameData, idx);
+        if (isPartOfStreet) {
+          setPixel(streetData, idx, ...PAINT_INACTIVE_STREET_RGBA);
+        }
+      }
     }
-    if (game.options.startWithStreet) {
-      moveToStartOfArray(highlightFrames, game.options.startWithStreet);
-    } else {
-      moveStoriedStreetToStartOfArray(highlightFrames);
+    streetCtx.putImageData(streetData, 0, 0);
+  }
+
+  static fromSavegame(game: Manhattan, savegame: GameplaySavegame): GameplayState|null {
+    const { streetList, ...options } = savegame;
+    if (!areStreetNamesValid(game.options.sheet, streetList)) {
+      // The game has evolved since the saved game was made, and
+      // some of the street names are now invalid.
+      return null;
     }
-    if (game.options.minStreetSize > 0) {
-      highlightFrames = highlightFrames.filter(frame => {
-        return this.countPixelsToBePainted(frame) >= game.options.minStreetSize;
-      });
-    }
-    if (game.options.onlyShowStreetsWithStories) {
-      highlightFrames = highlightFrames.filter(frame => StreetStoryState.existsForStreet(frame));
-    }
-    this.highlightFrames = highlightFrames;
-    this.currentHighlightFrameDetails = null;
-    this.initialStreetsToPaint = highlightFrames.length;
+    return new GameplayState(game, streetList, options);
+  }
+
+  private getBaseSavegame(): GameplaySavegame {
+    let { streetList, nextStreetIndex, score } = this;
+    return {
+      streetList,
+      nextStreetIndex,
+      score,
+      nextStreetHasMissedOnce: false,
+    };
+  }
+
+  private getSavegameForStreetMiss(): GameplaySavegame {
+    const savegame = this.getBaseSavegame();
+    savegame.nextStreetIndex--;
+    savegame.nextStreetHasMissedOnce = true;
+    return savegame;
   }
 
   drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
@@ -110,39 +134,38 @@ export class GameplayState extends ManhattanState {
     streetCtx.putImageData(streetIm, 0, 0);
   }
 
-  private getNextHighlightFrame(): CurrentHighlightFrameDetails|null {
-    const name = this.highlightFrames.shift();
+  private shiftToNextStreet(): CurrentStreetDetails|null {
+    const name = this.streetList[this.nextStreetIndex];
     if (!name) {
       return null;
     }
-    return {name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce: false};
+    this.nextStreetIndex++;
+    let hasMissedOnce = false;
+    if (typeof(this.nextStreetHasMissedOnce) === 'boolean') {
+      hasMissedOnce = this.nextStreetHasMissedOnce;
+      this.nextStreetHasMissedOnce = undefined;
+    }
+    return {name, pixelsLeft: this.countPixelsToBePainted(name), hasMissedOnce};
+  }
+
+  private hasStreetsLeft(): boolean {
+    return this.nextStreetIndex < this.streetList.length;
   }
 
   private countPixelsToBePainted(frame: string) {
-    const { sheet } = this.game.options;
-    const streetCtx = getCanvasCtx2D(this.streetCanvas);
-    const sheetCtx = getCanvasCtx2D(sheet.canvas);
-    const frameIm = sheet.getFrameImageData(sheetCtx, frame);
-    const streetIm = streetCtx.getImageData(0, 0, this.streetCanvas.width, this.streetCanvas.height);
-    let total = 0;
-    for (let idx of iterPixelIndices(frameIm)) {
-      if (!isImageEmptyAt(frameIm, idx) && isImageEmptyAt(streetIm, idx)) {
-        total += 1;
-      }
-    }
-    return total;
+    return countStreetPixelsToBePainted(this.game.options.sheet, frame, this.streetCanvas);
   }
 
   update() {
     let maybeShowStreetStory = false;
 
-    if (!this.currentHighlightFrameDetails) {
-      this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+    if (!this.currentStreetDetails) {
+      this.currentStreetDetails = this.shiftToNextStreet();
       maybeShowStreetStory = true;
     }
 
     const { game } = this;
-    const curr = this.currentHighlightFrameDetails;
+    const curr = this.currentStreetDetails;
 
     game.pen.setCursor('none');
 
@@ -152,12 +175,12 @@ export class GameplayState extends ManhattanState {
 
     if (!pen.isDown && curr.pixelsLeft === 0) {
       this.unhighlightActiveStreet();
-      this.currentHighlightFrameDetails = this.getNextHighlightFrame();
+      this.currentStreetDetails = this.shiftToNextStreet();
       maybeShowStreetStory = true;
     }
 
-    if (maybeShowStreetStory && this.currentHighlightFrameDetails && game.options.showStreetStories) {
-      const storyState = StreetStoryState.forStreet(game, this, this.currentHighlightFrameDetails.name);
+    if (maybeShowStreetStory && this.currentStreetDetails && game.options.showStreetStories) {
+      const storyState = StreetStoryState.forStreet(game, this, this.currentStreetDetails.name);
       if (storyState) {
         game.changeState(storyState);
         return;
@@ -207,16 +230,22 @@ export class GameplayState extends ManhattanState {
           streetName: curr.name,
           missedAtLeastOnce: curr.hasMissedOnce,
         });
-        if (this.highlightFrames.length === 0) {
+        if (!this.hasStreetsLeft()) {
+          this.game.autosave(null);
           logAmplitudeEvent({
             name: 'Game won',
-            streetsPainted: this.initialStreetsToPaint,
+            streetsPainted: this.streetList.length,
             finalScore: this.score,
           });
+        } else {
+          this.game.autosave(this.getBaseSavegame());
         }
       }
     } else if (isCompleteMiss && curr.pixelsLeft > 0) {
-      curr.hasMissedOnce = true;
+      if (!curr.hasMissedOnce) {
+        curr.hasMissedOnce = true;
+        this.game.autosave(this.getSavegameForStreetMiss());
+      }
       game.options.missSoundEffect.play();
     }
   }
@@ -263,7 +292,7 @@ export class GameplayState extends ManhattanState {
   private drawStatusText(ctx: CanvasRenderingContext2D) {
     const { width, height } = this.game.canvas;
     const { font: big, tinyFont: small } = this.game.options;
-    const curr = this.currentHighlightFrameDetails;
+    const curr = this.currentStreetDetails;
 
     type Line = {text: string, font: BitmapFont, rightPadding?: number};
     const lines: Line[] = [];
@@ -304,9 +333,19 @@ export class GameplayState extends ManhattanState {
 
   enter() {
     super.enter();
-  }
-
-  exit() {
-    super.exit();
+    if (!this.hasEnteredOnce) {
+      this.hasEnteredOnce = true;
+      const { showStreetSkeleton, showStreetsInNarrativeOrder } = this.game.options;
+      const { nextStreetIndex } = this;
+      const difficultyInfo: AmplitudeGameDifficultyInfo = {
+        showStreetSkeleton,
+        showStreetsInNarrativeOrder
+      };
+      if (nextStreetIndex === 0) {
+        logAmplitudeEvent({name: 'Game started', ...difficultyInfo});
+      } else {
+        logAmplitudeEvent({name: 'Game continued', nextStreetIndex, ...difficultyInfo});
+      }
+    }
   }
 }

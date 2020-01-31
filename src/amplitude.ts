@@ -1,11 +1,21 @@
 const AMPLITUDE_API_KEY = "40355a927e83f7e810a4a52d25d21ace";
 
+const DEBUG = false;
+
 type AmplitudeInterface = typeof import("../vendor/amplitude");
 
-type AmplitudeEvent = {
-  name: 'Game started',
+export type AmplitudeGameDifficultyInfo = {
   showStreetSkeleton: boolean,
   showStreetsInNarrativeOrder: boolean,
+};
+
+export type AmplitudeEvent = {
+  name: 'Game started',
+} & AmplitudeGameDifficultyInfo | {
+  name: 'Game continued',
+  nextStreetIndex: number,
+} & AmplitudeGameDifficultyInfo | {
+  name: 'Game reset',
 } | {
   name: 'Street painted',
   streetName: string,
@@ -35,6 +45,10 @@ function getAmplitude(): AmplitudeInterface|null {
 export function logAmplitudeEvent(event: AmplitudeEvent) {
   const {name, ...data} = event;
   const amplitude = getAmplitude();
+
+  if (DEBUG) {
+    console.log('logAmplitudeEvent:', event);
+  }
 
   if (amplitude) {
     const identify = new amplitude.Identify();

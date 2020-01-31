@@ -16,6 +16,14 @@ export const OFFLINE_GLOBS = [
   'game.html',
 ];
 
+/**
+ * Globs that are explicitly *not* needed for running
+ * the game offline.
+ */
+export const OFFLINE_IGNORE_GLOBS = [
+  'dist/**/*.test.js',
+];
+
 /** The game's service worker. */
 export const SERVICE_WORKER_FILENAME = 'service-worker.js';
 

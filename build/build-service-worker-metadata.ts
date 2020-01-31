@@ -15,7 +15,7 @@ const GLOBS = [
 
 const WRITE_FILE_DELAY_MS = 500;
 
-const watcher = chokidar.watch(GLOBS);
+const watcher = chokidar.watch(GLOBS, {ignored: metadata.OFFLINE_IGNORE_GLOBS});
 
 const files = new Set<string>();
 

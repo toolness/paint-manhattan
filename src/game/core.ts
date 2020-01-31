@@ -5,11 +5,12 @@ import { CanvasResizer } from '../canvas-resizer.js';
 import { Pen } from '../pen.js';
 import { SoundEffect } from '../audio.js';
 import { TERRAIN_FRAME } from './sheet-frames.js';
-import { GameplayState } from './states/gameplay.js';
+import { GameplayState, GameplaySavegame } from './states/gameplay.js';
 import { SplashScreenState } from './states/splash-screen.js';
 import { ManhattanState } from './state.js';
+import { CreateStreetListOptions, createStreetList } from './street-util.js';
 
-export type ManhattanOptions = {
+export type ManhattanOptions = CreateStreetListOptions & {
   sheet: AsepriteSheet,
   font: BitmapFont,
   tinyFont: BitmapFont,
@@ -17,16 +18,14 @@ export type ManhattanOptions = {
   splashImage: HTMLImageElement,
   skipSplashScreen: boolean,
   showStreetSkeleton: boolean,
-  startWithStreet?: string,
-  minStreetSize: number,
   successSoundEffect: SoundEffect,
   missSoundEffect: SoundEffect,
   showStreetStories: boolean,
-  onlyShowStreetsWithStories: boolean,
   showScore: boolean,
-  showStreetsInNarrativeOrder: boolean,
   enableFullscreen: boolean,
   resizeCanvas: boolean,
+  savegame?: GameplaySavegame,
+  onAutoSavegame?: (savegame: GameplaySavegame|null) => void,
   onFrameDrawn?: (ctx: CanvasRenderingContext2D) => void,
 };
 
@@ -46,8 +45,21 @@ export class Manhattan {
       this.resizer = new CanvasResizer(canvas);
     }
     this.canvas = canvas;
-    const gameplayState = new GameplayState(this);
+    const gameplayState = this.createGameplayState();
     this.currState = options.skipSplashScreen ? gameplayState : new SplashScreenState(this, gameplayState);
+  }
+
+  private createGameplayState(): GameplayState {
+    const { options } = this;
+    let gameplayState: GameplayState|null = null;
+    if (options.savegame) {
+      gameplayState = GameplayState.fromSavegame(this, options.savegame);
+    }
+    if (!gameplayState) {
+      const streetsToPaint = createStreetList(options.sheet, options);
+      gameplayState = new GameplayState(this, streetsToPaint);
+    }
+    return gameplayState;
   }
 
   changeState(newState: ManhattanState) {
@@ -90,5 +102,12 @@ export class Manhattan {
       this.resizer.stop();
     }
     this.pen.stop();
+  }
+
+  autosave(savegame: GameplaySavegame|null) {
+    const { onAutoSavegame} = this.options;
+    if (onAutoSavegame) {
+      onAutoSavegame(savegame);
+    }
   }
 }

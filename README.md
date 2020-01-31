@@ -46,6 +46,14 @@ You can also visit http://localhost:8000/debug.html for some debugging options.
 [NodeJS]: https://nodejs.org/
 [Yarn]: https://yarnpkg.com/
 
+## Running tests
+
+The game has a browser-based test suite that you can run at
+http://localhost:8000/test.html.
+
+Note that adding any new test files involves adding new `<script>` tags to
+`test.html`, as there is no "automatic discovery" of them.
+
 ## Editing the map
 
 [Aseprite][] is required to edit the map at `graphics/manhattan.aseprite`. The
