@@ -4,12 +4,17 @@ const DEBUG = false;
 
 type AmplitudeInterface = typeof import("../vendor/amplitude");
 
-type AmplitudeEvent = {
-  name: 'Game started',
-  nextStreetIndex?: number,
+export type AmplitudeGameDifficultyInfo = {
   showStreetSkeleton: boolean,
   showStreetsInNarrativeOrder: boolean,
-} | {
+};
+
+export type AmplitudeEvent = {
+  name: 'Game started',
+} & AmplitudeGameDifficultyInfo | {
+  name: 'Game continued',
+  nextStreetIndex?: number,
+} & AmplitudeGameDifficultyInfo | {
   name: 'Game reset',
 } | {
   name: 'Street painted',

@@ -5,7 +5,7 @@ import { STREETS_FRAME, TERRAIN_FRAME } from "../sheet-frames.js";
 import { ManhattanState } from "../state.js";
 import { StreetStoryState } from "./street-story.js";
 import { shortenStreetName, countStreetPixelsToBePainted, areStreetNamesValid } from "../street-util.js";
-import { logAmplitudeEvent } from "../../amplitude.js";
+import { logAmplitudeEvent, AmplitudeGameDifficultyInfo } from "../../amplitude.js";
 
 const PAINT_RADIUS_MOUSE = 5;
 
@@ -337,12 +337,15 @@ export class GameplayState extends ManhattanState {
       this.hasEnteredOnce = true;
       const { showStreetSkeleton, showStreetsInNarrativeOrder } = this.game.options;
       const { nextStreetIndex } = this;
-      logAmplitudeEvent({
-        name: 'Game started',
-        nextStreetIndex,
+      const difficultyInfo: AmplitudeGameDifficultyInfo = {
         showStreetSkeleton,
         showStreetsInNarrativeOrder
-      });
+      };
+      if (nextStreetIndex === 0) {
+        logAmplitudeEvent({name: 'Game started', ...difficultyInfo});
+      } else {
+        logAmplitudeEvent({name: 'Game continued', nextStreetIndex, ...difficultyInfo});
+      }
     }
   }
 }
