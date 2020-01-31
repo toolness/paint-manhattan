@@ -13,7 +13,7 @@ export type AmplitudeEvent = {
   name: 'Game started',
 } & AmplitudeGameDifficultyInfo | {
   name: 'Game continued',
-  nextStreetIndex?: number,
+  nextStreetIndex: number,
 } & AmplitudeGameDifficultyInfo | {
   name: 'Game reset',
 } | {
