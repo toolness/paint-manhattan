@@ -52,6 +52,7 @@ export class GameplayState extends ManhattanState {
   private currentStreetDetails: CurrentStreetDetails|null;
   private score: number;
   private nextStreetHasMissedOnce?: boolean;
+  private hasEnteredOnce = false;
 
   constructor(readonly game: Manhattan, readonly streetList: string[], options: Partial<GameplayStateOptions> = {}) {
     super(game);
@@ -332,9 +333,16 @@ export class GameplayState extends ManhattanState {
 
   enter() {
     super.enter();
-  }
-
-  exit() {
-    super.exit();
+    if (!this.hasEnteredOnce) {
+      this.hasEnteredOnce = true;
+      const { showStreetSkeleton, showStreetsInNarrativeOrder } = this.game.options;
+      const { nextStreetIndex } = this;
+      logAmplitudeEvent({
+        name: 'Game started',
+        nextStreetIndex,
+        showStreetSkeleton,
+        showStreetsInNarrativeOrder
+      });
+    }
   }
 }
