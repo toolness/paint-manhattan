@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import chokidar from 'chokidar';
-import { ONLINE_GLOBS, OFFLINE_GLOBS } from './metadata';
+import { ONLINE_GLOBS, OFFLINE_GLOBS, OFFLINE_IGNORE_GLOBS } from './metadata';
 
 const OUTPUT_DIR = 'public';
 
@@ -11,7 +11,7 @@ async function getFiles(): Promise<string[]> {
     const watcher = chokidar.watch([
       ...ONLINE_GLOBS,
       ...OFFLINE_GLOBS,
-    ]);
+    ], {ignored: OFFLINE_IGNORE_GLOBS});
 
     watcher.on('add', path => {
       files.push(path);
