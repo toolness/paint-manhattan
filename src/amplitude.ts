@@ -10,6 +10,8 @@ type AmplitudeEvent = {
   showStreetSkeleton: boolean,
   showStreetsInNarrativeOrder: boolean,
 } | {
+  name: 'Game reset',
+} | {
   name: 'Street painted',
   streetName: string,
   missedAtLeastOnce: boolean,

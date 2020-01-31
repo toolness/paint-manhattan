@@ -9,6 +9,7 @@ import { getStreetFrames } from "../game/sheet-frames.js";
 import { enableOfflineSupport } from "../offline.js";
 import { RecorderUI } from "../recorder-ui.js";
 import { SavegameStorage } from "../game/savegame-storage.js";
+import { logAmplitudeEvent } from "../amplitude.js";
 
 const RESET_BUTTON_DISAPPEAR_MS = 10_000;
 
@@ -31,6 +32,7 @@ function showResetButton(savegameStorage: SavegameStorage, parent: HTMLElement =
   button.className = 'pixely-button';
   button.onclick = () => {
     savegameStorage.save(null);
+    logAmplitudeEvent({name: 'Game reset'});
     window.location.reload();
   };
   parent.appendChild(button);
