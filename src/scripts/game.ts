@@ -9,6 +9,7 @@ import { getStreetFrames } from "../game/sheet-frames.js";
 import { enableOfflineSupport } from "../offline.js";
 import { RecorderUI } from "../recorder-ui.js";
 import { hasUserVisitedHomepage } from "../homepage-visited.js";
+import { SavegameStorage } from "../game/savegame-storage.js";
 
 const FONT_OPTIONS: BitmapFontOptions = {
   charWidth: 6,
@@ -47,6 +48,7 @@ async function main() {
   const splashImage = await loadImage(urls.SPLASH_URL);
   const font = new BitmapFont(fontImage, FONT_OPTIONS);
   const tinyFont = new BitmapFont(tinyFontImage, TINY_FONT_OPTIONS);
+  const savegameStorage = new SavegameStorage(window.location.href);
   const manhattan = new Manhattan({
     sheet,
     font,
@@ -66,6 +68,8 @@ async function main() {
     enableFullscreen: qs.get('fullscreen') === 'on',
     resizeCanvas: !(qs.get('noresize') === 'on'),
     onFrameDrawn: qs.get('record') === 'on' ? new RecorderUI().handleDrawFrame : undefined,
+    savegame: savegameStorage.load(),
+    onAutoSavegame: savegameStorage.save,
   });
   validateStreetStories(getStreetFrames(sheet));
   manhattan.start();

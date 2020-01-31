@@ -61,6 +61,25 @@ export class GameplayState extends ManhattanState {
     this.nextStreetIndex = options.nextStreetIndex || 0;
     this.nextStreetHasMissedOnce = options.nextStreetHasMissedOnce;
     this.score = options.score || 0;
+    this.autopaintStreets(this.nextStreetIndex);
+  }
+
+  private autopaintStreets(upToStreetIndex: number) {
+    const sheetCtx = getCanvasCtx2D(this.game.options.sheet.canvas);
+    const { width, height } = this.streetCanvas;
+    const streetCtx = getCanvasCtx2D(this.streetCanvas);
+    const streetData = streetCtx.getImageData(0, 0, width, height);
+    for (let i = 0; i < upToStreetIndex; i++) {
+      const streetName = this.streetList[i];
+      const frameData = this.game.options.sheet.getFrameImageData(sheetCtx, streetName);
+      for (let idx of iterPixelIndices(frameData)) {
+        const isPartOfStreet = !isImageEmptyAt(frameData, idx);
+        if (isPartOfStreet) {
+          setPixel(streetData, idx, ...PAINT_INACTIVE_STREET_RGBA);
+        }
+      }
+    }
+    streetCtx.putImageData(streetData, 0, 0);
   }
 
   static fromSavegame(game: Manhattan, savegame: GameplaySavegame): GameplayState|null {
@@ -73,25 +92,21 @@ export class GameplayState extends ManhattanState {
     return new GameplayState(game, streetList, options);
   }
 
-  getSavegame(): GameplaySavegame {
-    let { streetList, nextStreetIndex, score, nextStreetHasMissedOnce } = this;
-    const curr = this.currentStreetDetails;
-    if (curr) {
-      // The player is in the process of painting a street. If they
-      // have already made a mistake, make sure we remember, so that
-      // they can't just save scum to get a perfect score.
-      if (!(nextStreetIndex > 0 && nextStreetIndex < streetList.length)) {
-        console.log(`That's odd, nextStreetIndex has an unexpected value of ${nextStreetIndex}.`);
-      }
-      nextStreetIndex--;
-      nextStreetHasMissedOnce = curr.hasMissedOnce;
-    }
+  private getBaseSavegame(): GameplaySavegame {
+    let { streetList, nextStreetIndex, score } = this;
     return {
       streetList,
       nextStreetIndex,
       score,
-      nextStreetHasMissedOnce
+      nextStreetHasMissedOnce: false,
     };
+  }
+
+  private getSavegameForStreetMiss(): GameplaySavegame {
+    const savegame = this.getBaseSavegame();
+    savegame.nextStreetIndex--;
+    savegame.nextStreetHasMissedOnce = true;
+    return savegame;
   }
 
   drawStreetSkeleton(ctx: CanvasRenderingContext2D) {
@@ -214,32 +229,24 @@ export class GameplayState extends ManhattanState {
           streetName: curr.name,
           missedAtLeastOnce: curr.hasMissedOnce,
         });
-        if (this.hasStreetsLeft()) {
-          this.clearAutosave();
+        if (!this.hasStreetsLeft()) {
+          this.game.autosave(null);
           logAmplitudeEvent({
             name: 'Game won',
             streetsPainted: this.streetList.length,
             finalScore: this.score,
           });
         } else {
-          this.triggerAutosave();
+          this.game.autosave(this.getBaseSavegame());
         }
       }
     } else if (isCompleteMiss && curr.pixelsLeft > 0) {
       if (!curr.hasMissedOnce) {
         curr.hasMissedOnce = true;
-        this.triggerAutosave();
+        this.game.autosave(this.getSavegameForStreetMiss());
       }
       game.options.missSoundEffect.play();
     }
-  }
-
-  private triggerAutosave() {
-    this.game.autosave(this.getSavegame());
-  }
-
-  private clearAutosave() {
-    this.game.autosave(null);
   }
 
   draw(ctx: CanvasRenderingContext2D) {
