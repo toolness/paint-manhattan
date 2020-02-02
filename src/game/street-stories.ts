@@ -356,6 +356,18 @@ const STREET_STORIES: StreetStory[] = [
     time: Era.British,
   },
   {
+    name: "Mott Street",
+    content: [
+      "During the 19th century, Mott Street was part of a notorious slum called The Five Points.",
+      "In the latter quarter of the century, men from Guangdong, China settled here.",
+      "Followed by an influx of folk from Hong Kong and Taiwan in the 1960s, today this area is considered the historic heart of Chinatown.",
+    ],
+    sources: [
+      "https://en.wikipedia.org/wiki/Mott_Street",
+    ],
+    time: Era.British,
+  },
+  {
     name: "Harman Street/East Broadway",
     content: [
       "Harman Street was named in honor of Harman Rutgers, the grandfather of Henry Rutgers.",
