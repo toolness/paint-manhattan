@@ -6,9 +6,11 @@ import { getStreetsInNarrativeOrder, getStreetStory, streetHasStory } from "./st
 const sheet = loadAsepriteSheet(SPRITESHEET_URL);
 
 describe("getStreetsInNarrativeOrder()", () => {
-  it("returns a valid list of streets", async () => {
+  const streetNames = getStreetsInNarrativeOrder();
+
+  it(`returns a valid list of ${streetNames.length} streets`, async () => {
     const allStreetSet = new Set(getStreetFrames(await sheet));
-    for (let streetName of getStreetsInNarrativeOrder()) {
+    for (let streetName of streetNames) {
       if (!getStreetStory(streetName)) {
         throw new Error(`Assertion failure, getStreetStory() is not working!`);
       }
