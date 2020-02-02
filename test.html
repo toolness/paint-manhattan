@@ -15,9 +15,9 @@
     <script class="mocha-init">
       window.expect = chai.expect;
       mocha.setup('bdd');
-      mocha.checkLeaks();
     </script>
     <script type="module" src="./dist/util.test.js"></script>
+    <script type="module" src="./dist/game/street-util.test.js"></script>
     <script class="mocha-exec" type="module">
       mocha.run();
     </script>
