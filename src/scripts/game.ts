@@ -4,8 +4,6 @@ import { BitmapFont, BitmapFontOptions } from "../font.js";
 import { Manhattan } from "../game/core.js";
 import { OptionalSoundEffect } from "../audio.js";
 import * as urls from '../game/urls.js';
-import { validateStreetStories } from "../game/street-stories.js";
-import { getStreetFrames } from "../game/sheet-frames.js";
 import { enableOfflineSupport } from "../offline.js";
 import { RecorderUI } from "../recorder-ui.js";
 import { SavegameStorage } from "../game/savegame-storage.js";
@@ -73,7 +71,6 @@ async function main() {
     savegame,
     onAutoSavegame: savegameStorage.save,
   });
-  validateStreetStories(getStreetFrames(sheet));
   savegame && showResetButton(savegameStorage);
   manhattan.start();
 

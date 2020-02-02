@@ -408,15 +408,6 @@ export function streetHasStory(streetName: string): boolean {
   return getStreetStory(streetName) !== null;
 }
 
-export function validateStreetStories(allStreetNames: string[]) {
-  const allStreetSet = new Set(allStreetNames);
-  for (let story of STREET_STORIES) {
-    if (!allStreetSet.has(story.name)) {
-      console.warn(`Story has invalid street name "${story.name}". It will never be shown.`);
-    }
-  }
-}
-
 /**
  * Returns a list of streets in a predefined order that is roughly chronological,
  * but also designed to aid in learning how the streets are laid out: for instance,
