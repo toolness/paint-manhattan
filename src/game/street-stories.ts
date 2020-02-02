@@ -368,6 +368,18 @@ const STREET_STORIES: StreetStory[] = [
     time: Era.British,
   },
   {
+    name: "Mulberry Street",
+    content: [
+      "Named for the mulberry trees that lined it, this street was laid out prior to 1756.",
+      "During the 19th century it was part of a notorious slum called The Five Points.",
+      "By the end of the century, thanks to reporting by Jacob Riis, the city tore down tenements on the street's west side and created a park.",
+    ],
+    sources: [
+      "https://en.wikipedia.org/wiki/Mulberry_Street_(Manhattan)",
+    ],
+    time: 1755, // Appeared on maps at least as early as this year.
+  },
+  {
     name: "Harman Street/East Broadway",
     content: [
       "Harman Street was named in honor of Harman Rutgers, the grandfather of Henry Rutgers.",
