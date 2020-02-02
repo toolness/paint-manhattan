@@ -345,6 +345,17 @@ const STREET_STORIES: StreetStory[] = [
     time: 1797,  // Laid out prior to (Rogerson).
   },
   {
+    name: "Division Street",
+    content: [
+      "This street was named for the division between the farms of the Rutgers to the south, and another family named DeLancey to the north.",
+      "The DeLancey family was led by a loyalist who fled the city for England during the revolution. His property was seized by the city and sold in the 1780s.",
+    ],
+    sources: [
+      StorySource.Rogerson,
+    ],
+    time: Era.British,
+  },
+  {
     name: "Harman Street/East Broadway",
     content: [
       "Harman Street was named in honor of Harman Rutgers, the grandfather of Henry Rutgers.",
