@@ -298,6 +298,29 @@ const STREET_STORIES: StreetStory[] = [
     time: 1767,  // Laid out (Rogerson).
   },
   {
+    name: "Robinson Street/Park Place",
+    content: [
+      "This street formed the southern boundary of King's College, which stood here from 1760 to 1857.",
+      "The college was founded by Trinity Church and renamed to Columbia College after the Revolution; in 1857 it moved to Midtown, and in 1897 to its present location in Morningside Heights."
+    ],
+    sources: [
+      "http://www.wikicu.com/College_Hall"
+    ],
+    time: Era.British,
+  },
+  {
+    name: "Murray Street",
+    content: [
+      "Murray Street was named after a vestryman of Trinity Church and trustee of Columbia College.",
+      "At the corner of Murray and Broadway stood Bridewell Prison, built in 1775 and used by the British to house American prisoners of war during the Revolution."
+    ],
+    sources: [
+      StorySource.Rogerson,
+      "https://forgotten-ny.com/2013/06/four-walls-city-hall-park/"
+    ],
+    time: Era.British,
+  },
+  {
     name: "Chatham Street/Park Row",
     content: [
       "In 1854, Elizabeth Jennings, a Black woman who taught at the African Free School, was forcibly ejected from a streetcar at Chatham and Pearl on account of the color of her skin.",
