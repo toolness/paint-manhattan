@@ -22,11 +22,15 @@ were taken from Wikipedia, Dan Rogerson's
 and the walking tour "Slavery and Resistance in NYC" offered by
 [Mariame Kaba][kaba].
 
+For more information on the inspiration behind this game, see the blog post
+[The Stories Streets Tell][blogpost].
+
 [You can play the game here.][game]
 
 [nec]: https://forgotten-ny.com/1999/09/lower-manhattan-necrology/
 [rogerson]: https://www.amazon.com/dp/B00C0MTRUK
 [kaba]: http://mariamekaba.com/
+[blogpost]: https://www.toolness.com/wp/post/paint-manhattan-circa-1799/
 
 ## Quick start
 
